@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel_oms</property>
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.34:5432/infopanel</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.28:5432/infopanel</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.28:5432/infopanel_oms</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.47.8:5432/isem_db</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://10.10.44.143:5432/infopanel</property>-->
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">default</property>
+        <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.current_session_context_class">org.hibernate.context.ThreadLocalSessionContext</property>
+        <property name="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</property>
+        <!--<property name="hibernate.default_schema"></property>-->
+        <!--<property name="show_sql">true</property>-->
+        <!--<property name="hibernate.dialect">net.sf.hibernate.dialect.PostgreSQLDialect</property>-->
+
+
+        <property name="hibernate.c3p0.minPoolSize">15</property>
+        <property name="hibernate.c3p0.maxPoolSize">100</property>
+        <property name="hibernate.c3p0.timeout">1800</property>
+        <property name="hibernate.c3p0.max_statement">50</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property>
+
+        <mapping class="ru.blackart.dsi.infopanel.beans.Region"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Tab"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Group"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.UserSettings"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Users"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.TypeDeviceFilter"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.DeviceFilter"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Device"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Devcapsule"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Hostgroup"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Hoststatus"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Service"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Comment"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Trouble"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.TroubleList"></mapping>
+    </session-factory>
+</hibernate-configuration>    

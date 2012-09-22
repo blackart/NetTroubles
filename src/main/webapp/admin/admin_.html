@@ -1,0 +1,356 @@
+<html>
+<head>
+    <title>Административная панель</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
+    <META HTTP-EQUIV="REFRESH" CONTENT="1800">           <!--1800 - 30 минут-->
+    <!-- jQuery -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.form.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.clickToForm.js"></script>
+
+    <!-- UI -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.timepicker.js"></script>
+
+    <!--CSS style-->
+    <link rel="stylesheet" type="text/css" href="../css/jquery/jquery-ui-1.8.1.custom.css">
+    <link rel="stylesheet" type="text/css" href="../css/style_adminko.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/tabs-vertical.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/jquery.clickToForm.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion_dev.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion_main_menu.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/settings.css">
+    <link rel="stylesheet" type="text/css" href="../css/top_menu.css">
+
+
+    <!--JS-->
+    <script type="text/javascript" src="../js/adminko.js"></script>
+    <script type="text/javascript" src="../js/trouble.js"></script>
+</head>
+<body>
+
+<div style="display: none;">
+    <select id="host_status_replace">
+        <option value="1">магистральный</option>
+        <option value="2">промежуточный</option>
+        <option value="3">важный кончный</option>
+        <option value="4">конечный</option>
+    </select>
+</div>
+
+
+
+<div id="main_menu">
+    <div id="v_tabs">
+        <ul>
+            <li><a href="#qwerty" class="menu_item">11111111</a></li>
+            <li><a href="#trouble" class="menu_item">troubles</a></li>
+        </ul>
+        <div id="qwerty"></div>
+        <div id="trouble">
+
+    <div class="menu_top">
+        <div class="control_panel">
+            <div class="button_panel_failures">
+                <div class="merge_panel">
+                    <input type="checkbox" id="checkall">
+                    <input type="button" id="merge" value="merge"/>
+                </div>
+            </div>
+            <div class="button_print">
+                Интервал обновления:
+                <select id="interval_val">
+                    <option value="1800000">30 минут</option>
+                    <option value="1500000">25 минут</option>
+                    <option value="1200000">20 минут</option>
+                    <option value="900000">15 минут</option>
+                    <option value="600000">10 минут</option>
+                    <%--<option value="10000">10 секунд</option>--%>
+                    <%--<option value="5000">5 секунд</option>--%>
+                </select>
+                <input type="button" value="set interval" id="set_interval"/>
+                <input type="button" value="start reload" id="reload_page">
+                <input type="button" id="refresh_trouble_list" value="обновить"/>
+            </div>
+        </div>
+        <div class="bottom_button" id="troubles_page_control_panel">панель управления</div>
+    </div>
+
+    <div class="troubles_lists">
+        <div id="admin_waiting_close_trouble_list">
+
+            <div class='trouble_item'>
+                <div class='trouble_item_check'><input type='checkbox'/></div>
+                <div id='<%=t.getId()%>_block_item_admin_trouble_lists' class='trouble_item_accord'>
+                    <h3>
+                        <div class='panel_kit'>
+                            <div class='title_p'>
+                                <div id='<%=t.getId()%>_title_item_admin_trouble_list'><%=t.getTitle()%></div>
+                                <div class='title_ex'>Время аварии: <%=format.format(date_in)%></div>
+                                <% if (t.getCrm()) {%><div class="title_crm_status">Отправлено в CRM</div><%}%>
+                                <div class="title_timeout"></div>
+                            </div>
+                        </div>
+                    </h3>
+                    <div class='content' id='<%=t.getId()%>'>
+
+                        <div class='text_bold title_rubric'>Заголовок:<div class="redstar">*</div></div>
+                        <div id='<%=t.getId()%>_title' class='cont_rubric'><%=t.getTitle()%></div>
+
+                        <%
+                            Properties regions_check = new Properties();
+                            for (Region r : regions) {
+                                regions_check.put(r.getName(),0);
+                            }
+                        %>
+                        <div id='<%=t.getId()%>_dev_list' class='dev_list_up'>
+                            <div>
+                                <div class='text_bold title_rubric'>Список узлов:</div>
+
+                                <%
+                                    for (Devcapsule devcapsule : t.getDevcapsules()) {
+                                        if ((devcapsule.getDevice().getRegion() != null) && (!devcapsule.getDevice().getRegion().getName().equals(""))) {
+                                            String region_name = devcapsule.getDevice().getRegion().getName();
+                                            int count = (Integer)regions_check.get(region_name) + 1;
+                                            regions_check.put(devcapsule.getDevice().getRegion().getName(),count);
+                                        }
+
+                                        Date date_in_dev = new Date(Long.valueOf(devcapsule.getTimedown() != null ? devcapsule.getTimedown() : "0"));
+                                        Date date_out_dev = new Date(Long.valueOf(devcapsule.getTimeup() != null ? devcapsule.getTimeup() : "0"));
+
+                                %>
+                                <div class='dev_ent' id='<%=devcapsule.getId()%>_dev'>
+                                    <h1 class="up">
+                                        <div class='panel_kit'>
+                                            <div class='title_p'>
+                                                <div id='<%=devcapsule.getId()%>_title_dev'><%=devcapsule.getDevice().getName()%>
+                                                    , <%=devcapsule.getDevice().getDescription()%>
+                                                </div>
+                                                <div class='title_ex'>down: <%=format.format(date_in_dev)%> up: <%=format.format(date_out_dev)%></div>
+                                            </div>
+                                            <%if (t.getDevcapsules().size() > 1) {%>
+                                                <div class="func">
+                                                    <div><input type="button" id="<%=devcapsule.getId()%>_unmerge" value="unmerge"/></div>
+                                                </div>
+                                            <%}%>
+                                        </div>
+
+                                    </h1>
+                                </div>
+                                <%
+                                    }
+                                %>
+
+                                <%
+                                    String region_str = "";
+                                    for (Region r : regions) {
+                                        if ((Integer)regions_check.get(r.getName()) > 0) {
+                                            region_str+= r.getName() + " ; ";
+                                        }
+                                    }
+                                %>
+
+                            </div>
+                        </div>
+
+                        <div class='text_bold title_rubric'>Регион:</div>
+                        <div id='<%=t.getId()%>_region' class='content_block_inactive'><%=region_str%></div>
+
+                        <div class='text_bold title_rubric'>Затронутые сервисы:<div class="redstar">*</div></div>
+                        <div id='<%=t.getId()%>_service' class='service_sel'><%=serv%></div>
+                        <input type='hidden' value='<%=serv_id%>'/>
+
+                        <div class='text_bold title_rubric'>Легенда:<div class="redstar">*</div></div>
+                        <div id='<%=t.getId()%>_legend' class='cont_rubric'><%=t.getLegend()%></div>
+
+                        <div class='text_bold title_rubric'>Статус:</div>
+                        <div id='<%=t.getId()%>_status' class='status_sel'><%=t.getTroublestatus().getName()%></div>
+                        <input type='hidden' value='<%=t.getTroublestatus().getId()%>'/>
+
+                        <div class='text_bold title_rubric'>Дата и время аварии:<div class="redstar">*</div></div>
+                        <div id='<%=t.getId()%>_date_in' class='content_block_inactive'><%=format.format(date_in)%></div>
+
+                        <div class='text_bold title_rubric'>Сроки устранения:<div class="redstar">*</div></div>
+                        <div id='<%=t.getId()%>_timeout' class='timeout'><%=t.getTimeout() == null ? "" : format.format(timeout)%></div>
+
+                        <div class='text_bold title_rubric'>Дата и время устранения аварии:</div>
+                        <div id='<%=t.getId()%>_date_out' class='content_block_inactive'><%=format.format(date_out)%></div>
+
+                        <div class='text_bold title_rubric'>Комментарий:<div class="redstar">*</div></div>
+                        <div id='<%=t.getId()%>_description' class='description'><%=t.getDescription()%></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="admin_trouble_list">
+            <div class="trouble_list_title">Текущие проблемы:</div>
+            <div class='trouble_item'>
+                <div class='trouble_item_check'><input type='checkbox'/></div>
+                <div id='<%=t.getId()%>_block_item_admin_trouble_lists' class='trouble_item_accord'>
+                    <h3>
+                        <div class='panel_kit'>
+                            <div class='title_p'>
+                                <div id='<%=t.getId()%>_title_item_admin_trouble_list'><%=t.getTitle()%></div>
+                                <div class='title_ex'>Время аварии: <%=format.format(date_in)%></div>
+                                <% if (t.getCrm()) {%><div class="title_crm_status">Отправлено в CRM</div><%}%>
+                                <div class="title_timeout"></div>
+                            </div>
+                        </div>
+                    </h3>
+                    <div class='content' id='<%=t.getId()%>'>
+
+                        <div class='text_bold title_rubric'>Заголовок:</div>
+                        <div id='<%=t.getId()%>_title' class='cont_rubric'><%=t.getTitle()%></div>
+                        <%
+                            Properties regions_check = new Properties();
+                            for (Region r : regions) {
+                                regions_check.put(r.getName(),0);
+                            }
+                            %>
+                        <div id='<%=t.getId()%>_dev_list' class='dev_list_down'>
+                            <div>
+                                <div class='text_bold title_rubric'>Список узлов:</div>
+                                <%
+                                    for (Devcapsule devcapsule : t.getDevcapsules()) {
+                                        if ((devcapsule.getDevice().getRegion() != null) && (!devcapsule.getDevice().getRegion().getName().equals(""))) {
+                                            String region_name = devcapsule.getDevice().getRegion().getName();
+                                            int count = (Integer)regions_check.get(region_name) + 1;
+                                            regions_check.put(devcapsule.getDevice().getRegion().getName(),count);
+                                        }
+                                        if (devcapsule.getComplete()) {
+                                            Date date_in_dev = new Date(Long.valueOf(devcapsule.getTimedown() != null ? devcapsule.getTimedown() : "0"));
+                                            Date date_out_dev = new Date(Long.valueOf(devcapsule.getTimeup() != null ? devcapsule.getTimeup() : "0"));
+
+                                %>
+                                <div class='dev_ent' id='<%=devcapsule.getId()%>_dev'>
+                                    <h1 class="up">
+                                        <div class='panel_kit'>
+                                            <div class='title_p'>
+                                                <div id='<%=devcapsule.getId()%>_title_dev'><%=devcapsule.getDevice().getName()%>
+                                                    , <%=devcapsule.getDevice().getDescription()%>
+                                                </div>
+                                                <div class='title_ex'>down: <%=format.format(date_in_dev)%> up: <%=format.format(date_out_dev)%></div>
+                                            </div>
+                                            <%if (t.getDevcapsules().size() > 1) {%>
+                                                <div class="func">
+                                                    <div><input type="button" id="<%=devcapsule.getId()%>_unmerge" value="unmerge"/></div>
+                                                </div>
+                                            <%}%>
+                                        </div>
+
+                                    </h1>
+                                </div>
+                                <%
+                                        }
+                                    }
+                                %>
+
+                                <%
+                                    String region_str = "";
+                                    for (Region r : regions) {
+                                        if ((Integer)regions_check.get(r.getName()) > 0) {
+                                            region_str+= r.getName() + " ; ";
+                                        }
+                                    }
+                                %>
+
+                                <%
+                                    for (Devcapsule devcapsule : t.getDevcapsules()) {
+                                        if (!devcapsule.getComplete()) {
+                                            Date date_in_dev = new Date(Long.valueOf(devcapsule.getTimedown() != null ? devcapsule.getTimedown() : "0"));
+
+                                %>
+                                <div class='dev_ent' id='<%=devcapsule.getId()%>_dev'>
+                                    <h1 class="down">
+                                        <div class='panel_kit'>
+                                            <div class='title_p'>
+                                                <div id='<%=devcapsule.getId()%>_title_dev'><%=devcapsule.getDevice().getName()%> , <%=devcapsule.getDevice().getDescription()%></div>
+                                                <div class='title_ex'>down: <%=format.format(date_in_dev)%></div>
+                                            </div>
+                                            <%if (t.getDevcapsules().size() > 1) {%>
+                                                <div class="func">
+                                                    <div><input type="button" id="<%=devcapsule.getId()%>_unmerge" value="unmerge"/></div>
+                                                </div>
+                                            <%}%>
+                                        </div>
+                                    </h1>
+                                </div>
+                                <%
+                                        }
+                                    }
+                                %>
+
+                            </div>
+                        </div>
+
+                        <div class='text_bold title_rubric'>Регион:</div>
+                        <div id='<%=t.getId()%>_region' class='content_block_inactive'><%=region_str%></div>
+
+                        <div class='text_bold title_rubric'>Затронутые сервисы:</div>
+                        <div id='<%=t.getId()%>_service' class='service_sel'><%=serv%></div>
+                        <input type='hidden' value='<%=serv_id%>'/>
+
+                        <div class='text_bold title_rubric'>Легенда:</div>
+                        <div id='<%=t.getId()%>_legend' class='cont_rubric'><%=t.getLegend()%></div>
+
+                        <div class='text_bold title_rubric'>Статус:</div>
+                        <div id='<%=t.getId()%>_status' class='status_sel'><%=t.getTroublestatus().getName()%></div>
+                        <input type='hidden' value='<%=t.getTroublestatus().getId()%>'/>
+
+                        <div class='text_bold title_rubric'>Дата и время аварии:</div>
+                        <div id='<%=t.getId()%>_date_in' class='content_block_inactive'><%=format.format(date_in)%></div>
+
+                        <div class='text_bold title_rubric'>Сроки устранения:</div>
+                        <div id='<%=t.getId()%>_timeout' class='timeout'><%=t.getTimeout() == null ? "" : format.format(timeout)%></div>
+
+                        <div class='text_bold title_rubric'>Комментарий:</div>
+                        <div id='<%=t.getId()%>_description' class='description'><%=t.getDescription()%></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="pageReload" value="false">
+    <input type="hidden" id="timeoutReloadPage" value="1800000">
+    <input type="hidden" id="service_sel" value="
+
+                e-mail|4;
+
+                Internet|1;
+
+                IPVPN|2;
+
+                VoIP|3;
+
+                Hosting|5;
+
+    ">
+    <input type="hidden" id="status_sel" value="
+
+                Новая авария|1;
+
+                Причины выясняются|2;
+
+                Проблема устраянется|3;
+
+                Проблема устранена|4;
+
+    ">
+
+    </div>
+    </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+/*----------------------------Accordion-----------------------------*/
+
+/*----------------------Заголовок Аккордиона------------------------*/
+.panel_kit {
+    position: relative;
+    display: table;
+    width: 100%; /*padding: 0.5em;*/
+/*margin: 0.3em;*/
+/*border: 1px solid #000000;*/
+    text-decoration: none;
+}
+
+.panel_kit .title_p {
+    display: table;
+    text-align: left;
+    width: 86%; /*padding: 5px;*/
+/*border: 1px solid #cc00cc;*/
+/*font-size: 1em;*/
+    margin: .7em 0 .7em 2em;
+    float: left;
+}
+
+.panel_kit .title_p .title_crm_status {
+    text-align: right;
+    color: #7ea7ec;
+}
+
+.panel_kit .title_g {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.panel_kit .title_ex {
+    display: block; /*font-size: .75em;*/
+/*border: 1px solid #00ff33;*/
+    font-weight: normal;
+    color: #999999;
+}
+
+.panel_kit .func {
+    display: block;
+    position: relative;
+    margin: 10px;
+    text-align: right;
+    width: 7%; /*border: 1px solid #0000ff;*/
+    float: right;
+}
+
+.panel_kit .func div {
+    display: inline;
+    margin: 10px 10px 0 0;
+    text-decoration: underline; /*border: 1px solid #ff0000;*/
+}
+
+/*-------------------------Стиль аккордиона-------------------------*/
+
+/*--------------------------current---------------------------------*/
+.ui-accordion-trouble {
+    width: 100%;
+    background-color: #fff; /*border: 1px solid red;*/
+    margin: 0 auto;
+}
+
+/*.ui-accordion-trouble .ui-state-default, .ui-accordion-trouble .ui-widget-content .ui-state-default, .ui-accordion-trouble .ui-widget-header .ui-state-default { border: 1px solid #c5dbec; background: #dfeffc url(images/ui-bg_glass_85_dfeffc_1x400.png) 50% 50% repeat-x; font-weight: bold; color: #2e6e9e; }
+.ui-accordion-trouble .ui-state-default a, .ui-accordion-trouble .ui-state-default a:link, .ui-accordion-trouble .ui-state-default a:visited { color: #2e6e9e; text-decoration: none; }
+
+.ui-accordion-trouble .ui-state-hover, .ui-accordion-trouble .ui-widget-content .ui-state-hover, .ui-accordion-trouble .ui-widget-header .ui-state-hover, .ui-accordion-trouble .ui-state-focus, .ui-accordion-trouble .ui-widget-content .ui-state-focus, .ui-accordion-trouble .ui-widget-header .ui-state-focus { border: 1px solid #79b7e7; background: #d0e5f5 url(images/ui-bg_glass_75_d0e5f5_1x400.png) 50% 50% repeat-x; font-weight: bold; color: #1d5987; }
+.ui-accordion-trouble .ui-state-hover a, .ui-accordion-trouble .ui-state-hover a:hover { color: #1d5987; text-decoration: none; }
+
+.ui-accordion-trouble .ui-state-active, .ui-accordion-trouble .ui-widget-content .ui-state-active, .ui-accordion-trouble .ui-widget-header .ui-state-active { border: 1px solid #79b7e7; background: #f5f8f9 url(images/ui-bg_inset-hard_100_f5f8f9_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #e17009; }
+
+.ui-accordion-trouble .ui-state-active a, .ui-accordion-trouble .ui-state-active a:link, .ui-accordion-trouble .ui-state-active a:visited { color: #e17009; text-decoration: none; }
+.ui-accordion-trouble .ui-widget :active { outline: none; }*/
+
+.ui-accordion-trouble li {
+    display: inline; /*border: 1px solid blue;*/
+}
+
+.ui-accordion-trouble .ui-accordion-header {
+    display: table;
+    cursor: pointer;
+    position: relative;
+    outline: 0; /*margin-top: 1px;*/
+/*zoom: 1; */
+    border: 2px solid #c3d9ff;
+    color: #333333;
+    width: 100%; /*border: 1px solid #3ea0f0;*/
+/*background-color: #3ea0f0;*/
+    margin: 0.4em 0 0 0;
+    padding: 0;
+    text-decoration: underline;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    font-size: 9pt;
+    text-decoration: none; /*-moz-border-radius-bottomleft: 18px;*/
+/*-webkit-border-bottom-left-radius: 18px;*/
+/*-moz-border-radius-bottomright: 18px;*/
+/*-webkit-border-bottom-right-radius: 18px;    */
+
+}
+
+.ui-accordion-trouble .ui-accordion-header-active {
+    display: table;
+    border: 1px solid #c3d9ff;
+    border-bottom: 0 !important;
+    background-color: #c3d9ff;
+    text-decoration: none;
+}
+
+.ui-accordion-trouble .ui-accordion-header a {
+    display: block;
+    padding: .5em .5em .5em 2.2em;
+    color: #000;
+    text-decoration: none;
+    border: 1px solid #ff3333;
+}
+
+.ui-accordion-trouble .ui-accordion-header .ui-icon {
+    position: absolute;
+    left: .5em;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.ui-accordion-trouble .ui-accordion-content {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: -1px;
+    margin-bottom: 1em;
+    padding: 1em 1em 0 1em;
+    overflow: auto; /*border: 1px solid red;*/
+    background-color: #fff;
+    width: 93%;
+    display: none;
+    border: 3px solid #ff6600;
+    border-top: 0 solid #c3d9ff;
+    font-size: 9pt;
+    -moz-border-radius-bottomleft: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+}
+
+.ui-accordion-trouble .ui-accordion-content-active {
+    display: table;
+}
+
+/*-----------------------wait---------------------------------------*/
+.ui-accordion-trouble-wait {
+    width: 100%;
+    background-color: #fff; /*border: 1px solid red;*/
+    margin: 0 auto;
+}
+
+.ui-accordion-trouble-wait .ui-accordion-header {
+    display: table;
+    cursor: pointer;
+    position: relative;
+    outline: 0; /*margin-top: 1px;*/
+/*zoom: 1; */
+    border: 2px solid #ff3333;
+    color: #333333;
+    width: 100%; /*border: 1px solid #3ea0f0;*/
+/*background-color: #3ea0f0;*/
+    margin: 0.4em 0 0 0;
+    padding: 0;
+    text-decoration: underline;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    font-size: 9pt;
+    text-decoration: none; /*-moz-border-radius-bottomleft: 18px;*/
+/*-webkit-border-bottom-left-radius: 18px;*/
+/*-moz-border-radius-bottomright: 18px;*/
+/*-webkit-border-bottom-right-radius: 18px;    */
+
+}
+
+.ui-accordion-trouble-wait li {
+    display: inline; /*border: 1px solid blue;*/
+}
+
+.ui-accordion-trouble-wait .ui-accordion-header-active {
+    display: table;
+    border: 1px solid #ff3333;
+    border-bottom: 0 !important;
+    background-color: #ff3333;
+    text-decoration: none;
+}
+
+.ui-accordion-trouble-wait .ui-accordion-header a {
+    display: block;
+    padding: .5em .5em .5em 2.2em;
+    color: #000;
+    text-decoration: none;
+    border: 1px solid #ff3333;
+}
+
+.ui-accordion-trouble-wait .ui-accordion-header .ui-icon {
+    position: absolute;
+    left: .5em;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.ui-accordion-trouble-wait .ui-accordion-content {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: -1px;
+    margin-bottom: 1em;
+    padding: 1em 1em 0 1em;
+    overflow: auto; /*border: 1px solid red;*/
+    background-color: #fff;
+    width: 93%;
+    display: none;
+    border: 3px solid #ff6600;
+    border-top: 0 solid #ff3333;
+    font-size: 9pt;
+    -moz-border-radius-bottomleft: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+}
+
+.ui-accordion-trouble-wait .ui-accordion-content-active {
+    display: table;
+}
+
+/*-----------------------need-actual-problem---------------------------------------*/
+.ui-accordion-trouble-need-actual-problem {
+    width: 100%;
+    background-color: #fff; /*border: 1px solid red;*/
+    margin: 0 auto;
+}
+
+.ui-accordion-trouble-need-actual-problem .ui-accordion-header {
+    display: table;
+    cursor: pointer;
+    position: relative;
+    outline: 0; /*margin-top: 1px;*/
+/*zoom: 1; */
+    border: 2px solid #009900;
+    color: #333333;
+    width: 100%; /*border: 1px solid #3ea0f0;*/
+/*background-color: #3ea0f0;*/
+    margin: 0.4em 0 0 0;
+    padding: 0;
+    text-decoration: underline;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    font-size: 9pt;
+    text-decoration: none; /*-moz-border-radius-bottomleft: 18px;*/
+/*-webkit-border-bottom-left-radius: 18px;*/
+/*-moz-border-radius-bottomright: 18px;*/
+/*-webkit-border-bottom-right-radius: 18px;    */
+
+}
+
+.ui-accordion-trouble-need-actual-problem li {
+    display: inline; /*border: 1px solid blue;*/
+}
+
+.ui-accordion-trouble-need-actual-problem .ui-accordion-header-active {
+    display: table;
+    border: 1px solid #009900;
+    border-bottom: 0 !important;
+    background-color: #009900;
+    text-decoration: none;
+}
+
+.ui-accordion-trouble-need-actual-problem .ui-accordion-header a {
+    display: block;
+    padding: .5em .5em .5em 2.2em;
+    color: #000;
+    text-decoration: none;
+    border: 1px solid #ff3333;
+}
+
+.ui-accordion-trouble-need-actual-problem .ui-accordion-header .ui-icon {
+    position: absolute;
+    left: .5em;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.ui-accordion-trouble-need-actual-problem .ui-accordion-content {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: -1px;
+    margin-bottom: 1em;
+    padding: 1em 1em 0 1em;
+    overflow: auto; /*border: 1px solid red;*/
+    background-color: #fff;
+    width: 93%;
+    display: none;
+    border: 3px solid #ff6600;
+    border-top: 0 solid #ff3333;
+    font-size: 9pt;
+    -moz-border-radius-bottomleft: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+}
+
+.ui-accordion-trouble-need-actual-problem .ui-accordion-content-active {
+    display: table;
+}

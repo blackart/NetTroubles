@@ -1,0 +1,1702 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Административная панель</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
+    <META HTTP-EQUIV="REFRESH" CONTENT="600">
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.4.2.min.js"></script>
+    <!--<script type="text/javascript" src="../js/jQuery/js/jquery-1.5.1.js"></script>-->
+    <script type="text/javascript" src="../js/jQuery/js/jquery.form.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.clickToForm.js"></script>
+
+    <!-- UI -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.timepicker.js"></script>
+
+    <!--CSS style-->
+    <link rel="stylesheet" type="text/css" href="../css/jquery/jquery-ui-1.8.1.custom.css">
+
+    <link rel="stylesheet" type="text/css" href="../css/tabs-vertical.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style_adminko.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/jquery.clickToForm.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion_main_menu.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion_dev.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/settings.css">
+    <link rel="stylesheet" type="text/css" href="../css/top_menu.css">
+
+    <!--JS-->
+    <script type="text/javascript" src="../js/adminko.js"></script>
+    <script type="text/javascript" src="../js/trouble.js"></script>
+    <!--<script type="text/javascript" src="../js/groups.js"></script>-->
+    <!--<script type="text/javascript" src="../js/failures.js"></script>-->
+    <!--<script type="text/javascript" src="../js/trouble_close.js"></script>-->
+</head>
+<body>
+
+<div style="display: none;">
+    <select id="host_status_replace">
+        <option value="1">магистральный</option>
+        <option value="2">промежуточный</option>
+        <option value="3">важный кончный</option>
+        <option value="4">конечный</option>
+    </select>
+</div>
+
+<div id="main_menu">
+    <div id="v_tabs">
+
+        <ul>
+            <li><a href="#failures_" class="menu_item">Failures list</a></li>
+            <h3>Проблемы</h3>
+            <div>
+                <!--<li><a href="#trouble">troubles</a></li>-->
+                <li><a href="#settings">settings</a></li>
+                <li><a href="#trouble">troubles</a></li>
+                <!--<li><a href="#trouble">Настройки</a></li>
+                <li><a href="#trouble">Настройки</a></li>
+                <li><a href="#trouble">Настройки</a></li>
+                <li><a href="#trouble">Настройки</a></li>
+                <li><a href="#trouble">Настройки</a></li>-->
+            </div>
+        </ul>
+        <div id="failures_">
+
+        <!--<div class="menu_top">
+            <div class="find_panel">
+                <div class="button_panel">
+                    <div class="start_find_panel">
+                        Параметр поиска:
+                        <div class="type_find_select">
+                            <select id="type_find_select">
+                                <option value="0"></option>
+                                <option value="1">по имени</option>
+                                <option value="2">по дате</option>
+                                <option value="3">по статусу</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="other_panel"></div>
+
+                </div>
+                <div class="button_print"><input id="page_for_print" type="button" value="страница для печати" alt="страница для печати"/></div>
+            </div>
+            <div class="bottom_button">панель поиска</div>
+        </div>-->
+
+        <!--<div class="menu_top">
+            <div class="control_panel">
+                <div class="button_panel_failures">
+                    <div class="start_find_panel">
+                        <input type="checkbox" id="checkall">
+                        <input type="button" id="merge" value="merge"/>
+                    </div>
+                    <div class="other_panel"></div>
+                </div>
+                <div class="button_print">
+                    Интервал обновления:
+                    <select id="interval_val">
+                        <option value="1800000">30 минут</option>
+                        <option value="1500000">25 минут</option>
+                        <option value="1200000">20 минут</option>
+                        <option value="900000">15 минут</option>
+                        <option value="600000">10 минут</option>
+                        <option value="10000">10 секунд</option>
+                        <option value="5000">5 секунд</option>
+                    </select>
+                    <input type="button" value="set interval" id="set_interval"/>
+                    <div id="cur_val_interval">1800</div>
+                    <input type="button" value="start reload" id="reload_page">
+                    <input type="button" id="refresh_trouble_list" value="обновить"/>
+                    <input type="button" id="page_for_print" value="страница для печати" alt="страница для печати"/>
+                </div>
+            </div>
+            <div class="bottom_button" id="troubles_page_control_panel">панель управления</div>
+        </div>-->
+
+        <!--<div class="menu_top">
+            <div class="control_panel">
+                <div class="button_panel_failures">
+                    <div class="merge_panel">
+                        <input type="checkbox" id="checkall">
+                        <input type="button" id="merge" value="merge"/>
+                    </div>
+                </div>
+                <div class="button_print">
+                    <form id="settings_trouble_close_list" method="post" action="/controller" accept-charset="UTF-8">
+                        дата: <input type="text" id="date_trouble_close_list" name="date"/>
+                        искать за:
+                        <select name="find_entry" id="find_entry">
+                            <option value="1">день</option>
+                            <option value="2">месяц</option>
+                            <option value="3">год</option>
+                        </select>
+                        <input type="submit" value="поиск">
+                        <input type="hidden" name="cmd" value="getListOfClosedTroubles">
+                    </form>
+                </div>
+            </div>
+            <div class="bottom_button" id="troubles_page_control_panel">панель поиска</div>
+        </div>-->
+
+        <div class="menu_top">
+            <div class="control_panel">
+                <div class="button_panel_failures">
+                    <div class="merge_panel">
+
+                    </div>
+                </div>
+                <div class="button_print">
+                    <input type="button" value="trash all">
+                </div>
+            </div>
+            <div class="bottom_button" id="troubles_close_page_control_panel">панель управления</div>
+        </div>
+
+        <div id="failures" class="failures">
+            <div class="trouble_list_title">Закрытые проблемы, но не отправленный в CRM:</div>
+            <table id="failures_table" border="1px" cellpadding="5px" cellspacing="0" width="100%">
+                <tbody>
+                <tr><td>№</td><td>Время падения</td><td>Время простоя</td><td>Узел</td><td>Статус</td><td>Описание узла</td><td>Причина аварии</td><td>ФИО инженера</td><td class='delete_devc'>Действие</td></tr>
+                <tr><td>1</td><td>27/02/2011 15:27:00</td><td>N/A</td><td>sw75</td><td>конечный</td><td>Ulan-batorskaya, 8</td><td></td><td>system</td><td class='delete_devc'><input type='button' value='удалить' class='1_trouble_id'/></td></tr>
+                <tr><td>2</td><td>27/02/2011 15:27:00</td><td>N/A</td><td>sw67</td><td>клиентский</td><td>Lermontova, 83</td><td></td><td>system</td><td class='delete_devc'><input type='button' value='удалить' class='1_trouble_id'/></td></tr>
+                <tr><td>3</td><td>27/02/2011 15:27:00</td><td>N/A</td><td>sw621</td><td>конечный</td><td>Dek.sob, 28</td><td></td><td>system</td><td class='delete_devc'><input type='button' value='удалить' class='1_trouble_id'/></td></tr>
+                <tr><td>4</td><td>25/02/2011 17:26:54</td><td>1:4</td><td>sw75</td><td>конечный</td><td>Ulan-batorskaya, 8</td><td>sdf sadas d</td><td>Медведев Сергей Андреевич</td><td class='delete_devc'><input type='button' value='удалить' class='1_trouble_id'/></td></tr>
+                <!--<tr><td>5</td><td>24/02/2011 19:41:23</td><td>21:44</td><td>sw643</td><td>конечный</td><td>up</td><td>test\dsf fdsfs</td><td>Медведев Сергей Андреевич</td></tr><tr><td>6</td><td>24/02/2011 19:41:23</td><td>21:44</td><td>sw67</td><td>клиентский</td><td>Lermontova, 83</td><td>test\dsf fdsfs</td><td>Медведев Сергей Андреевич</td></tr><tr><td>7</td><td>24/02/2011 19:41:23</td><td>21:45</td><td>sw621</td><td>конечный</td><td>Dek.sob, 28</td><td>test\dsf fdsfs</td><td>Медведев Сергей Андреевич</td></tr><tr><td>8</td><td>24/02/2011 19:41:23</td><td>21:45</td><td>sw6000</td><td>смежный</td><td>Ленина, 26</td><td>test\dsf fdsfs</td><td>Медведев Сергей Андреевич</td></tr><tr><td>9</td><td>24/02/2011 19:41:23</td><td>21:45</td><td>sw65</td><td>клиентский</td><td>Ulan-batorskaya, 8</td><td>test\dsf fdsfs</td><td>Медведев Сергей Андреевич</td></tr><tr><td>10</td><td>24/02/2011 19:41:23</td><td>21:45</td><td>sw689</td><td>смежный</td><td>out</td><td>test\dsf fdsfs</td><td>Медведев Сергей Андреевич</td></tr><tr><td>11</td><td>24/02/2011 17:30:43</td><td>0:1</td><td>sw989</td><td></td><td>out</td><td></td><td>system</td></tr><tr><td>12</td><td>24/02/2011 16:40:43</td><td>0:49</td><td>sw989</td><td></td><td>out</td><td>thsdg</td><td>system</td></tr><tr><td>13</td><td>24/02/2011 15:02:03</td><td>1:38</td><td>sw789</td><td>конечный</td><td>mmmmmmmmm</td><td>dsf ssdfsdsfsfsd fdsfdfgf asdasd</td><td>system</td></tr><tr><td>14</td><td>23/02/2011 21:34:52</td><td>20:2</td><td>sw321</td><td>клиентский</td><td>Dek.sob, 28</td><td>dsf ssdfsdsfsfsd fdsfdfgf asdasd</td><td>system</td></tr><tr><td>15</td><td>23/02/2011 21:34:52</td><td>20:2</td><td>sw55</td><td>магистральный</td><td>Ulan-batorskaya, 8</td><td>dsf ssdfsdsfsfsd fdsfdfgf asdasd</td><td>system</td></tr><tr><td>16</td><td>23/02/2011 21:34:52</td><td>20:2</td><td>sw5000</td><td>смежный</td><td>44444444444444</td><td>dsf ssdfsdsfsfsd fdsfdfgf asdasd</td><td>system</td></tr><tr><td>17</td><td>23/02/2011 21:34:52</td><td>20:2</td><td>sw843</td><td>конечный</td><td>55555555</td><td>dsf ssdfsdsfsfsd fdsfdfgf asdasd</td><td>system</td></tr><tr><td>18</td><td>23/02/2011 21:34:52</td><td>20:2</td><td>sw1</td><td>клиентский</td><td>Lermontova, 83</td><td>dsf ssdfsdsfsfsd fdsfdfgf asdasd</td><td>system</td></tr><tr><td>19</td><td>22/02/2011 20:32:26</td><td>25:1</td><td>sw5000</td><td>смежный</td><td>44444444444444</td><td>11dfdsf fdg sdfsdsf s dsfdfsdfsd</td><td>system</td></tr><tr><td>20</td><td>22/02/2011 20:11:46</td><td>25:22</td><td>sw843</td><td>конечный</td><td>55555555</td><td>11dfdsf fdg sdfsdsf s dsfdfsdfsd</td><td>system</td></tr><tr><td>21</td><td>22/02/2011 18:16:10</td><td>27:17</td><td>sw321</td><td>клиентский</td><td>Dek.sob, 28</td><td>11dfdsf fdg sdfsdsf s dsfdfsdfsd</td><td>system</td></tr><tr><td>22</td><td>22/02/2011 18:16:10</td><td>27:17</td><td>sw55</td><td>магистральный</td><td>Ulan-batorskaya, 8</td><td>11dfdsf fdg sdfsdsf s dsfdfsdfsd</td><td>system</td></tr><tr><td>23</td><td>22/02/2011 18:16:10</td><td>27:17</td><td>sw1</td><td>клиентский</td><td>Lermontova, 83</td><td>11dfdsf fdg sdfsdsf s dsfdfsdfsd</td><td>system</td></tr><tr><td>24</td><td>21/02/2011 14:40:44</td><td>0:2</td><td>sw1</td><td>клиентский</td><td>Lermontova, 83</td><td>бла-бла!!!</td><td>system</td></tr><tr><td>25</td><td>21/02/2011 14:40:44</td><td>0:2</td><td>sw321</td><td>клиентский</td><td>Dek.sob, 28</td><td>бла-бла!!!</td><td>system</td></tr><tr><td>26</td><td>21/02/2011 14:40:44</td><td>0:2</td><td>sw55</td><td>магистральный</td><td>Ulan-batorskaya, 8</td><td>бла-бла!!!</td><td>system</td></tr><tr><td>27</td><td>15/02/2011 23:30:38</td><td>0:0</td><td>sw55</td><td>магистральный</td><td>Ulan-batorskaya, 8</td><td>dddd</td><td>system</td></tr><tr><td>28</td><td>15/02/2011 23:30:38</td><td>0:0</td><td>sw321</td><td>клиентский</td><td>Dek.sob, 28</td><td>dddd</td><td>system</td></tr><tr><td>29</td><td>15/02/2011 23:30:38</td><td>0:0</td><td>sw1</td><td>клиентский</td><td>Lermontova, 83</td><td>ddddddddddd</td><td>system</td></tr><tr><td>30</td><td>15/02/2011 22:22:31</td><td>0:2</td><td>sw55</td><td>магистральный</td><td>Ulan-batorskaya, 8</td><td>ddddddddddd</td><td>system</td></tr><tr><td>31</td><td>15/02/2011 22:22:31</td><td>0:2</td><td>sw1</td><td>клиентский</td><td>Lermontova, 83</td><td>ddddddddddd</td><td>system</td></tr><tr><td>32</td><td>15/02/2011 22:22:31</td><td>0:2</td><td>sw321</td><td>клиентский</td><td>Dek.sob, 28</td><td>ddddddddddd</td><td>system</td></tr><tr><td>33</td><td>15/02/2011 22:18:22</td><td>0:2</td><td>sw55</td><td>магистральный</td><td>Ulan-batorskaya, 8</td><td>ddddddddddd</td><td>system</td></tr><tr><td>34</td><td>15/02/2011 22:18:22</td><td>0:2</td><td>sw321</td><td>клиентский</td><td>Dek.sob, 28</td><td>ddddddddddd</td><td>system</td></tr><tr><td>35</td><td>15/02/2011 22:18:22</td><td>0:2</td><td>sw1</td><td>клиентский</td><td>Lermontova, 83</td><td>ddddddddddd</td><td>system</td></tr>-->
+                </tbody>
+            </table>
+            <div class='statistics'><div>Общее время простоя: 22:50</div><div>Количесво аварий:  6</div><div>Среднее время простоя: 11:34</div></div>
+        </div>
+
+    </div>
+
+        <div id="settings">
+
+        <div class="settings" >
+
+            <div class="settings_block">
+                <!--<input id="page_for_print" type="button" value="страница для печати" alt="страница для печати"/>-->
+                <div class="title">Add group of account</div>
+
+                <table id="groups_add"  class="settings_add" cellpadding="0" cellspacing="0">
+                    <tr class="header">
+                        <td>Name</td>
+                        <td>Menu</td>
+                        <td>Add</td>
+                    </tr>
+                    <tr>
+                        <td width="40%"><div><input type="text" class="group_name"/></div></td>
+                        <td width="50%" class="menu_items">
+                                    <ul class="l1">
+                                        <li id="1_1_main"><input type="checkbox"/>Troubles</li>
+                                        <ul class="l2">
+                                            <li id="2_1_child"><input type="checkbox"/>Current</li>
+                                            <li id="3_1_child"><input type="checkbox"/>Close</li>
+                                        </ul>
+                                        <li id="4_2_main"><input type="checkbox"/>Failures list</li>
+                                        <li id="5_3_main"><input type="checkbox"/>Host manager</li>
+                                        <li id="6_4_main"><input type="checkbox"/>Filters</li>
+                                        <ul class="l2">
+                                            <li id="7_4_child"><input type="checkbox"/>Main</li>
+                                            <li id="8_4_child"><input type="checkbox"/>Failures</li>
+                                        </ul>
+                                        <li id="9_5_main"><input type="checkbox"/>Security</li>
+                                        <ul class="l2">
+                                            <li id="10_5_child"><input type="checkbox"/>Groups of accounts</li>
+                                            <li id="11_5_child"><input type="checkbox"/>Accounts of users</li>
+                                        </ul>
+                                    </ul>
+                        </td>
+                        <td width="10%"><input type="button" value="add" class='group_add_button'/></td>
+                    </tr>
+                </table>
+
+                <div class="title">Groups</div>
+
+                <table id="groups_list_table" class="settings_list" cellpadding="0" cellspacing="0">
+                    <tr class="header">
+                        <td width="30%">Group name</td>
+                        <td width="50%">Menu items</td>
+                        <td width="10%">Edit</td>
+                        <td width="10%">Delete</td>
+                    </tr>
+                            <tr id="1_group" class="item">
+                                <td class="group_name">Test</td>
+                                <td class="menu_items">
+                                    <ul class="l1">
+                                        <li id="1_1_main-1"><input type="checkbox"/>Troubles</li>
+                                        <ul class="l2">
+                                            <li id="2_1_child-1"><input type="checkbox"/>Current</li>
+                                            <li id="3_1_child-1"><input type="checkbox"/>Close</li>
+                                        </ul>
+                                        <li id="4_2_main-1"><input type="checkbox"/>Failures list</li>
+                                        <li id="5_3_main-1"><input type="checkbox"/>Host manager</li>
+                                        <li id="6_4_main-1"><input type="checkbox"/>Filters</li>
+                                        <ul class="l2">
+                                            <li id="7_4_child-1"><input type="checkbox"/>Main</li>
+                                            <li id="8_4_child-1"><input type="checkbox"/>Failures</li>
+                                        </ul>
+                                        <li id="9_5_main-1"><input type="checkbox"/>Security</li>
+                                        <ul class="l2">
+                                            <li id="10_5_child-1"><input type="checkbox"/>Groups of accounts</li>
+                                            <li id="11_5_child-1"><input type="checkbox"/>Accounts of users</li>
+                                        </ul>
+                                    </ul>
+                                </td>
+
+                                <td><input type="button" value="edit" class="group_edit_button"/></td>
+                                <td><input type="button" value="delete" class="group_delete_button"/></td>
+                            </tr>
+                </table>
+
+                <div class="test_test">ку!</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <div id="trouble">
+
+
+
+
+
+
+
+<div class="menu_top">
+    <div class="control_panel" style="display: none; ">
+        <div class="button_panel_failures">
+            <div class="merge_panel">
+                <input type="checkbox" id="checkall">
+                <input type="button" id="merge" value="merge">
+            </div>
+        </div>
+        <div class="button_print">
+            Интервал обновления:
+            <select id="interval_val">
+                <option value="1800000">30 минут</option>
+                <option value="1500000">25 минут</option>
+                <option value="1200000">20 минут</option>
+                <option value="900000">15 минут</option>
+                <option value="600000">10 минут</option>
+
+
+            </select>
+            <input type="button" value="set interval" id="set_interval">
+            <input type="button" value="start reload" id="reload_page">
+            <input type="button" id="refresh_trouble_list" value="обновить">
+        </div>
+    </div>
+    <div class="bottom_button" id="troubles_page_control_panel">панель управления</div>
+</div>
+
+<div class="troubles_lists">
+    <div id="admin_waiting_close_trouble_list" class="ui-widget ui-helper-reset ui-accordion-trouble-wait" role="tablist" style="display: block; ">
+        <div class="trouble_list_title">Разрешенные проблемы, но не отправленные в CRM:</div>
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30304_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="0">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30304_title_item_admin_trouble_list">sw4-usolie, PSH-2109G+  Usolie, Kr. Partizan, 24</div>
+                            <div class="title_ex">Время аварии: 31/07/2011 21:36:02</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30304" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:<div class="redstar">*</div></div>
+                    <div id="30304_title" class="cont_rubric content_block" style="cursor: pointer; ">sw4-usolie, PSH-2109G+  Usolie, Kr. Partizan, 24</div>
+
+
+                    <div id="30304_dev_list" class="dev_list_up">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+                            <div class="dev_ent" id="30196_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30196_title_dev">sw4-usolie
+                                                , PSH-2109G+  Usolie, Kr. Partizan, 24
+                                            </div>
+                                            <div class="title_ex">down: 31/07/2011 21:36:02 up: 01/08/2011 08:38:54</div>
+                                        </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30304_region" class="content_block_inactive">Усолье ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:<div class="redstar">*</div></div>
+                    <div id="30304_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:<div class="redstar">*</div></div>
+                    <div id="30304_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30304_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:<div class="redstar">*</div></div>
+                    <div id="30304_date_in" class="content_block_inactive">31/07/2011 21:36:02</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:<div class="redstar">*</div></div>
+                    <div id="30304_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Дата и время устранения аварии:</div>
+                    <div id="30304_date_out" class="content_block_inactive">01/08/2011 08:38:54</div>
+
+                    <div class="text_bold title_rubric">Комментарий:<div class="redstar">*</div></div>
+                    <div id="30304_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30308_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30308_title_item_admin_trouble_list">sw811, DES-3200-10 @ Chelyabinskaya, 27V</div>
+                            <div class="title_ex">Время аварии: 31/07/2011 23:15:10</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30308" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:<div class="redstar">*</div></div>
+                    <div id="30308_title" class="cont_rubric content_block" style="cursor: pointer; ">sw811, DES-3200-10 @ Chelyabinskaya, 27V</div>
+
+
+                    <div id="30308_dev_list" class="dev_list_up">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+                            <div class="dev_ent" id="30200_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30200_title_dev">sw811
+                                                , DES-3200-10 @ Chelyabinskaya, 27V
+                                            </div>
+                                            <div class="title_ex">down: 31/07/2011 23:15:10 up: 01/08/2011 08:55:50</div>
+                                        </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30308_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:<div class="redstar">*</div></div>
+                    <div id="30308_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:<div class="redstar">*</div></div>
+                    <div id="30308_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30308_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:<div class="redstar">*</div></div>
+                    <div id="30308_date_in" class="content_block_inactive">31/07/2011 23:15:10</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:<div class="redstar">*</div></div>
+                    <div id="30308_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Дата и время устранения аварии:</div>
+                    <div id="30308_date_out" class="content_block_inactive">01/08/2011 08:55:50</div>
+
+                    <div class="text_bold title_rubric">Комментарий:<div class="redstar">*</div></div>
+                    <div id="30308_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30361_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30361_title_item_admin_trouble_list">sw349, Shelekhov, 2 kvartal, 18a</div>
+                            <div class="title_ex">Время аварии: 01/08/2011 10:04:03</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30361" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:<div class="redstar">*</div></div>
+                    <div id="30361_title" class="cont_rubric content_block" style="cursor: pointer; ">sw349, Shelekhov, 2 kvartal, 18a</div>
+
+
+                    <div id="30361_dev_list" class="dev_list_up">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+                            <div class="dev_ent" id="30250_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30250_title_dev">sw349
+                                                , Shelekhov, 2 kvartal, 18a
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 10:04:03 up: 01/08/2011 11:01:02</div>
+                                        </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30361_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:<div class="redstar">*</div></div>
+                    <div id="30361_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:<div class="redstar">*</div></div>
+                    <div id="30361_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30361_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:<div class="redstar">*</div></div>
+                    <div id="30361_date_in" class="content_block_inactive">01/08/2011 10:04:03</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:<div class="redstar">*</div></div>
+                    <div id="30361_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Дата и время устранения аварии:</div>
+                    <div id="30361_date_out" class="content_block_inactive">01/08/2011 11:01:02</div>
+
+                    <div class="text_bold title_rubric">Комментарий:<div class="redstar">*</div></div>
+                    <div id="30361_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30362_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30362_title_item_admin_trouble_list">sw439, Akademicheskaya, 28/2</div>
+                            <div class="title_ex">Время аварии: 01/08/2011 10:22:16</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30362" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:<div class="redstar">*</div></div>
+                    <div id="30362_title" class="cont_rubric content_block" style="cursor: pointer; ">sw439, Akademicheskaya, 28/2</div>
+
+
+                    <div id="30362_dev_list" class="dev_list_up">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+                            <div class="dev_ent" id="30251_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30251_title_dev">sw439
+                                                , Akademicheskaya, 28/2
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 10:22:16 up: 01/08/2011 10:45:30</div>
+                                        </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30362_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:<div class="redstar">*</div></div>
+                    <div id="30362_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:<div class="redstar">*</div></div>
+                    <div id="30362_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30362_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:<div class="redstar">*</div></div>
+                    <div id="30362_date_in" class="content_block_inactive">01/08/2011 10:22:16</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:<div class="redstar">*</div></div>
+                    <div id="30362_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Дата и время устранения аварии:</div>
+                    <div id="30362_date_out" class="content_block_inactive">01/08/2011 10:45:30</div>
+
+                    <div class="text_bold title_rubric">Комментарий:<div class="redstar">*</div></div>
+                    <div id="30362_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30363_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30363_title_item_admin_trouble_list">sw343, DES-3028, Академическая 28/4</div>
+                            <div class="title_ex">Время аварии: 01/08/2011 10:24:18</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30363" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:<div class="redstar">*</div></div>
+                    <div id="30363_title" class="cont_rubric content_block" style="cursor: pointer; ">sw343, DES-3028, Академическая 28/4</div>
+
+
+                    <div id="30363_dev_list" class="dev_list_up">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+                            <div class="dev_ent" id="30252_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30252_title_dev">sw343
+                                                , DES-3028, Академическая 28/4
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 10:24:18 up: 01/08/2011 10:45:54</div>
+                                        </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30363_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:<div class="redstar">*</div></div>
+                    <div id="30363_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:<div class="redstar">*</div></div>
+                    <div id="30363_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30363_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:<div class="redstar">*</div></div>
+                    <div id="30363_date_in" class="content_block_inactive">01/08/2011 10:24:18</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:<div class="redstar">*</div></div>
+                    <div id="30363_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Дата и время устранения аварии:</div>
+                    <div id="30363_date_out" class="content_block_inactive">01/08/2011 10:45:54</div>
+
+                    <div class="text_bold title_rubric">Комментарий:<div class="redstar">*</div></div>
+                    <div id="30363_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="admin_trouble_list" class="ui-accordion ui-widget ui-helper-reset ui-accordion-trouble" role="tablist" style="display: block; ">
+        <div class="trouble_list_title">Текущие проблемы:</div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="28762_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="0" style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: red; border-right-color: red; border-bottom-color: red; border-left-color: red; background-position: initial initial; background-repeat: initial initial; ">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="28762_title_item_admin_trouble_list">Мира, 16</div>
+                            <div class="title_ex">Время аварии: 13/07/2011 15:18:07</div>
+                            <div class="title_crm_status">Отправлено в CRM</div>
+                            <div class="title_timeout" style="color: red; text-align: right; ">Срок устранения аварии истёк</div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="28762" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="28762_title" class="cont_rubric content_block" style="cursor: pointer; ">Мира, 16</div>
+
+                    <div id="28762_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="28781_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="28781_title_dev">sw295 , DES-3028 Mira, 16 (Karat)</div>
+                                            <div class="title_ex">down: 13/07/2011 15:18:07</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="28762_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="28762_service" class="service_sel content_block" style="cursor: pointer; ">e-mail ; Internet ; IPVPN ; </div>
+                    <input type="hidden" value="4 ; 1 ; 2 ; ">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="28762_legend" class="cont_rubric content_block" style="cursor: pointer; ">Нет питания на узле</div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="28762_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="28762_date_in" class="content_block_inactive">13/07/2011 15:18:07</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="28762_timeout" class="timeout content_block" style="cursor: pointer; ">07/08/2011 10:00:00</div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="28762_description" class="description content_block" style="cursor: pointer; ">у РЭС нет информации. от вышестоящего sw230 линка до свитча нет. клиентов, подключенных от него узла найти не могу. Контакт по узлу недоступен. Карат переехал на Петрова, 30</div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="29429_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1" style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: red; border-right-color: red; border-bottom-color: red; border-left-color: red; background-position: initial initial; background-repeat: initial initial; ">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="29429_title_item_admin_trouble_list">Депутатская, 42/3</div>
+                            <div class="title_ex">Время аварии: 18/07/2011 19:47:41</div>
+                            <div class="title_crm_status">Отправлено в CRM</div>
+                            <div class="title_timeout" style="color: red; text-align: right; ">Срок устранения аварии истёк</div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="29429" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="29429_title" class="cont_rubric content_block" style="cursor: pointer; ">Депутатская, 42/3</div>
+
+                    <div id="29429_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="29388_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="29388_title_dev">sw326 , DES-3200-18; Deputatskaya, 42/3</div>
+                                            <div class="title_ex">down: 18/07/2011 19:47:41</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="29429_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="29429_service" class="service_sel content_block" style="cursor: pointer; ">e-mail ; Internet ; IPVPN ; VoIP ; </div>
+                    <input type="hidden" value="4 ; 1 ; 2 ; 3 ; ">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="29429_legend" class="cont_rubric content_block" style="cursor: pointer; ">Нет питания на узле</div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="29429_status" class="status_sel content_block" style="cursor: pointer; ">Причины выясняются</div>
+                    <input type="hidden" value="2">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="29429_date_in" class="content_block_inactive">18/07/2011 19:47:41</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="29429_timeout" class="timeout content_block" style="cursor: pointer; ">07/08/2011 12:00:00</div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="29429_description" class="description content_block" style="cursor: pointer; ">у РЭС ничего нет. подключен 1 клиент (ФЛ), но фактически он находится по другому адресу, больше подключенных клиентов нет, никто не звонил</div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="29846_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1" style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: red; border-right-color: red; border-bottom-color: red; border-left-color: red; background-position: initial initial; background-repeat: initial initial; ">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="29846_title_item_admin_trouble_list">Байкальск, мкр-н Южный, кв. 3, 1</div>
+                            <div class="title_ex">Время аварии: 22/07/2011 13:30:41</div>
+                            <div class="title_crm_status">Отправлено в CRM</div>
+                            <div class="title_timeout" style="color: red; text-align: right; ">Срок устранения аварии истёк</div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="29846" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="29846_title" class="cont_rubric content_block" style="cursor: pointer; ">Байкальск, мкр-н Южный, кв. 3, 1</div>
+
+                    <div id="29846_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="29779_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="29779_title_dev">sw6-baik , Uzhniy kvl 3, 1</div>
+                                            <div class="title_ex">down: 22/07/2011 13:30:41</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="29846_region" class="content_block_inactive">Байкальск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="29846_service" class="service_sel content_block" style="cursor: pointer; ">e-mail ; Internet ; IPVPN ; </div>
+                    <input type="hidden" value="4 ; 1 ; 2 ; ">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="29846_legend" class="cont_rubric content_block" style="cursor: pointer; ">Нет питания на узле</div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="29846_status" class="status_sel content_block" style="cursor: pointer; ">Проблема устраянется</div>
+                    <input type="hidden" value="3">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="29846_date_in" class="content_block_inactive">22/07/2011 13:30:41</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="29846_timeout" class="timeout content_block" style="cursor: pointer; ">03/08/2011 14:00:00</div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="29846_description" class="description content_block" style="cursor: pointer; ">Ноябрь ЛТД подключен. Договор закрыт. Нужно дозвониться до них (39542)-32204 и попросить включить по питанию узел. Скорее всего обесточили. Барышников сказал, что на узле сгорел блок питания, на складе его пока нету. В течение 2 дней, сказал, устранится.</div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30216_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1" style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: red; border-right-color: red; border-bottom-color: red; border-left-color: red; background-position: initial initial; background-repeat: initial initial; ">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30216_title_item_admin_trouble_list">Ширямова, 6</div>
+                            <div class="title_ex">Время аварии: 29/07/2011 15:55:46</div>
+                            <div class="title_crm_status">Отправлено в CRM</div>
+                            <div class="title_timeout" style="color: red; text-align: right; ">Срок устранения аварии истёк</div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30216" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30216_title" class="cont_rubric content_block" style="cursor: pointer; ">Ширямова, 6</div>
+
+                    <div id="30216_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="30120_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30120_title_dev">sw590 , Shiryamova, 6 WiFi</div>
+                                            <div class="title_ex">down: 29/07/2011 15:55:46</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30216_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30216_service" class="service_sel content_block" style="cursor: pointer; ">Internet ; IPVPN ; </div>
+                    <input type="hidden" value="1 ; 2 ; ">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30216_legend" class="cont_rubric content_block" style="cursor: pointer; ">Питание есть, клиенты не звонили</div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30216_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30216_date_in" class="content_block_inactive">29/07/2011 15:55:46</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30216_timeout" class="timeout content_block" style="cursor: pointer; ">06/08/2011 10:00:00</div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30216_description" class="description content_block" style="cursor: pointer; ">Коммутатор лежит по менеджменту</div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30358_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1" style="background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: red; border-right-color: red; border-bottom-color: red; border-left-color: red; background-position: initial initial; background-repeat: initial initial; ">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30358_title_item_admin_trouble_list">Слюдянка</div>
+                            <div class="title_ex">Время аварии: 30/07/2011 22:21:51</div>
+                            <div class="title_crm_status">Отправлено в CRM</div>
+                            <div class="title_timeout" style="color: red; text-align: right; ">Срок устранения аварии истёк</div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30358" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30358_title" class="cont_rubric content_block" style="cursor: pointer; ">Слюдянка</div>
+
+                    <div id="30358_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+                            <div class="dev_ent" id="30234_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30234_title_dev">sw92-slud
+                                                , Sludyanka, Lenina, 27
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:01 up: 01/08/2011 10:02:05</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30234_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30235_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30235_title_dev">sw90-slud
+                                                , Sludyanka, Sovetskaya, 37
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:05 up: 01/08/2011 10:02:10</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30235_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30236_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30236_title_dev">sw47-slud
+                                                , Sludyanka, Podgornaya, 19a (Baza Pereval)
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:09 up: 01/08/2011 10:01:30</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30236_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30237_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30237_title_dev">r-slud
+                                                , Sludyanka, Lenina, 93 (DSI Slud office)
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:08 up: 01/08/2011 09:26:28</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30237_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30238_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30238_title_dev">sw93-slud
+                                                , Angasolka, Lenina, 27a
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:08 up: 01/08/2011 10:01:28</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30238_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30239_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30239_title_dev">sw1-slud
+                                                , Sludyanka, Lenina, 1v
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:08 up: 01/08/2011 10:01:25</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30239_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30240_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30240_title_dev">sw71-slud
+                                                , Sludyanka, Paris Komunny, 84
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:08 up: 01/08/2011 10:01:25</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30240_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30241_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30241_title_dev">sw32-slud
+                                                , Sludyanka, Lenina, 19a (Asik)
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:07 up: 01/08/2011 10:01:19</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30241_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30242_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30242_title_dev">c831-slud-office
+                                                , Sludyanka, Lenina, 93 (DSI Slud office)
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:10 up: 01/08/2011 09:26:28</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30242_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30244_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30244_title_dev">sw58-slud
+                                                , DES-3028, Sludyanka, Babushkina, 17 (TEC) 83954451877 -котельная, можно узнавать по проблемам со светом в Слюдянке
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:14 up: 01/08/2011 09:26:33</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30244_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30245_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30245_title_dev">sw43-slud
+                                                , Sludyanka, Paris Komunny, 80
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:12 up: 01/08/2011 10:01:30</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30245_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30246_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30246_title_dev">sw42-slud
+                                                , Sludyanka, Paris Komunny, 82
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:12 up: 01/08/2011 10:01:30</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30246_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30247_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30247_title_dev">sw36-slud
+                                                , Sludyanka, Solnechnaya, 22/2
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:12 up: 01/08/2011 10:01:30</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30247_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30248_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30248_title_dev">sw35-slud
+                                                , Sludyanka, Paris Komunny, 86
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:10 up: 01/08/2011 10:01:25</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30248_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+                            <div class="dev_ent" id="30249_dev">
+                                <h1 class="up">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30249_title_dev">sw107-slud
+                                                , Sludyanka, Lenina, 23a
+                                            </div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:16 up: 01/08/2011 10:01:38</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30249_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+
+                                </h1>
+                            </div>
+
+
+
+
+
+                            <div class="dev_ent" id="30243_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30243_title_dev">sw29-slud , Sludyanka, Babushkina, 13</div>
+                                            <div class="title_ex">down: 01/08/2011 04:58:15</div>
+                                        </div>
+
+                                            <div class="func">
+                                                <div><input type="button" id="30243_unmerge" value="unmerge"></div>
+                                            </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30358_region" class="content_block_inactive">Иркутск ; Слюдянка ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30358_service" class="service_sel content_block" style="cursor: pointer; ">Internet ; IPVPN ; VoIP ; </div>
+                    <input type="hidden" value="1 ; 2 ; 3 ; ">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30358_legend" class="cont_rubric content_block" style="cursor: pointer; ">Обрыв оптического кабеля</div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30358_status" class="status_sel content_block" style="cursor: pointer; ">Проблема устраянется</div>
+                    <input type="hidden" value="3">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30358_date_in" class="content_block_inactive">30/07/2011 22:21:51</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30358_timeout" class="timeout content_block" style="cursor: pointer; ">05/08/2011 11:00:00</div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30358_description" class="description content_block" style="cursor: pointer; ">Похоже, что обрыв между Бабушкина 17 и Бабушкина 11. Е. Барышников уже там,  ищет обрыв. Вырезали муфту на линии, сварщика пока нету, будут ждать пока привезут муфту с иркутска и только тогда будут делать. Барышников сказал до конца недели.</div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30375_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30375_title_item_admin_trouble_list">tt100, trtwqe</div>
+                            <div class="title_ex">Время аварии: 04/08/2011 22:43:11</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30375" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30375_title" class="cont_rubric content_block" style="cursor: pointer; ">tt100, trtwqe</div>
+
+                    <div id="30375_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="30263_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30263_title_dev">tt100 , trtwqe</div>
+                                            <div class="title_ex">down: 04/08/2011 22:43:11</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30375_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30375_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30375_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30375_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30375_date_in" class="content_block_inactive">04/08/2011 22:43:11</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30375_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30375_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30374_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30374_title_item_admin_trouble_list">tt90, trtwqe</div>
+                            <div class="title_ex">Время аварии: 04/08/2011 22:43:11</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30374" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30374_title" class="cont_rubric content_block" style="cursor: pointer; ">tt90, trtwqe</div>
+
+                    <div id="30374_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="30262_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30262_title_dev">tt90 , trtwqe</div>
+                                            <div class="title_ex">down: 04/08/2011 22:43:11</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30374_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30374_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30374_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30374_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30374_date_in" class="content_block_inactive">04/08/2011 22:43:11</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30374_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30374_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30376_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30376_title_item_admin_trouble_list">tt200, trtwqe</div>
+                            <div class="title_ex">Время аварии: 04/08/2011 22:43:11</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30376" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30376_title" class="cont_rubric content_block" style="cursor: pointer; ">tt200, trtwqe</div>
+
+                    <div id="30376_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="30264_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30264_title_dev">tt200 , trtwqe</div>
+                                            <div class="title_ex">down: 04/08/2011 22:43:11</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30376_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30376_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30376_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30376_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30376_date_in" class="content_block_inactive">04/08/2011 22:43:11</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30376_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30376_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30377_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30377_title_item_admin_trouble_list">tt300, trtwqe</div>
+                            <div class="title_ex">Время аварии: 04/08/2011 22:43:11</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30377" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30377_title" class="cont_rubric content_block" style="cursor: pointer; ">tt300, trtwqe</div>
+
+                    <div id="30377_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="30265_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30265_title_dev">tt300 , trtwqe</div>
+                                            <div class="title_ex">down: 04/08/2011 22:43:11</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30377_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30377_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30377_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30377_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30377_date_in" class="content_block_inactive">04/08/2011 22:43:11</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30377_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30377_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+        <div class="trouble_item">
+            <div class="trouble_item_check"><input type="checkbox"></div>
+            <div id="30378_block_item_admin_trouble_lists" class="trouble_item_accord">
+                <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" role="tab" aria-expanded="false" tabindex="-1">
+                    <div class="panel_kit">
+                        <div class="title_p">
+                            <div id="30378_title_item_admin_trouble_list">tt500, trtwqe</div>
+                            <div class="title_ex">Время аварии: 04/08/2011 22:43:11</div>
+
+                            <div class="title_timeout"></div>
+                        </div>
+                    </div>
+                </h3>
+                <div class="content ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="30378" role="tabpanel" style="display: none; ">
+
+                    <div class="text_bold title_rubric">Заголовок:</div>
+                    <div id="30378_title" class="cont_rubric content_block" style="cursor: pointer; ">tt500, trtwqe</div>
+
+                    <div id="30378_dev_list" class="dev_list_down">
+                        <div>
+                            <div class="text_bold title_rubric">Список узлов:</div>
+
+
+
+
+
+                            <div class="dev_ent" id="30266_dev">
+                                <h1 class="down">
+                                    <div class="panel_kit">
+                                        <div class="title_p">
+                                            <div id="30266_title_dev">tt500 , trtwqe</div>
+                                            <div class="title_ex">down: 04/08/2011 22:43:11</div>
+                                        </div>
+
+                                    </div>
+                                </h1>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="text_bold title_rubric">Регион:</div>
+                    <div id="30378_region" class="content_block_inactive">Иркутск ; </div>
+
+                    <div class="text_bold title_rubric">Затронутые сервисы:</div>
+                    <div id="30378_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                    <input type="hidden" value="">
+
+                    <div class="text_bold title_rubric">Легенда:</div>
+                    <div id="30378_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Статус:</div>
+                    <div id="30378_status" class="status_sel content_block" style="cursor: pointer; ">Новая авария</div>
+                    <input type="hidden" value="1">
+
+                    <div class="text_bold title_rubric">Дата и время аварии:</div>
+                    <div id="30378_date_in" class="content_block_inactive">04/08/2011 22:43:11</div>
+
+                    <div class="text_bold title_rubric">Сроки устранения:</div>
+                    <div id="30378_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                    <div class="text_bold title_rubric">Комментарий:</div>
+                    <div id="30378_description" class="description content_block" style="cursor: pointer; "></div>
+
+                <div class="button_ok_cancel"><input type="button" value="сохранить" style="display: none; "><input type="button" value="удалить" style="display: inline-block; "><input type="button" value="отправить в CRM" style="display: inline-block; "></div></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<input type="hidden" id="pageReload" value="false">
+<input type="hidden" id="timeoutReloadPage" value="1800000">
+<input type="hidden" id="service_sel" value="
+
+            e-mail|4;
+
+            Internet|1;
+
+            IPVPN|2;
+
+            VoIP|3;
+
+            Hosting|5;
+
+">
+<input type="hidden" id="status_sel" value="
+
+            Новая авария|1;
+
+            Причины выясняются|2;
+
+            Проблема устраянется|3;
+
+            Проблема устранена|4;
+
+">
+
+
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="openControlPanel" value="true"/>
+</body>
+</html>

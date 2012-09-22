@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Административная панель</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
+    <META HTTP-EQUIV="REFRESH" CONTENT="600">
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.4.2.min.js"></script>
+    <!--<script type="text/javascript" src="../js/jQuery/js/jquery-1.5.1.js"></script>-->
+    <script type="text/javascript" src="../js/jQuery/js/jquery.form.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.clickToForm.js"></script>
+
+    <!-- UI -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.timepicker.js"></script>
+
+    <!--CSS style-->
+    <link rel="stylesheet" type="text/css" href="../css/jquery/jquery-ui-1.8.1.custom.css">
+
+    <link rel="stylesheet" type="text/css" href="../css/tabs-vertical.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style_adminko.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/jquery.clickToForm.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion_main_menu.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/accordion_dev.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/settings.css">
+    <link rel="stylesheet" type="text/css" href="../css/top_menu.css">
+
+    <!--JS-->
+    <script type="text/javascript" src="../js/adminko.js"></script>
+    <script type="text/javascript" src="../js/trouble.js"></script>
+    <!--<script type="text/javascript" src="../js/groups.js"></script>-->
+    <!--<script type="text/javascript" src="../js/failures.js"></script>-->
+    <!--<script type="text/javascript" src="../js/trouble_close.js"></script>-->
+</head>
+<body>
+
+<div style="display: none;">
+    <select id="host_status_replace">
+        <option value="1">магистральный</option>
+        <option value="2">промежуточный</option>
+        <option value="3">важный кончный</option>
+        <option value="4">конечный</option>
+    </select>
+</div>
+
+<div id="main_menu">
+    <div id="v_tabs">
+        <ul>
+            <li><a href="#trouble" class="menu_item">troubles</a></li>
+        </ul>
+        <div id="trouble">
+            <div class="menu_top">
+                <div class="control_panel" style="display: none; ">
+                    <div class="button_panel_failures">
+                        <div class="merge_panel">
+                            <input type="checkbox" id="checkall">
+                            <input type="button" id="merge" value="merge">
+                        </div>
+                    </div>
+                    <div class="button_print">
+                        Интервал обновления:
+                        <select id="interval_val">
+                            <option value="1800000">30 минут</option>
+                            <option value="1500000">25 минут</option>
+                            <option value="1200000">20 минут</option>
+                            <option value="900000">15 минут</option>
+                            <option value="600000">10 минут</option>
+                        </select>
+                        <input type="button" value="set interval" id="set_interval">
+                        <input type="button" value="start reload" id="reload_page">
+                        <input type="button" id="refresh_trouble_list" value="обновить">
+                    </div>
+                </div>
+                <div class="bottom_button" id="troubles_page_control_panel">панель управления</div>
+            </div>
+            <div class="troubles_lists">
+                <div id="admin_trouble_list">
+                    <div class="trouble_list_title">Текущие проблемы:</div>
+                    <div class="trouble_item">
+                        <div class="trouble_item_check"><input type="checkbox"/></div>
+                        <div id="2321432_block_item_admin_trouble_lists" class="trouble_item_accord">
+                            <h3>
+                                <div class="panel_kit">
+                                    <div class="title_p">
+                                        <div id="2321432_title_item_admin_trouble_list">sw4-usolie, PSH-2109G+ Usolie, Kr. Partizan, 24</div>
+                                        <div class="title_ex">Время аварии: 31/07/2011 21:36:02</div>
+                                        <div class="title_timeout"></div>
+                                    </div>
+                                </div>
+                            </h3>
+                            <div id="2321432" class='content'>
+                                <div class="text_bold title_rubric">Заголовок:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="2321432_title" class="cont_rubric content_block" style="cursor: pointer; ">sw4-usolie, PSH-2109G+
+                                    Usolie, Kr. Partizan, 24
+                                </div>
+
+                                <div id="2321432_dev_list" class="dev_list_up">
+                                    <div>
+                                        <div class="text_bold title_rubric">Список узлов:</div>
+                                        <div class="dev_ent" id="30196_dev">
+                                            <h1 class="up">
+                                                <div class="panel_kit">
+                                                    <div class="title_p">
+                                                        <div id="30196_title_dev">sw4-usolie
+                                                            , PSH-2109G+ Usolie, Kr. Partizan, 24
+                                                        </div>
+                                                        <div class="title_ex">down: 31/07/2011 21:36:02 up: 01/08/2011 08:38:54</div>
+                                                    </div>
+
+                                                </div>
+
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text_bold title_rubric">Затронутые сервисы:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="2321432_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                                <input type="hidden" value="">
+
+                                <div class="text_bold title_rubric">Легенда:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="2321432_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                                <div class="text_bold title_rubric">Сроки устранения:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="2321432_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                                <div class="text_bold title_rubric">Комментарии:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <!--<div id="2321432_description" class="description content_block" style="cursor: pointer; "></div>-->
+                                <div class="trouble_comments">
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Хомяков Андрей Сергеевич</div>
+                                            <div class="comment_date">23.08.2011 09:10:34</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Миронов Сергей Владимирович</div>
+                                            <div class="comment_date">24.08.2011 19:45:00</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_send">
+                                        <textarea rows="4" cols="5"></textarea>
+                                        <input type="button" class="comment_send_button" value="отправить"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="trouble_item">
+                        <div class="trouble_item_check"><input type="checkbox"/></div>
+                        <div id="3443252_block_item_admin_trouble_lists" class="trouble_item_accord">
+                            <h3>
+                                <div class="panel_kit">
+                                    <div class="title_p">
+                                        <div id="3443252_title_item_admin_trouble_list">sw4-usolie, PSH-2109G+ Usolie, Kr. Partizan, 24</div>
+                                        <div class="title_ex">Время аварии: 31/07/2011 21:36:02</div>
+                                        <div class="title_timeout"></div>
+                                    </div>
+                                </div>
+                            </h3>
+                            <div id="3443252" class='content'>
+                                <div class="text_bold title_rubric">Заголовок:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="3443252_title" class="cont_rubric content_block" style="cursor: pointer; ">sw4-usolie, PSH-2109G+
+                                    Usolie, Kr. Partizan, 24
+                                </div>
+
+                                <div id="3443252_dev_list" class="dev_list_up">
+                                    <div>
+                                        <div class="text_bold title_rubric">Список узлов:</div>
+                                        <div class="dev_ent" id="30126_dev">
+                                            <h1 class="up">
+                                                <div class="panel_kit">
+                                                    <div class="title_p">
+                                                        <div id="30126_title_dev">sw4-usolie
+                                                            , PSH-2109G+ Usolie, Kr. Partizan, 24
+                                                        </div>
+                                                        <div class="title_ex">down: 31/07/2011 21:36:02 up: 01/08/2011 08:38:54</div>
+                                                    </div>
+
+                                                </div>
+
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text_bold title_rubric">Затронутые сервисы:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="3443252_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                                <input type="hidden" value="">
+
+                                <div class="text_bold title_rubric">Легенда:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="3443252_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                                <div class="text_bold title_rubric">Сроки устранения:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="3443252_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                                <div class="text_bold title_rubric">Комментарии:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <!--<div id="3443252_description" class="description content_block" style="cursor: pointer; "></div>-->
+                                <div class="trouble_comments">
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_send">
+                                        <textarea rows="4" cols="5">sdfdsf</textarea>
+                                        <input type="button" class="comment_send_button" value="отправить"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="trouble_item">
+                        <div class="trouble_item_check"><input type="checkbox"/></div>
+                        <div id="343242_block_item_admin_trouble_lists" class="trouble_item_accord">
+                            <h3>
+                                <div class="panel_kit">
+                                    <div class="title_p">
+                                        <div id="343242_title_item_admin_trouble_list">sw4-usolie, PSH-2109G+ Usolie, Kr. Partizan, 24</div>
+                                        <div class="title_ex">Время аварии: 31/07/2011 21:36:02</div>
+                                        <div class="title_timeout"></div>
+                                    </div>
+                                </div>
+                            </h3>
+                            <div id="343242" class='content'>
+                                <div class="text_bold title_rubric">Заголовок:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="343242_title" class="cont_rubric content_block" style="cursor: pointer; ">sw4-usolie, PSH-2109G+
+                                    Usolie, Kr. Partizan, 24
+                                </div>
+
+                                <div id="343242_dev_list" class="dev_list_up">
+                                    <div>
+                                        <div class="text_bold title_rubric">Список узлов:</div>
+                                        <div class="dev_ent" id="301265_dev">
+                                            <h1 class="up">
+                                                <div class="panel_kit">
+                                                    <div class="title_p">
+                                                        <div id="301265_title_dev">sw4-usolie
+                                                            , PSH-2109G+ Usolie, Kr. Partizan, 24
+                                                        </div>
+                                                        <div class="title_ex">down: 31/07/2011 21:36:02 up: 01/08/2011 08:38:54</div>
+                                                    </div>
+
+                                                </div>
+
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text_bold title_rubric">Затронутые сервисы:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="343242_service" class="service_sel content_block" style="cursor: pointer; "></div>
+                                <input type="hidden" value="">
+
+                                <div class="text_bold title_rubric">Легенда:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="343242_legend" class="cont_rubric content_block" style="cursor: pointer; "></div>
+
+                                <div class="text_bold title_rubric">Сроки устранения:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <div id="343242_timeout" class="timeout content_block" style="cursor: pointer; "></div>
+
+                                <div class="text_bold title_rubric">Комментарии:
+                                    <div class="redstar">*</div>
+                                </div>
+                                <!--<div id="343242_description" class="description content_block" style="cursor: pointer; "></div>-->
+                                <div class="trouble_comments">
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_item">
+                                        <div class="comment_title">
+                                            <div class="comment_author">Медведев Сергей Андреевич</div>
+                                            <div class="comment_date">22.08.2011 12:34:23</div>
+                                        </div>
+                                        <div class="comment_text">Я очень счастлив где-то в глубине души, что у нас будут дрова) Просто ещё не осознал этого=) А Ромичу просто пох*й на всю движуху, у него есть дрова=)</div>
+                                    </div>
+                                    <div class="comment_send">
+                                        <textarea rows="4" cols="5">sdfdsf</textarea>
+                                        <input type="button" class="comment_send_button" value="отправить"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="pageReload" value="false">
+                <input type="hidden" id="timeoutReloadPage" value="1800000">
+                <input type="hidden" id="service_sel" value="e-mail|4;Internet|1;IPVPN|2;VoIP|3;Hosting|5;">
+                <input type="hidden" id="status_sel" value="Новая авария|1;Причины выясняются|2;Проблема устраянется|3;Проблема устранена|4;">
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="openControlPanel" value="true"/>
+</body>
+</html>
