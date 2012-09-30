@@ -1,0 +1,1 @@
+C:\infoexec\start.bat "http://localhost:8180/info/snmpc" down $N $x $X $h $D
