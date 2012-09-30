@@ -156,6 +156,7 @@ $(document).ready(function() {
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                             $.fn.update_trouble_counters();
                         }
+                        alert($(data).find("message").text());
                     }
                 });
 
@@ -621,6 +622,7 @@ $(document).ready(function() {
             $interval = "";
             $.fn.set_interval_status(start);
         }
+        $.fn.update_trouble_counters();
     };
 
     if ($.fn.get_interval_status() == 1) {

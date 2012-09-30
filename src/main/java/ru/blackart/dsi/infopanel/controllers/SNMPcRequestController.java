@@ -1,7 +1,9 @@
 package ru.blackart.dsi.infopanel.controllers;
 
+import net.sf.cglib.core.Block;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hostgroup;
+import ru.blackart.dsi.infopanel.tasksSystem.TaskQueueController;
 import ru.blackart.dsi.infopanel.temp.thread.ManagerQueueRequests;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
 import ru.blackart.dsi.infopanel.utils.*;
@@ -18,17 +20,25 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletConfig;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Queue;
+import java.util.concurrent.*;
 
 public class SNMPcRequestController extends HttpServlet {
     private Properties settingsMonitoringPanel;
     private GenerateMonitoringPanel generateMonitoringPanel;
     private Storage storage;
+    private ThreadPoolExecutor threadPoolExecutor = TaskQueueController.getInstance().getThreadPoolExecutor();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
+        //инициализация сервлета
         super.init(config);
 
+        //пути к файлу с коммандами, настройкам логирования, и остальным конфигурационным файлам
         String path = config.getInitParameter("pathToDataFile");
         InputStream is = config.getServletContext().getResourceAsStream(path);
         Properties path_to_data_file = new Properties();
@@ -37,9 +47,11 @@ public class SNMPcRequestController extends HttpServlet {
         } catch (IOException e) {
 
         }
+        //сохраняем в атрибуты сервлета
         config.getServletContext().setAttribute("pathToDataFile", path_to_data_file);
 
         //считываем настройки из конфигурационного файла
+        //системный пароль, параметр обучения программы и интервал падения узла
         String path_to_settings = config.getInitParameter("settings");
         InputStream is_path_to_settings = config.getServletContext().getResourceAsStream(path_to_settings);
         Properties settings = new Properties();
@@ -49,6 +61,7 @@ public class SNMPcRequestController extends HttpServlet {
 
         }
 
+        //пути к панели мониторинга
         String settingsMonitoringPanel = path_to_data_file.getProperty("generateMonitoringPanel");
         InputStream s = config.getServletContext().getResourceAsStream(settingsMonitoringPanel);
         this.settingsMonitoringPanel = new Properties();
@@ -91,12 +104,14 @@ public class SNMPcRequestController extends HttpServlet {
 
         if (managerDeviceFilter.filterInputDevice(inputDevice)) {
             if (requestDataObject.getPoolling().equals("down")) {
-                Thread exDownThread = new Thread(new DownTrapsHandler(requestDataObject, this.storage));
-                exDownThread.start();
+                Thread exDownThread = new DownTrapsHandler(requestDataObject, this.storage, this.threadPoolExecutor);
+                this.threadPoolExecutor.execute(exDownThread);
             } else if (requestDataObject.getPoolling().equals("up")) {
-                Thread exUpThread = new Thread(new UpTrapsHandler(requestDataObject, this.storage));
-                exUpThread.start();
+                Thread exUpThread = new UpTrapsHandler(requestDataObject, this.storage, this.threadPoolExecutor);
+                this.threadPoolExecutor.execute(exUpThread);
             }
         }
+
+        System.out.println("All task - " + threadPoolExecutor.getTaskCount() + " completed task - " + threadPoolExecutor.getCompletedTaskCount());
     }
 }

@@ -25,6 +25,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
 import org.hibernate.Criteria;
@@ -34,7 +38,7 @@ import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 public class HTTPServletController extends HttpServlet {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private FactoryCommandCommand factory;
-    
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -56,8 +60,8 @@ public class HTTPServletController extends HttpServlet {
         //пути к конфигурационным файлам
         Properties paths = (Properties) config.getServletContext().getAttribute("pathToDataFile");
         // подгружаем настройки логера
-//        File config_log4j = new File(config.getInitParameter("pathToCatalina") + paths.getProperty("pathToApplication") + config.getInitParameter("root") + paths.getProperty("pathToLog4jConfig"));
-        File config_log4j = new File("\\log4j.properties");
+        File config_log4j = new File(config.getInitParameter("pathToCatalina") + paths.getProperty("pathToApplication") + config.getInitParameter("root") + paths.getProperty("pathToLog4jConfig"));
+//        File config_log4j = new File("\\classes\\log4j.properties");
         PropertyConfigurator.configure(config_log4j.getPath());
         //инициализируем Фабрику Комманд
         this.factory = FactoryCommandCommand.getInstance(this.getServletConfig());

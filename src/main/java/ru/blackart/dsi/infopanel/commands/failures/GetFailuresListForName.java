@@ -57,6 +57,7 @@ public class GetFailuresListForName extends AbstractCommand {
                     right_date = searchingForDate.getRight_date();
                     left_date = searchingForDate.getLeft_date();
                 }
+                xml.addKid(new BasicXmlData("title", "Список аварий за период с " + format.format(left_date) + " по " + format.format(right_date) + ".<br>Список отфильтрован по id узла - " + device_name));
             }
             for (Devcapsule d : devc_find) {
                 Date date_down = new Date(Long.valueOf(d.getTimedown() != null ? d.getTimedown() : "0"));
@@ -101,8 +102,6 @@ public class GetFailuresListForName extends AbstractCommand {
                 xml_level_1.addKid(new BasicXmlData("trouble_id", String.valueOf(trouble.getId())));
                 xml.addKid(xml_level_1);
             }
-
-            xml.addKid(new BasicXmlData("title", "Список аварий за период с " + format.format(left_date) + " по " + format.format(right_date) + ".<br>Список отфильтрован по id узла - " + device_name));
 
             if (count_devc > 0) {
                 long full_minute_all = Long.valueOf(time_down_summ) / (60 * 1000);

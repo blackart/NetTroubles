@@ -21,11 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
-public class UpTrapsHandler implements Runnable {
+public class UpTrapsHandler extends Thread {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private RequestDataImpl requestData;
     private Storage storage;
+    private ThreadPoolExecutor threadPoolExecutor;
 
     private DeviceManager deviceManager = DeviceManager.getInstance();
     private DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
@@ -37,9 +39,10 @@ public class UpTrapsHandler implements Runnable {
 
     Date upDate;
 
-    public UpTrapsHandler(RequestDataImpl requestData, Storage storage) {                           //Конструктор потока
+    public UpTrapsHandler(RequestDataImpl requestData, Storage storage, ThreadPoolExecutor threadPoolExecutor) { //Конструктор потока
         this.requestData = requestData;                                                 //передаём потоку данные запроса
         this.storage = storage;
+        this.threadPoolExecutor = threadPoolExecutor;
     }
 
     private Device deviceLevelOperations() {
@@ -73,7 +76,11 @@ public class UpTrapsHandler implements Runnable {
             if ((upDate.getTime() - downDate.getTime()) / (60 * 1000) >= this.storage.getTrueDownInterval()) {
                 devcapsule.setTimeup(String.valueOf(upDate.getTime()));
                 devcapsule.setComplete(true);
-                this.devcapsuleService.update(devcapsule);
+
+                synchronized (this.devcapsuleService) {
+                    this.devcapsuleService.update(devcapsule);
+                }
+
                 Trouble trouble = this.dataModelConstructor.getTroubleForDevcapsule(devcapsule);
 
                 boolean move = true;
@@ -87,12 +94,19 @@ public class UpTrapsHandler implements Runnable {
                     if ((trouble.getTimeout() == null) || (trouble.getTimeout().trim().equals(""))) {
                         trouble.setTimeout(String.valueOf(upDate.getTime()));
                     }
-                    this.troubleService.update(trouble);
+
+                    synchronized (this.troubleService) {
+                        this.troubleService.update(trouble);
+                    }
+
                     TroubleList targetTrList = this.dataModelConstructor.getTargetTroubleListForTrouble(trouble);
                     TroubleList sourceTrList = this.dataModelConstructor.getTroubleListForTrouble(trouble);
                     this.dataModelConstructor.moveTroubleList(trouble, sourceTrList, targetTrList);
-                    this.troubleListService.update(targetTrList);
-                    this.troubleListService.update(sourceTrList);
+
+                    synchronized (this.troubleListService) {
+                        this.troubleListService.update(targetTrList);
+                        this.troubleListService.update(sourceTrList);
+                    }
 
                     if (trouble.getCrm()) {
                         CrmTrouble crmTrouble = new CrmTrouble(trouble, "2");
@@ -113,7 +127,9 @@ public class UpTrapsHandler implements Runnable {
                 trouble.getDevcapsules().remove(index);
 
                 if (trouble.getDevcapsules().size() > 0) {
-                    troubleService.update(trouble);
+                    synchronized (troubleService) {
+                        troubleService.update(trouble);
+                    }
                 } else {
                     TroubleList troubleList = this.dataModelConstructor.getTroubleListForTrouble(trouble);
                     index = -1;
@@ -127,9 +143,16 @@ public class UpTrapsHandler implements Runnable {
                         crmTrouble.send();
                     }
                     troubleList.getTroubles().remove(index);
-                    troubleListService.update(troubleList);
-                    troubleService.delete(trouble);
-                    devcapsuleService.delete(devcapsule);
+
+                    synchronized (troubleListService) {
+                        troubleListService.update(troubleList);
+                    }
+                    synchronized (troubleService) {
+                        troubleService.delete(trouble);
+                    }
+                    synchronized (devcapsuleService) {
+                        devcapsuleService.delete(devcapsule);
+                    }
                 }
             }
         }
@@ -153,26 +176,26 @@ public class UpTrapsHandler implements Runnable {
     }
 
     public void run() {
-        Device device = this.deviceLevelOperations();
-        this.upDate = this.parse(this.requestData.getDate(), this.requestData.getTime());
-        List<Devcapsule> devcapsules = dataModelConstructor.sortDevcapsuleByTime(dataModelConstructor.getDevcWithOpenUpDateForDevice(device));
+        synchronized (dataModelConstructor) {
+            Device device = this.deviceLevelOperations();
+            this.upDate = this.parse(this.requestData.getDate(), this.requestData.getTime());
+            List<Devcapsule> devcapsules = dataModelConstructor.sortDevcapsuleByTime(dataModelConstructor.getDevcWithOpenUpDateForDevice(device));
 
-        if (devcapsules.size() > 0) {
-            for (Devcapsule devcapsule : devcapsules) {
-                this.devcapsuleLevelOperations(devcapsule);
-            }
-        } else if (devcapsules.size() == 0) {
-            if (this.storage.getUpDevcList().containsKey(device.getName())) {
-                RequestDataImpl requestData = this.storage.getUpDevcList().get(device.getName());
-                Date upDateStore = this.parse(requestData.getDate(), requestData.getTime());
-                if (upDateStore.before(upDate)) {
+            if (devcapsules.size() > 0) {
+                for (Devcapsule devcapsule : devcapsules) {
+                    this.devcapsuleLevelOperations(devcapsule);
+                }
+            } else if (devcapsules.size() == 0) {
+                if (this.storage.getUpDevcList().containsKey(device.getName())) {
+                    RequestDataImpl requestData = this.storage.getUpDevcList().get(device.getName());
+                    Date upDateStore = this.parse(requestData.getDate(), requestData.getTime());
+                    if (upDateStore.before(upDate)) {
+                        this.storage.getUpDevcList().put(device.getName(), this.requestData);
+                    }
+                } else {
                     this.storage.getUpDevcList().put(device.getName(), this.requestData);
                 }
-            } else {
-                this.storage.getUpDevcList().put(device.getName(), this.requestData);
             }
         }
-
-
     }
 }

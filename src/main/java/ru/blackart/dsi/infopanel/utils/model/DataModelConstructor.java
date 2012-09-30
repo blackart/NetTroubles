@@ -242,7 +242,7 @@ public class DataModelConstructor {
         return this.getTroubleForDevcapsuleInCustomTroubleList(devcapsule, this.getTroubleListForName(troubleList));
     }
 
-    public Trouble getTroubleForDevcapsuleInCustomTroubleList(Devcapsule devcapsule, TroubleList troubleList) {
+    public synchronized Trouble getTroubleForDevcapsuleInCustomTroubleList(Devcapsule devcapsule, TroubleList troubleList) {
         Trouble trouble = null;
 
         for (Trouble t : troubleList.getTroubles()) {
@@ -298,7 +298,7 @@ public class DataModelConstructor {
 /*--------------------------------Devcapsule------------------------------------*/
 /*------------------------------------------------------------------------------*/
 
-    public List<Devcapsule> getDevcWithOpenUpDateForDevice(Device device) {
+    public synchronized List<Devcapsule> getDevcWithOpenUpDateForDevice(Device device) {
         List<Devcapsule> return_arr = new ArrayList<Devcapsule>();
 
         for (Trouble trouble : this.getList_of_current_troubles().getTroubles()) {

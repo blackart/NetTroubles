@@ -22,6 +22,33 @@ $(document).ready(function() {
 
     $("#date_trouble_close_list").datepicker("setDate", "+0");
 
+    function generateShortDevList() {
+        $.each($(".short_dev_list"), function() {
+            $(this).append("<div class='dev_view_all'>show</div>");
+            $(this).find(".dev_view_all").bind("mouseover", function() {
+                $(this).css("color", "#000");
+                $(this).css("background", "#dbe8ff");
+                $(this).css("cursor", "pointer");
+            });
+            $(this).find(".dev_view_all").bind("mouseout", function() {
+                $(this).css("color", "#999999");
+                $(this).css("background", "#fff");
+            });
+            $(this).find(".dev_view_all").bind("click", function() {
+                var $devices = $(this).parent().next("div");
+
+                if ($($devices).css("display") == "none") {
+                    $(this).text("hide");
+                    $($devices).css("display", "block");
+                } else {
+                    $(this).text("show");
+                    $($devices).css("display", "none");
+                }
+            });
+            $(this).next("div").css("display", "none");
+        });
+    }
+
     $("#settings_trouble_close_list").ajaxForm({
         beforeSubmit: function() {
             if ($.trim($("#date_trouble_close_list").val()) == "") {
@@ -49,7 +76,7 @@ $(document).ready(function() {
                 var $service = $(this).find('service').text();
                 var $service_id = $(this).find('service_id').text();
                 /*----------------------------------------------------*/
-                var $actual_problem = $(this).find('legend').text();
+                var $actual_problem = $(this).find('actual_problem').text();
                 /*----------------------------------------------------*/
                 var $timeout = $(this).find('timeout').text();
                 var $date_in = $(this).find('date_in').text();
@@ -66,12 +93,12 @@ $(document).ready(function() {
 
                 var $block_0 = "<div class=\"text_bold title_rubric\">Заголовок:</div><div id=\"" + $id + "_title\" class=\"cont_rubric\">" + $title + "</div>";
                 var $block_2 = "<div class=\"text_bold title_rubric\">Затронутые сервисы:</div><div id=\"" + $id + "_service\" class=\"service_sel\">" + $service + "</div><input type=\"hidden\" value=\"" + $service_id + "\"/>";
-                var $block_5 = "<div class=\"text_bold title_rubric\">Дата и время аварии:</div><div id=\"" + $id + "_date_in\" class=\"datein\">" + $date_in + "</div>";
-                var $block_6 = "<div class=\"text_bold title_rubric\">Сроки устранения:</div><div id=\"" + $id + "_timeout\" class=\"timeout\">" + $timeout + "</div>";
-                var $block_7 = "<div class=\"text_bold title_rubric\">Дата и время устранения аварии:</div><div id=\"" + $id + "_date_out\" class=\"dateout\">" + $date_out + "</div>";
+                var $block_5 = "<div class=\"text_bold title_rubric\">Дата и время аварии:</div><div id=\"" + $id + "_date_in\" class=\"content_block_inactive\">" + $date_in + "</div>";
+                var $block_6 = "<div class=\"text_bold title_rubric\">Сроки устранения:</div><div id=\"" + $id + "_timeout\" class=\"content_block_inactive\">" + $timeout + "</div>";
+                var $block_7 = "<div class=\"text_bold title_rubric\">Дата и время устранения аварии:</div><div id=\"" + $id + "_date_out\" class=\"content_block_inactive\">" + $date_out + "</div>";
                 var $block_3 = "<div class=\"text_bold title_rubric\">Фактическая проблема:</div><div id=\"" + $id + "_actual_problem\" class=\"cont_rubric\">" + $actual_problem + "</div>";
 
-                var $dev_list = "<div class=\"text_bold title_rubric\">Список узлов:</div>";
+                var $dev_list = "";
                 $(this).find("devcapsul").each(function() {
                     var id_dev = $(this).find('id_dev').text();
                     var host_id_dev = $(this).find('hostId').text();
@@ -81,9 +108,9 @@ $(document).ready(function() {
 
                     var $cont_dev = "<div class=\"func\"><div><input type=\"button\" id=\"" + id_dev + "_unmerge\" value=\"unmerge\"></div></div>";
                     var $head_dev = "<h1 class='up'><div class='panel_kit'><div class='title_p'><div id=\"" + id_dev + "_title_dev\">" + host_id_dev + ", " + description_dev + "</div><div class='title_ex'>down: [" + timedown_dev + "] | up: [" + timeup_dev + "]</div></div>" + (parseInt($devc_count) > 1 ? $cont_dev : "") + "</div></h1>";
-                    $dev_list += "<div class=\"dev_ent\">" + $head_dev + "</div>";
+                    $dev_list += "<div class=\"dev_ent\" id=\"" + id_dev + "\">" + $head_dev + "</div>";
                 });
-                var $block_1 = "<div id=\"" + $id + "_dev_list\" class=\"dev_list_up\">" + $dev_list + "</div>";
+                var $block_1 = "<div class=\"text_bold title_rubric\">Список узлов:</div><div><div class=\"short_dev_list\"></div><div id=\"" + $id + "_dev_list\" class=\"dev_list_down\"><div>" + $dev_list + "</div></div></div>";
 
                 var $descriptions = "";
                 $(this).find("descriptions").each(function() {
@@ -103,6 +130,8 @@ $(document).ready(function() {
 
                 $("<div class=\"trouble_item\">" + $check_dop + "<div id='" + $id + "_block_item_admin_trouble_lists' class=\"trouble_item_accord\">" + $h3 + $content + "</div></div>").appendTo("#admin_trouble_close_list");
             });
+
+            generateShortDevList();
 
             $("#admin_trouble_close_list").accordion({collapsible: true, header: "h3", autoHeight: false, alwaysOpen: false, active: false, navigation: true, icons: false}).addClass('ui-accordion-trouble');
 
@@ -166,12 +195,12 @@ $(document).ready(function() {
                             var $id = $($this).attr('id');
                             var $title = $("#" + $id + "_title").html();
                             var $service = $("#" + $id + "_service").next(":hidden").val();
-                            var $legend = $("#" + $id + "_legend").html();
-                            var $status = $("#" + $id + "_status").next(":hidden").val();
-                            var $timeout = $("#" + $id + "_timeout").html();
+//                            var $legend = $("#" + $id + "_legend").html();
+//                            var $status = $("#" + $id + "_status").next(":hidden").val();
+                            /*var $timeout = $("#" + $id + "_timeout").html();
                             var $date_in = $("#" + $id + "_date_in").html();
-                            var $date_out = $("#" + $id + "_date_out").html();
-                            var $description = $("#" + $id + "_description").html();
+                            var $date_out = $("#" + $id + "_date_out").html();*/
+                            var $actual_problem = $("#" + $id + "_actual_problem").html();
 
                             $.ajax({
                                 url : "/controller",
@@ -181,12 +210,13 @@ $(document).ready(function() {
                                     id: $id,
                                     title: $title,
                                     service: $service,
-                                    legend: $legend,
+                                    /*legend: $legend,
                                     status: $status,
                                     timeout: $timeout,
                                     date_in: $date_in,
                                     date_out: $date_out,
-                                    description: $description,
+                                    description: $description,*/
+                                    actual_problem: $actual_problem,
                                     list: "complete"
                                 },
                                 beforeSend: function() {
@@ -208,11 +238,12 @@ $(document).ready(function() {
 
                             var $title = $("#" + $id + "_title").html();
                             var $service = $("#" + $id + "_service").next(":hidden").val();
-                            var $legend = $("#" + $id + "_legend").html();
+                            /*var $legend = $("#" + $id + "_legend").html();
                             var $status = $("#" + $id + "_status").next(":hidden").val();
                             var $timeout = $("#" + $id + "_timeout").html();
                             var $date_in = $("#" + $id + "_date_in").html();
-                            var $description = $("#" + $id + "_description").html();
+                            var $description = $("#" + $id + "_description").html();*/
+                            var $actual_problem = $("#" + $id + "_actual_problem").html();
 
                             $.ajax({
                                 url : "/controller",
@@ -222,17 +253,14 @@ $(document).ready(function() {
                                     id: $id,
                                     title: $title,
                                     service: $service,
-                                    legend: $legend,
+                                    /*legend: $legend,
                                     status: $status,
                                     timeout: $timeout,
                                     date_in: $date_in,
-                                    description: $description
+                                    description: $description*/
+                                    actual_problem: $actual_problem
                                 },
                                 beforeSend: function() {
-                                    if ($.trim($legend) == "") {
-                                        alert("Укажите легенду о проблеме");
-                                        return false;
-                                    }
                                     $.fn.controll_button("off");
 
                                     var devs = "";
@@ -267,6 +295,7 @@ $(document).ready(function() {
                     },
                     success: function(data) {
                         $("#settings_trouble_close_list").submit();
+                        $.fn.update_trouble_counters();
                     }
                 });
             });
@@ -342,6 +371,7 @@ $(document).ready(function() {
         } else {
             alert("Отметьте хотя бы одну проблему");
         }
+        $.fn.update_trouble_counters();
     });
 
     $("#service_merge").addClass("ui-autocomplete-input ui-widget ui-widget-content ui-corner-left");

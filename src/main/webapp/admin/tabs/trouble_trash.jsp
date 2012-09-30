@@ -111,7 +111,6 @@
                                                             <div class='title_ex'>down: <%=format.format(date_in_dev)%> up: <%=format.format(date_out_dev)%></div>
                                                         </div>
                                                     </div>
-
                                                 </h1>
                                             </div>
                                             <%

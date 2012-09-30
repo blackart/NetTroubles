@@ -15,41 +15,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClearTrashList extends AbstractCommand {
+    private DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    private TroubleService troubleService = TroubleService.getInstance();
+    private DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
+    private CommentService commentService = CommentService.getInstance();
+    private TroubleListService troubleListService = TroubleListService.getInstance();
+
     @Override
     public String execute() throws Exception {
-        DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-        TroubleService troubleService = TroubleService.getInstance();
-        DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
-        CommentService commentService = CommentService.getInstance();
-        TroubleListService troubleListService = TroubleListService.getInstance();
+        synchronized (dataModelConstructor) {
+            TroubleList trashTroubleList = dataModelConstructor.getList_of_trash_troubles();
+            List<Trouble> troubles = new ArrayList<Trouble>(trashTroubleList.getTroubles());
 
-        TroubleList trashTroubleList = dataModelConstructor.getList_of_trash_troubles();
-        List<Trouble> troubles = new ArrayList<Trouble>(trashTroubleList.getTroubles());
+            for (Trouble t : troubles) {
+                List<Devcapsule> devcapsules = new ArrayList<Devcapsule>(t.getDevcapsules());
+                List<Comment> comments = new ArrayList<Comment>(t.getComments());
 
-        for (Trouble t : troubles) {
-            List<Devcapsule> devcapsules = new ArrayList<Devcapsule>(t.getDevcapsules());
-            List<Comment> comments = new ArrayList<Comment>(t.getComments());
+                if (t.getDevcapsules() != null) t.getDevcapsules().clear();
+                if (t.getServices() != null) t.getServices().clear();
+                if (t.getComments() != null) t.getComments().clear();
 
-            if (t.getDevcapsules() != null) t.getDevcapsules().clear();
-            if (t.getServices() != null) t.getServices().clear();
-            if (t.getComments() != null) t.getComments().clear();
-            troubleService.update(t);
+                synchronized (troubleService) {
+                    troubleService.update(t);
+                }
 
-            for (Devcapsule d : devcapsules) {
-                devcapsuleService.delete(d);
+                synchronized (devcapsuleService) {
+                    for (Devcapsule d : devcapsules) {
+                        devcapsuleService.delete(d);
+                    }
+                }
+                synchronized (commentService) {
+                    for (Comment c : comments) {
+                        commentService.delete(c);
+                    }
+                }
             }
-            for (Comment c : comments) {
-                commentService.delete(c);
+
+            synchronized (troubleListService) {
+                trashTroubleList.getTroubles().clear();
+                troubleListService.update(trashTroubleList);
+            }
+
+            synchronized (troubleService) {
+                for (Trouble t : troubles) {
+                    troubleService.delete(t);
+                }
             }
         }
-
-        trashTroubleList.getTroubles().clear();
-        troubleListService.update(trashTroubleList);
-
-        for (Trouble t : troubles) {
-            troubleService.delete(t);
-        }
-
         return null;
     }
 }

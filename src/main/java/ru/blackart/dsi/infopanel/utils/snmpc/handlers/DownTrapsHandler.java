@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
-public class DownTrapsHandler implements Runnable {
+public class DownTrapsHandler extends Thread {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private RequestDataImpl requestData;
     private Storage storage;
@@ -35,10 +36,12 @@ public class DownTrapsHandler implements Runnable {
     private Device device;
     private Devcapsule devcapsule;
     private Trouble trouble;
+    private ThreadPoolExecutor threadPoolExecutor;
 
-    public DownTrapsHandler(RequestDataImpl requestData, Storage storage) {                         //Конструктор потока
+    public DownTrapsHandler(RequestDataImpl requestData, Storage storage, ThreadPoolExecutor threadPoolExecutor) { //Конструктор потока
         this.requestData = requestData;                                                 //передаём потоку данные запроса
         this.storage = storage;
+        this.threadPoolExecutor = threadPoolExecutor;
     }
 
     private Device deviceLevelOperations() {
@@ -69,52 +72,56 @@ public class DownTrapsHandler implements Runnable {
         Date downDate = this.parse(this.requestData.getDate(), this.requestData.getTime());
 //        log.info("Saving devcapsule for " + device.getName() + " down date - " + format.format(downDate));
 
-//        log.info("Find in DB devcapsule with + " + device.getName() + " and null timedown and not null timeup");
-        List<Devcapsule> devcapsules = dataModelConstructor.getDevcWithOpenUpDateForDevice(device);
-//        log.info("Count devcapsule for device " + device.getName() + " - " + devcapsules.size());
+        synchronized (dataModelConstructor) {
+    //        log.info("Find in DB devcapsule with + " + device.getName() + " and null timedown and not null timeup");
+            List<Devcapsule> devcapsules = dataModelConstructor.getDevcWithOpenUpDateForDevice(device);
+    //        log.info("Count devcapsule for device " + device.getName() + " - " + devcapsules.size());
 
-        Boolean lock = false;
-        Devcapsule return_devcapsule = null;
+            Boolean lock = false;
+            Devcapsule return_devcapsule = null;
 
-        if ((devcapsules != null) && (devcapsules.size() > 0)) {
-//            log.info("Sorting list of devcapsules for device " + device.getName());
-            devcapsules = dataModelConstructor.sortDevcapsuleByTime(devcapsules);    //Сортируем по убыванию
-            Devcapsule devcapsule = devcapsules.get(0);
+                if ((devcapsules != null) && (devcapsules.size() > 0)) {
+        //            log.info("Sorting list of devcapsules for device " + device.getName());
+                    devcapsules = dataModelConstructor.sortDevcapsuleByTime(devcapsules);    //Сортируем по убыванию
+                    Devcapsule devcapsule = devcapsules.get(0);
 
-            Date downDate_last = new Date(Long.valueOf(devcapsule.getTimedown()));
+                    Date downDate_last = new Date(Long.valueOf(devcapsule.getTimedown()));
 
-            if (downDate.before(downDate_last)) {
-                devcapsule.setTimedown(String.valueOf(downDate.getTime()));
-                devcapsuleService.update(devcapsule);
-                Trouble trouble = dataModelConstructor.getTroubleForDevcapsule(devcapsule);
-                Date time_down_min = new Date(Long.valueOf(trouble.getDate_in()));
-                for (Devcapsule devc : trouble.getDevcapsules()) {
-                    Date time_down_another = new Date(Long.valueOf(devc.getTimedown()));
-                    if (time_down_min.after(time_down_another)) {
-                        time_down_min = time_down_another;
+                    if (downDate.before(downDate_last)) {
+                        devcapsule.setTimedown(String.valueOf(downDate.getTime()));
+                        synchronized (devcapsuleService)  {
+                            devcapsuleService.update(devcapsule);
+                        }
+                        Trouble trouble = dataModelConstructor.getTroubleForDevcapsule(devcapsule);
+                        Date time_down_min = new Date(Long.valueOf(trouble.getDate_in()));
+                        for (Devcapsule devc : trouble.getDevcapsules()) {
+                            Date time_down_another = new Date(Long.valueOf(devc.getTimedown()));
+                            if (time_down_min.after(time_down_another)) {
+                                time_down_min = time_down_another;
+                            }
+                        }
+                        if (Long.valueOf(trouble.getDate_in()) > time_down_min.getTime()) {
+                            trouble.setDate_in(String.valueOf(time_down_min.getTime()));
+                            troubleService.update(trouble);
+                        }
+        //                log.info("Find devcapsule and update.");
                     }
+                    lock = true;
                 }
-                if (Long.valueOf(trouble.getDate_in()) > time_down_min.getTime()) {
-                    trouble.setDate_in(String.valueOf(time_down_min.getTime()));
-                    troubleService.update(trouble);
+
+                if (!lock) {
+                    return_devcapsule = new Devcapsule();
+                    return_devcapsule.setDevice(device);
+                    return_devcapsule.setComplete(false);
+                    return_devcapsule.setTimedown(String.valueOf(downDate.getTime()));
+                    synchronized (devcapsuleService)  {
+                        devcapsuleService.save(return_devcapsule);
+                    }
+        //            log.info("Save devcapsule for device " + device.getName());
                 }
-//                log.info("Find devcapsule and update.");
-            }
-            lock = true;
+
+                return return_devcapsule;
         }
-
-
-        if (!lock) {
-            return_devcapsule = new Devcapsule();
-            return_devcapsule.setDevice(device);
-            return_devcapsule.setComplete(false);
-            return_devcapsule.setTimedown(String.valueOf(downDate.getTime()));
-            devcapsuleService.save(return_devcapsule);
-//            log.info("Save devcapsule for device " + device.getName());
-        }
-
-
-        return return_devcapsule;
     }
 
     private Trouble troubleLevelOperations() {
@@ -138,7 +145,9 @@ public class DownTrapsHandler implements Runnable {
         trouble.setCrm(false);
         trouble.setClose(devcapsule.getComplete());
 
-        troubleService.save(trouble);
+        synchronized (troubleService){
+            troubleService.save(trouble);
+        }
 
         return trouble;
     }
@@ -167,11 +176,15 @@ public class DownTrapsHandler implements Runnable {
         if (this.devcapsule != null) this.trouble = this.troubleLevelOperations();
 
         if (this.trouble != null) {
-            TroubleList troubleList = this.dataModelConstructor.getTargetTroubleListForTrouble(this.trouble);
-            troubleList.getTroubles().add(this.trouble);
+            synchronized (dataModelConstructor) {
+                TroubleList troubleList = this.dataModelConstructor.getTargetTroubleListForTrouble(this.trouble);
+                troubleList.getTroubles().add(this.trouble);
 
-            troubleListsManager.sortTroubleList(troubleList);
-            troubleListService.update(troubleList);
+                troubleListsManager.sortTroubleList(troubleList);
+                synchronized (troubleListService) {
+                    troubleListService.update(troubleList);
+                }
+            }
         }
 
         if (this.storage.getUpDevcList().containsKey(this.device.getName())) {
@@ -180,8 +193,8 @@ public class DownTrapsHandler implements Runnable {
             Date downDate = this.parse(this.requestData.getDate(), this.requestData.getTime());
 
             if (upDate.after(downDate)) {
-                Thread exUpThread = new Thread(new UpTrapsHandler(requestData, this.storage));
-                exUpThread.start();
+                Thread exUpThread = new Thread(new UpTrapsHandler(requestData, this.storage, this.threadPoolExecutor));
+                threadPoolExecutor.execute(exUpThread);
                 this.storage.getUpDevcList().remove(device.getName());
             }
         }

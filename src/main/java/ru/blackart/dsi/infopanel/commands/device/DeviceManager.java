@@ -20,7 +20,7 @@ public class DeviceManager {
         this.config = config;
     }*/
 
-    public static DeviceManager getInstance() {
+    public static synchronized DeviceManager getInstance() {
         if (deviceManager == null) {
             deviceManager = new DeviceManager();
         }

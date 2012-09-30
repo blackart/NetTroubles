@@ -1,4 +1,4 @@
 cmd=/WEB-INF/cmd
 pathToApplication=/webapps
-pathToLog4jConfig=/WEB-INF/log4j
+pathToLog4jConfig=/WEB-INF/classes/log4j.properties
 generateMonitoringPanel=/WEB-INF/generateMonitoringPanel

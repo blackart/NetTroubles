@@ -21,7 +21,7 @@ public class TroubleListService {
         return session;
     }
 
-    public static TroubleListService getInstance() {
+    public static synchronized TroubleListService getInstance() {
         if (troubleListService == null) {
             troubleListService = new TroubleListService();
             troubleListService.session = SessionFactorySingle.getSessionFactory().openSession();
@@ -78,13 +78,13 @@ public class TroubleListService {
         }
     }
 
-    public TroubleList get(int id) {
+    public synchronized TroubleList get(int id) {
         Criteria crt = this.getSession().createCriteria(TroubleList.class);
         crt.add(Restrictions.eq("id", id));
         return (TroubleList) crt.list().get(0);
     }
 
-    public List<TroubleList> getAll() {
+    public synchronized List<TroubleList> getAll() {
         return (List<TroubleList>) this.getSession().createCriteria(TroubleList.class).list();
     }
 }

@@ -5,14 +5,8 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel_oms</property>
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.34:5432/infopanel</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.28:5432/infopanel</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.28:5432/infopanel_oms</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.47.8:5432/isem_db</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://10.10.44.143:5432/infopanel</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel_oms</property>-->
+        <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.102:5432/infopanel_oms</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">default</property>
         <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
@@ -30,20 +24,20 @@
         <property name="hibernate.c3p0.max_statement">50</property>
         <property name="hibernate.c3p0.idle_test_period">3000</property>
 
-        <mapping class="ru.blackart.dsi.infopanel.beans.Region"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Tab"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Group"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.UserSettings"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Users"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.TypeDeviceFilter"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.DeviceFilter"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Device"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Devcapsule"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Hostgroup"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Hoststatus"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Service"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Comment"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Trouble"></mapping>
-        <mapping class="ru.blackart.dsi.infopanel.beans.TroubleList"></mapping>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Region"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Tab"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Group"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.UserSettings"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Users"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.TypeDeviceFilter"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.DeviceFilter"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Device"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Devcapsule"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Hostgroup"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Hoststatus"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Service"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Comment"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.Trouble"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.TroubleList"/>
     </session-factory>
 </hibernate-configuration>    

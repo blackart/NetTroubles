@@ -9,35 +9,40 @@ import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
 import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 public class RecoveryTrouble extends AbstractCommand {
+    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    TroubleListService troubleListService = TroubleListService.getInstance();
+
     @Override
     public String execute() throws Exception {
-        DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-        TroubleListService troubleListService = TroubleListService.getInstance();
+        synchronized (dataModelConstructor) {
+            int id = Integer.valueOf(this.getRequest().getParameter("id"));
 
-        int id = Integer.valueOf(this.getRequest().getParameter("id"));
+            Trouble trouble = dataModelConstructor.getTroubleForId(id);
 
-        Trouble trouble = dataModelConstructor.getTroubleForId(id);
+            TroubleList troubleListTarget = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
+            TroubleList troubleListSource = dataModelConstructor.getTroubleListForTrouble(trouble);
 
-        TroubleList troubleListTarget = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
-        TroubleList troubleListSource = dataModelConstructor.getTroubleListForTrouble(trouble);
+            dataModelConstructor.moveTroubleList(trouble, troubleListSource, troubleListTarget);
 
-        dataModelConstructor.moveTroubleList(trouble, troubleListSource, troubleListTarget);
+            synchronized (troubleListService) {
+                troubleListService.update(troubleListTarget);
+                troubleListService.update(troubleListSource);
+            }
 
-        troubleListService.update(troubleListTarget);
-        troubleListService.update(troubleListSource);
+            if ((!trouble.getClose()) && (trouble.getCrm())) {
+                CrmTrouble crmTrouble = new CrmTrouble(trouble, "1");
+                crmTrouble.send();
+            } else if (trouble.getCrm() && trouble.getClose()) {
+                CrmTrouble crmTrouble = new CrmTrouble(trouble, "2");
+                crmTrouble.send();
+            }
 
-        if ((!trouble.getClose()) && (trouble.getCrm())) {
-            CrmTrouble crmTrouble = new CrmTrouble(trouble, "1");
-            crmTrouble.send();
-        } else if (trouble.getCrm() && trouble.getClose()) {
-            CrmTrouble crmTrouble = new CrmTrouble(trouble, "2");
-            crmTrouble.send();
+            TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
+            synchronized (troubleListsManager) {
+                troubleListsManager.sortTroubleList(troubleListTarget);
+                troubleListsManager.sortTroubleList(troubleListSource);
+            }
         }
-
-        TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
-        troubleListsManager.sortTroubleList(troubleListTarget);
-        troubleListsManager.sortTroubleList(troubleListSource);
-
         return null;
     }
 }

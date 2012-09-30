@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditTroubleOfCompleteTroubleList extends AbstractCommand {
-    public String execute() throws Exception {
-        DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-        TroubleService troubleService = TroubleService.getInstance();
-        ServiceService serviceService = ServiceService.getInstance();
+    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    TroubleService troubleService = TroubleService.getInstance();
+    ServiceService serviceService = ServiceService.getInstance();
 
+    public String execute() throws Exception {
         //Parse incoming date. Format "DD/MM/YYYY hh/mm/ss" to array [0]DD/MM/YYYY and [1]hh/mm/ss/
         /*String date_time_in_str = this.getRequest().getParameter("date_in");
         String date_in = null;
@@ -50,23 +50,29 @@ public class EditTroubleOfCompleteTroubleList extends AbstractCommand {
         String title = this.getRequest().getParameter("title").trim();
         String actual_problem = this.getRequest().getParameter("actual_problem").trim();
 
-        Trouble trouble = dataModelConstructor.getTroubleForId(id);
+        synchronized (dataModelConstructor) {
+            Trouble trouble = dataModelConstructor.getTroubleForId(id);
 
-        trouble.setTitle(title);
-        trouble.setActualProblem(actual_problem);
-        trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setTitle(title);
+            trouble.setActualProblem(actual_problem);
+            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
 
-        if ((services != null) && (services.length > 0)) {
-            List<Service> service_ = new ArrayList<Service>();
-            for (int i = 0; i < services.length; i++) {
-                if (!services[i].equals("")) {
-                    Service service = serviceService.getService(Integer.valueOf(services[i]));
-                    service_.add(service);
+            if ((services != null) && (services.length > 0)) {
+                synchronized (serviceService) {
+                    List<Service> service_ = new ArrayList<Service>();
+                    for (int i = 0; i < services.length; i++) {
+                        if (!services[i].equals("")) {
+                            Service service = serviceService.getService(Integer.valueOf(services[i]));
+                            service_.add(service);
+                        }
+                    }
+                    trouble.setServices(service_);
                 }
             }
-            trouble.setServices(service_);
+            synchronized (troubleService) {
+                troubleService.update(trouble);
+            }
         }
-        troubleService.update(trouble);
 
         return null;
     }
