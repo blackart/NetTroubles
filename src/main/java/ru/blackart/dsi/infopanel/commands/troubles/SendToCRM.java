@@ -45,7 +45,7 @@ public class SendToCRM extends AbstractCommand {
 
             if (tList.getName().equals("current")) {
                 String timeout = null;
-                if ((timeout_str != null) && (!timeout_str.equals(""))) {
+                if ((timeout_str != null) && (!timeout_str.trim().equals(""))) {
                     String[] timeout_arr = timeout_str.split(" ");
                     timeout = String.valueOf(DateStr.parse(timeout_arr[0], timeout_arr[1]).getTime());
                 }

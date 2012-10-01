@@ -61,7 +61,7 @@
     <META HTTP-EQUIV="REFRESH" CONTENT="1800">           <!--1800 - 30 минут-->
     <!-- jQuery -->
     <%--<script type="text/javascript" src="../js/jQuery/js/jquery-1.5.1.js"></script>--%>
-    <script type="text/javascript" src="../js/jQuery/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="../js/jQuery/js/jquery.form.js"></script>
     <script type="text/javascript" src="../js/jQuery/js/jquery.clickToForm.js"></script>
 
@@ -352,12 +352,11 @@
     <div>Удалить устройство <strong id="delete_device" ></strong> ?</div>
 </div>
 
-<div class="logout_bar">
-    <%if ((session.getAttribute("login") != null) && ((Boolean) (session.getAttribute("login")))) {
-            Users user = (Users) session.getAttribute("info");%>
-            <%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]
-    <%}%>
-</div>
+<div class="logout_bar"><%
+    if ((session.getAttribute("login") != null) && ((Boolean) (session.getAttribute("login")))) {
+            Users user = (Users) session.getAttribute("info");
+    %><%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]<%}
+%></div>
 
 <div id="main_menu">
     <div id="v_tabs">

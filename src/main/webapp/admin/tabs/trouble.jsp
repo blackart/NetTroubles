@@ -377,21 +377,7 @@
 
                     <div class='text_bold title_rubric'>Список узлов:</div>
                     <div>
-                        <div class="short_dev_list">
-                            <%--<%
-                                String down_dev = "Down: ";
-                                String up_dev= "Up: ";
-                                for (Devcapsule devcapsule : t.getDevcapsules()) {
-                                    if (devcapsule.getComplete()) {
-                                        up_dev += devcapsule.getDevice().getName() + " ";
-                                    } else {
-                                        down_dev += devcapsule.getDevice().getName() + " ";
-                                    }
-                                }
-                            %>
-                            <%="<div class='down'>" + down_dev + "</div>"%>
-                            <%="<div class='up'>" + up_dev + "</div>"%>--%>
-                        </div>
+                        <div class="short_dev_list"></div>
                         <div id='<%=t.getId()%>_dev_list' class='dev_list_down'>
                             <div>
                                 <%
@@ -494,7 +480,7 @@
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+
             }
         %>
     </div>

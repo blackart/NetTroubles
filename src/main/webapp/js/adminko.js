@@ -8,6 +8,29 @@ $(document).ready(function() {
     var $interval = "";
     var interval_val = 600000;
 
+    $.fn.update_trouble_counters = function() {
+        $.ajax({
+            url : "/controller",
+            type : "POST",
+            data : {
+                cmd: "getTroubleCounters"
+            },
+            success: function(data) {
+                var $current = $(data).find('current').text();
+                var $waiting_close = $(data).find('waiting_close').text();
+                var $close = $(data).find('close').text();
+                var $trash = $(data).find('trash').text();
+                var $need_actual_problem = $(data).find('need_actual_problem').text();
+
+                $(".count_need_actual_problem_troubles").html("(" + $need_actual_problem);
+                $(".count_current_troubles").html($current + ")");
+                $(".count_waiting_close_troubles").html($waiting_close);
+                $(".count_complete_troubles").html("(" + $close + ")");
+                $(".count_trash_troubles").html("(" + $trash + ")");
+            }
+        });
+    };
+
     $.fn.get_interval_val = function() {
         return interval_val;
     };
@@ -26,18 +49,15 @@ $(document).ready(function() {
     };
 
 
-    $("#logout").click(function() {
+    $("#logout").click(function () {
         $.ajax({
-            url : "/controller",
-            type : "POST",
-            data : {cmd: "logout"},
-            success: function(data) {
-                /*var $parse =  data.split("|");
-                 if ($parse[0] == "0") {
-                 document.location = $.trim($parse[1]);
-                 }*/
+            url: "/controller",
+            type: "POST",
+            data: {
+                cmd: "logout"
             }
         });
+        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
     });
 
     $("#main_menu").accordion({header: "h3", autoHeight: false, alwaysOpen: false, active: 0, navigation: true, collapsible: false, icons: false
@@ -52,22 +72,11 @@ $(document).ready(function() {
          }*/
     }).removeClass('ui-tabs').addClass('ui-tabs-vertical');
 
-    $("#main_menu").ajaxStart(function() {
-        /*$.ajax({
-         url : "/controller",
-         type : "POST",
-         data : {cmd: "user_get_login_ajax"},
-         success: function(data) {
-         var $parse =  data.split("|");
-         if ($parse[0] == "0") {
-         document.location = $.trim($parse[1]);
-         }
-         }
-         });*/
+    $("body").ajaxStart(function() {
         $("body").append("<div id='zanaves'><div class='zanaves'></div><img src='../img/ajax-loader_2.gif' alt='load' class='preloader'/></div>");
         $("#zanaves").show();
     });
-    $("#main_menu").ajaxStop(function() {
+    $("body").ajaxStop(function() {
         $("#zanaves").hide();
         $("#zanaves").remove();
     });
@@ -132,8 +141,6 @@ $(document).ready(function() {
                     $dev_id += this.id.replace("_dev_merge", "") + "|";
                 });
 
-//                alert("[" + $id + "],[" + $title + "],[" + $service + "],[" + $legend + "],[" + $status + "],[" + $description + "],[" + $dev_id + "]");
-
                 $.ajax({
                     url : "/controller",
                     type : "POST",
@@ -156,7 +163,9 @@ $(document).ready(function() {
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                             $.fn.update_trouble_counters();
                         }
-                        alert($(data).find("message").text());
+
+                        var message = $(data).find("message");
+                        if (message.length == 1) alert($(message).text());
                     }
                 });
 
@@ -628,30 +637,6 @@ $(document).ready(function() {
     if ($.fn.get_interval_status() == 1) {
         $.fn.reload_page($.fn.get_interval_val(), 1);
     }
-
-    $.fn.update_trouble_counters = function() {
-        $.ajax({
-            url : "/controller",
-            type : "POST",
-            data : {
-                cmd: "getTroubleCounters"
-            },
-            success: function(data) {
-                var $current = $(data).find('current').text();
-                var $waiting_close = $(data).find('waiting_close').text();
-                var $close = $(data).find('close').text();
-                var $trash = $(data).find('trash').text();
-                var $need_actual_problem = $(data).find('need_actual_problem').text();
-
-                $(".count_need_actual_problem_troubles").html("(" + $need_actual_problem);
-                $(".count_current_troubles").html($current + ")");
-                $(".count_waiting_close_troubles").html($waiting_close);
-                $(".count_complete_troubles").html("(" + $close + ")");
-                $(".count_trash_troubles").html("(" + $trash + ")");
-            }
-        });
-    };
-
     $.fn.update_trouble_counters();
 
 });

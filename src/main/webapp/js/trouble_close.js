@@ -2,7 +2,7 @@ $(document).ready(function() {
     $("#date_trouble_close_list").datepicker({
         changeMonth: true,
         changeYear: true,
-        closeText: 'X',
+        closeText: 'close',
         showButtonPanel: true,
         dayNames: ['Воскресение', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
         dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
@@ -17,10 +17,9 @@ $(document).ready(function() {
         appendText: '',
         onChangeMonthYear: function(year, month, inst) {
             $(this).datepicker("setDate", "01/" + month + "/" + year);
-        }
+        },
+        defaultDate: new Date
     });
-
-    $("#date_trouble_close_list").datepicker("setDate", "+0");
 
     function generateShortDevList() {
         $.each($(".short_dev_list"), function() {
@@ -134,7 +133,6 @@ $(document).ready(function() {
             generateShortDevList();
 
             $("#admin_trouble_close_list").accordion({collapsible: true, header: "h3", autoHeight: false, alwaysOpen: false, active: false, navigation: true, icons: false}).addClass('ui-accordion-trouble');
-
             $("#admin_trouble_close_list").clickToForm({
                 header: ".content",
                 elements: {
@@ -322,7 +320,7 @@ $(document).ready(function() {
     $("#merge_close_list").click(function() {
         $("#dev_list_merge").empty();
         $("#title_merge, #legend_merge, #description_merge").combobox("clear");
-        $("select[id=service_merge] option").removeAttr('selected');
+        $("select[id='service_merge'] option").removeAttr('selected');
 
         var ids = "";
         $("#admin_trouble_close_list").find(".trouble_item").each(function() {
