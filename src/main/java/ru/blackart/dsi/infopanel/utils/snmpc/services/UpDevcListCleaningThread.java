@@ -6,6 +6,8 @@ import ru.blackart.dsi.infopanel.utils.snmpc.transport.RequestDataImpl;
 import java.util.*;
 
 public class UpDevcListCleaningThread implements Runnable {
+    ManagerUpDevcListCleaningThread managerUpDevcListCleaningThread = ManagerUpDevcListCleaningThread.getInstance();
+    Storage storage = managerUpDevcListCleaningThread.getStorage();
 
     private Date parse(String str_date, String str_time) {
         String[] str_date_mas = str_date.split("\\/");
@@ -26,26 +28,26 @@ public class UpDevcListCleaningThread implements Runnable {
 
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            Storage storage = ManagerUpDevcListCleaningThread.getInstance().getStorage();
-            HashMap<String, RequestDataImpl> upDevcList = storage.getUpDevcList();
+            synchronized (storage) {
+                HashMap<String, RequestDataImpl> upDevcList = storage.getUpDevcList();
 
-            Date now_date = new Date();
+                Long now_date = System.currentTimeMillis();
 
-            Set<String> keySet = new HashSet<String>();
-            keySet.addAll(upDevcList.keySet());
-            for (String aKeySet : keySet) {
-                String nextKey = aKeySet;
-                RequestDataImpl requestData = upDevcList.get(nextKey);
-                Date seletUpTime = this.parse(requestData.getDate(), requestData.getTime());
-                if (((now_date.getTime() - seletUpTime.getTime()) / (60 * 1000)) > 30) {
-                    upDevcList.remove(nextKey);
+                Set<String> keySet = new HashSet<String>();
+                keySet.addAll(upDevcList.keySet());
+                for (String aKeySet : keySet) {
+                    RequestDataImpl requestData = upDevcList.get(aKeySet);
+                    Date seletUpTime = this.parse(requestData.getDate(), requestData.getTime());
+                    if (((now_date - seletUpTime.getTime()) / (60 * 1000)) > 30) {
+                        upDevcList.remove(aKeySet);
+                    }
                 }
-            }
 
-            try {
-                Thread.currentThread().sleep(20000);    //900000 == 15 минут
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                try {
+                    Thread.currentThread().sleep(20000);    //900000 == 15 минут
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

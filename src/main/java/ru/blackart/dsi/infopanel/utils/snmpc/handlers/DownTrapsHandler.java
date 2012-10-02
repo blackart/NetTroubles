@@ -193,7 +193,7 @@ public class DownTrapsHandler extends Thread {
             Date downDate = this.parse(this.requestData.getDate(), this.requestData.getTime());
 
             if (upDate.after(downDate)) {
-                Thread exUpThread = new Thread(new UpTrapsHandler(requestData, this.storage, this.threadPoolExecutor));
+                Thread exUpThread = new UpTrapsHandler(requestData, this.storage, this.threadPoolExecutor);
                 threadPoolExecutor.execute(exUpThread);
                 this.storage.getUpDevcList().remove(device.getName());
             }

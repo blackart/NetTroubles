@@ -75,11 +75,10 @@ public class SNMPcRequestController extends HttpServlet {
 
         storage = new Storage(Boolean.valueOf((String) settings.get("learning")), Integer.valueOf((String) settings.get("trueDownInterval")));
 
-//        ManagerQueueRequests.getInstance().start();
+        ManagerQueueRequests.getInstance().start();
         ManagerUpDevcListCleaningThread managerUpDevcListCleaningThread = ManagerUpDevcListCleaningThread.getInstance();
         managerUpDevcListCleaningThread.setStorage(this.storage);
         managerUpDevcListCleaningThread.startCleaningThread();
-
     }
 
     @Override
