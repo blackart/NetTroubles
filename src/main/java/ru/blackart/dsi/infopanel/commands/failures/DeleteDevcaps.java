@@ -10,30 +10,36 @@ import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
 import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 public class DeleteDevcaps extends AbstractCommand {
+    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    TroubleService troubleService = TroubleService.getInstance();
+    TroubleListService troubleListService = TroubleListService.getInstance();
+    TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
+
     @Override
     public String execute() throws Exception {
         int trouble_id = Integer.valueOf(this.getRequest().getParameter("id"));
 
-        DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+        synchronized (dataModelConstructor) {
+            synchronized (troubleService) {
+                Trouble trouble = troubleService.get(trouble_id);
+                TroubleList now_troubleList = dataModelConstructor.getTroubleListForTrouble(trouble);
 
-        TroubleService troubleService = TroubleService.getInstance();
-        TroubleListService troubleListService = TroubleListService.getInstance();
-        Trouble trouble = troubleService.get(trouble_id);
-        TroubleList now_troubleList = dataModelConstructor.getTroubleListForTrouble(trouble);
+                if ((!trouble.getClose()) && (trouble.getCrm())) {
+                    CrmTrouble crmTrouble = new CrmTrouble(trouble, "3");
+                    crmTrouble.send();
+                }
 
-        if ((!trouble.getClose()) && (trouble.getCrm())) {
-            CrmTrouble crmTrouble = new CrmTrouble(trouble, "3");
-            crmTrouble.send();
+                dataModelConstructor.moveTroubleList(trouble, now_troubleList, dataModelConstructor.getList_of_trash_troubles());
+
+                synchronized (troubleListService) {
+                    troubleListService.update(now_troubleList);
+                    troubleListService.update(dataModelConstructor.getList_of_trash_troubles());
+                }
+                synchronized (troubleListsManager) {
+                    troubleListsManager.sortTroubleList(dataModelConstructor.getList_of_trash_troubles());
+                }
+            }
         }
-
-        dataModelConstructor.moveTroubleList(trouble, now_troubleList, dataModelConstructor.getList_of_trash_troubles());
-        troubleListService.update(now_troubleList);
-        troubleListService.update(dataModelConstructor.getList_of_trash_troubles());
-
-        TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
-        troubleListsManager.sortTroubleList(dataModelConstructor.getList_of_trash_troubles());
-
-
         return null;
     }
 }

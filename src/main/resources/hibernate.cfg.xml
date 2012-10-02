@@ -6,8 +6,8 @@
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <!--<property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/infopanel_oms</property>-->
-        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.102:5432/infopanel_oms</property>-->
-        <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.182:5432/infopanel_oms</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.53:5432/infopanel_oms</property>
+        <!--<property name="hibernate.connection.url">jdbc:postgresql://192.168.1.182:5432/infopanel_oms</property>-->
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">default</property>
         <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
