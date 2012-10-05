@@ -33,18 +33,20 @@ public class EditSomeDevices extends AbstractCommand {
         String[] group_id_arr = group_id.split("\\|");
         String[] region_id_arr = region_id.split("\\|");
 
-        Session session = SessionFactorySingle.getSessionFactory().openSession();
+//        Session session = SessionFactorySingle.getSessionFactory().openSession();
 //        BasicXmlData xml = new BasicXmlData("device_message");
 
 //        log.info("Device parameters: id - " + devices_id + "; description - " + desc + "; status_id - " + status_id + "; group_id - " + group_id + ";");
 
         for (int i=0; i < device_id_arr.length; i++) {
+            Device device = null;
             Hostgroup hostgroup = null;
             Hoststatus hoststatus = null;
             Region region = null;
-            List<Device> devices = null;
 
             boolean ok = true;
+
+
 
             Criteria crt_device = session.createCriteria(Device.class);
             crt_device.add(Restrictions.eq("id", Integer.valueOf(device_id_arr[i])));

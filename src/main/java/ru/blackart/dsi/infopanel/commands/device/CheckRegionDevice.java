@@ -66,7 +66,7 @@ public class CheckRegionDevice extends AbstractCommand {
         return null;
     }
 
-    public static Region getRegionForDevice(Device device, List<Region> regions) {
+    public static synchronized Region getRegionForDevice(Device device, List<Region> regions) {
         Region return_region = null;
 
         Properties regions_all = new Properties();

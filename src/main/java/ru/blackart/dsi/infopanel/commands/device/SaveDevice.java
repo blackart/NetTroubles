@@ -22,19 +22,6 @@ public class SaveDevice {
         criteria.add(Restrictions.eq("num", Integer.valueOf(group)));
         List<Hostgroup> hostgroup_arr = criteria.list();
 
-        /*if ((status != null) && (!status.equals(""))) {
-            Criteria crt_status = session.createCriteria(Hoststatus.class);
-            crt_status.add(Restrictions.eq("id", Integer.valueOf(status)));
-            List<Hoststatus> hoststatus_arr = crt_status.list();
-
-            Hoststatus hoststatus;
-
-            if (hoststatus_arr.size() != 0) {
-                hoststatus = hoststatus_arr.get(0);
-                dev.setHoststatus(hoststatus);
-            }
-        }*/
-
         Hostgroup hostgroup;
         if (hostgroup_arr.size() != 0) {
             hostgroup = hostgroup_arr.get(0);
@@ -52,7 +39,9 @@ public class SaveDevice {
         dev.setRegion(CheckRegionDevice.getRegionForDevice(dev,(List<Region>)TroubleListsManager.getInstance().getHTTPServletConfig().getServletContext().getAttribute("regions")));
 
         session.beginTransaction();
+
         session.save(dev);
+
         session.getTransaction().commit();
         session.flush();
         session.close();

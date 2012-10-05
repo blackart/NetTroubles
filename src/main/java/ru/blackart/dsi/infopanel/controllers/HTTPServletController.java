@@ -99,29 +99,27 @@ public class HTTPServletController extends HttpServlet {
         Criteria crt_5 = session.createCriteria(Users.class);
         ArrayList<Users> users = new ArrayList<Users>(crt_5.list());
         config.getServletContext().setAttribute("users", users);
+
         //Hostgroups
         Criteria crt_6 = session.createCriteria(Hostgroup.class);
         ArrayList<Hostgroup> hostgroups = new ArrayList<Hostgroup>(crt_6.list());
         config.getServletContext().setAttribute("hostgroups", hostgroups);
+
         //Hoststatus
         Criteria crt_host_status = session.createCriteria(Hoststatus.class);
         ArrayList<Hoststatus> hoststatuses = new ArrayList<Hoststatus>(crt_host_status.list());
         config.getServletContext().setAttribute("hoststatuses", hoststatuses);
+
         //Region
         Criteria crt_region = session.createCriteria(Region.class);
         ArrayList<Region> regions = new ArrayList<Region>(crt_region.list());
         config.getServletContext().setAttribute("regions", regions);
-        //Devices
-        DeviceManager deviceManager = DeviceManager.getInstance();
 
         //Devcapsules
         Criteria crt_8 = session.createCriteria(Devcapsule.class);
         ArrayList<Devcapsule> devcapsules = new ArrayList<Devcapsule>(crt_8.list());
         config.getServletContext().setAttribute("devcapsules", devcapsules);
-        //Devcapsules
-        /*Criteria crt_9 = session.createCriteria(Trouble.class);
-        ArrayList<Trouble> troubles = new ArrayList<Trouble>(crt_9.list());
-        config.getServletContext().setAttribute("troubles", troubles);*/
+
         //TroubleLists
         Criteria crt_10 = session.createCriteria(TroubleList.class);
         ArrayList<TroubleList> troubleLists = new ArrayList<TroubleList>(crt_10.list());
@@ -129,6 +127,9 @@ public class HTTPServletController extends HttpServlet {
 
         session.flush();
         session.close();
+
+        //Devices
+        DeviceManager deviceManager = DeviceManager.getInstance();
     }
 
     @Override

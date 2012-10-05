@@ -1,6 +1,8 @@
 package ru.blackart.dsi.infopanel.controllers;
 
 import net.sf.cglib.core.Block;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hostgroup;
 import ru.blackart.dsi.infopanel.tasksSystem.TaskQueueController;
@@ -28,6 +30,7 @@ import java.util.Queue;
 import java.util.concurrent.*;
 
 public class SNMPcRequestController extends HttpServlet {
+    private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private Properties settingsMonitoringPanel;
     private GenerateMonitoringPanel generateMonitoringPanel;
     private Storage storage;
@@ -109,8 +112,7 @@ public class SNMPcRequestController extends HttpServlet {
                 Thread exUpThread = new UpTrapsHandler(requestDataObject, this.storage, this.threadPoolExecutor);
                 this.threadPoolExecutor.execute(exUpThread);
             }
+            log.info(request.getParameter("poolling") + " " + request.getParameter("device") + " " + request.getParameter("date") + " " + request.getParameter("time"));
         }
-
-        System.out.println("All task - " + threadPoolExecutor.getTaskCount() + " completed task - " + threadPoolExecutor.getCompletedTaskCount());
     }
 }

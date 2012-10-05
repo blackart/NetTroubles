@@ -88,12 +88,14 @@ public class SendToCRM extends AbstractCommand {
 
                     CommentService commentService = CommentService.getInstance();              //Далее работаем над отправкой комментариев к проблеме в CRM
 
-                    for (Comment comment : trouble.getComments()) {
-                        CrmComment crmComment = new CrmComment(trouble, comment);
-                        if (!comment.getCrm()) {                                               //если коммент ещё не отправлен в CRM
-                            if (crmComment.send()) {                                           //отправляем коммент в CRM, если успешно, сохраняем это состояние в DB
-                                comment.setCrm(true);
-                                commentService.update(comment);
+                    synchronized (commentService) {
+                        for (Comment comment : trouble.getComments()) {
+                            CrmComment crmComment = new CrmComment(trouble, comment);
+                            if (!comment.getCrm()) {                                               //если коммент ещё не отправлен в CRM
+                                if (crmComment.send()) {                                           //отправляем коммент в CRM, если успешно, сохраняем это состояние в DB
+                                    comment.setCrm(true);
+                                    commentService.update(comment);
+                                }
                             }
                         }
                     }
@@ -102,14 +104,16 @@ public class SendToCRM extends AbstractCommand {
                         troubleService.update(trouble);                                            //сохраняем в DB инфу о проблеме
                     }
 
-                    TroubleListService troubleListService = TroubleListService.getInstance();
                     TroubleList targetTroubleList = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
 
-                    if (tList.getId() != targetTroubleList.getId()) {
-                        //перемещаем и сохраняем состояние обоих очередей в DB.
-                        dataModelConstructor.moveTroubleList(trouble, tList, targetTroubleList);
-                        troubleListService.update(tList);
-                        troubleListService.update(targetTroubleList);
+                    TroubleListService troubleListService = TroubleListService.getInstance();
+                    synchronized (troubleListService) {
+                        if (tList.getId() != targetTroubleList.getId()) {
+                            //перемещаем и сохраняем состояние обоих очередей в DB.
+                            dataModelConstructor.moveTroubleList(trouble, tList, targetTroubleList);
+                            troubleListService.update(tList);
+                            troubleListService.update(targetTroubleList);
+                        }
                     }
                 } else {
                     xml.addKid(new BasicXmlData("message", "Информация по проблеме заполнена верно, но при отправке в CRM возникла ошибка. Сообщите об этом разработчику."));

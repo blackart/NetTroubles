@@ -68,7 +68,7 @@ public class Login extends AbstractCommand {
         }
 
         if ((login.equals("system")) && (passwd.equals(settings.getProperty("system_password")))) {
-            this.log.info("User - " + login + " id GOD!!!");
+            this.log.info("User - " + login + " is GOD!!!");
 
             Users user = null;
             if (usersList.size() == 1) {
@@ -97,7 +97,7 @@ public class Login extends AbstractCommand {
                     group.setName("system");
                 }
 
-                //todo брать не из базы а из properties файла, резервная система в отсутствие записейв DB
+                //todo брать не из базы а из properties файла, резервная система в отсутствие записей в DB
 
                 Criteria crt_4 = session.createCriteria(Tab.class);
                 ArrayList<Tab> tabs = new ArrayList<Tab>(crt_4.list());
