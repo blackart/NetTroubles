@@ -19,10 +19,11 @@ public class AddDevice extends AbstractCommand {
 
     /**
      * Генерация XML данных.
-     * @param prop параметр
+     *
+     * @param prop  параметр
      * @param value свойство
-     * @throws java.io.IOException
      * @return BasicXmlData данный в формате xml
+     * @throws java.io.IOException
      */
     private BasicXmlData generateXMLResponse(String prop, String value) throws IOException {
         BasicXmlData xml = new BasicXmlData("device_message");
@@ -37,63 +38,78 @@ public class AddDevice extends AbstractCommand {
         String name = this.getRequest().getParameter("name").trim();
         String desc = this.getRequest().getParameter("desc").trim();
         String status_id = this.getRequest().getParameter("status").replace("_hs_add", "").trim();
-        String group_id = this.getRequest().getParameter("group").replace("_hg_add","").trim();
+        String group_id = this.getRequest().getParameter("group").replace("_hg_add", "").trim();
         String region_id = this.getRequest().getParameter("region").trim();
 
-        log.info("Input parameters : name - " + name + "; description - " + desc  + "; status_id - " + status_id + "; group_id - " + group_id + "; region_id - " + region_id);
+        log.info("Input parameters : name - " + name + "; description - " + desc + "; status_id - " + status_id + "; group_id - " + group_id + "; region_id - " + region_id);
 
         OutputStream out = getResponse().getOutputStream();
 
         synchronized (deviceManager) {
-            Hostgroup hostgroup;
-            Hoststatus hoststatus;
-            Region region;
-
             if (name.equals("")) {
-                log.error("Host name is empty!");
-
+                log.error("Host name value empty!");
                 BasicXmlData xml = this.generateXMLResponse("message", "Устройство с пустым именем не может быть добавлено!");
                 xml.save(out);
                 return null;
-            } else {
-                Device device = deviceManager.getDevice(name);
-                if (device != null) {
-                    log.error("Host name - " + name + " already exist");
-
-                    BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, так как в системе уже существует устройство с таким именем!");
-                    xml.save(out);
-                    return null;
-                }
             }
 
-            if (status_id.equals("") || group_id.equals("") || region_id.equals("")) {
-                if (status_id.equals("")) log.error("Host status is empty!");
-                if (group_id.equals("")) log.error("Host group is empty!");
-                if (region_id.equals("")) log.error("Region host is empty!");
+            Device device = deviceManager.getDevice(name);
 
-                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение статуса, группы или региона пусто!");
+            if (device != null) {
+                log.error("Host name - " + name + " already exist");
+
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство c таким именем уже существует!");
                 xml.save(out);
                 return null;
-            } else {
-
-                hoststatus = deviceManager.getStatus(status_id);
-                hostgroup = deviceManager.getHostGroup(group_id);
-                region = deviceManager.getRegion(region_id);
-
-                if ((hoststatus == null) || (hostgroup == null) || (region == null)) {
-                    if (hostgroup == null) log.error("Not found host group with " + group_id + " id");
-                    if (hoststatus == null) log.error("Not found host status with " + status_id + " id");
-                    if (region == null) log.error("Not found region with " + region_id + " id");
-
-                    BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если статус, группа или регион с таким значением не существует в системе!");
-                    xml.save(out);
-                    return null;
-                } else {
-                    log.info("Host group - " + hostgroup.getName() + ", host status - " + hoststatus.getName() + ", region - " + region.getName());
-                }
             }
 
-            Device device = new Device();
+            if (status_id.equals("")) {
+                log.error("Host status value empty!");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его статуса пусто!");
+                xml.save(out);
+                return null;
+            }
+
+            if (group_id.equals("")) {
+                log.error("Host group value empty!");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его группы пусто!");
+                xml.save(out);
+                return null;
+            }
+
+            if (region_id.equals("")) {
+                log.error("Region value empty!");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его региона пусто!");
+                xml.save(out);
+                return null;
+            }
+
+            Hoststatus hoststatus = deviceManager.getStatusFromDB(status_id);
+            Hostgroup hostgroup = deviceManager.getHostGroupFromDB(group_id);
+            Region region = deviceManager.getRegionFromDB(region_id);
+
+            if (hostgroup == null) {
+                log.error("Not found host group with " + group_id + " id");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не добавлено. Группа устройства не найдена.");
+                xml.save(out);
+                return null;
+            }
+            if (hoststatus == null) {
+                log.error("Not found host status with " + status_id + " id");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не добавлено. Не удалось присвоить статус устройстве. Такого статуса не существует.");
+                xml.save(out);
+                return null;
+            }
+            if (region == null) {
+                log.error("Not found region with " + region_id + " id");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не добавлено. Регион для устройства указан неверно");
+                xml.save(out);
+                return null;
+            }
+
+            log.info("Host group - " + hostgroup.getName() + ", host status - " + hoststatus.getName() + ", region - " + region.getName());
+
+            device = new Device();
 
             device.setName(name);
             device.setDescription(desc);

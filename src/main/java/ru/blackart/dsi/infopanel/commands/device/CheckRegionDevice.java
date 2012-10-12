@@ -7,61 +7,56 @@ import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Region;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class CheckRegionDevice extends AbstractCommand {
 
     @Override
     public String execute() throws Exception {
-        Session session = SessionFactorySingle.getSessionFactory().openSession();
+        DeviceManager deviceManager = DeviceManager.getInstance();
 
-        Criteria crt_device = session.createCriteria(Device.class);
+        synchronized (deviceManager) {
+            HashMap<String, Device> prop_dev_ist = deviceManager.getDevice_list();
+            Collection<Device> dev_list = new ArrayList<Device>();
+            dev_list.addAll((Collection)prop_dev_ist.values());
 
-        ArrayList<Region> regions = (ArrayList<Region>) this.getConfig().getServletContext().getAttribute("regions");
+            ArrayList<Region> regions = (ArrayList<Region>) this.getConfig().getServletContext().getAttribute("regions");
 
-        Properties regions_all = new Properties();
-        for (Region r : regions) {
-            regions_all.setProperty(r.getName(),".*(" + r.getPrefix() + ")" );
-        }
+            Properties regions_all = new Properties();
+            for (Region r : regions) {
+                regions_all.setProperty(r.getName(), ".*(" + r.getPrefix() + ")");
+            }
 
-        for (Device d : (List<Device>)crt_device.list()) {
-            Boolean irk = true;
-            for (Enumeration en = regions_all.keys(); en.hasMoreElements();) {
-                String region_ = en.nextElement().toString();
-                if (Pattern.matches(regions_all.getProperty(region_), d.getName()) && (!region_.equals("Иркутск"))) {
+            for (Device d : dev_list) {
+                Boolean irk = true;
+                for (Enumeration en = regions_all.keys(); en.hasMoreElements(); ) {
+                    String region_ = en.nextElement().toString();
+                    if (Pattern.matches(regions_all.getProperty(region_), d.getName()) && (!region_.equals("Иркутск"))) {
+                        Region region_dest = null;
+                        for (Region r : regions) {
+                            if (r.getName().equals(region_)) region_dest = r;
+                        }
+                        if (region_dest != null) {
+                            d.setRegion(region_dest);
+                            deviceManager.updateDevice(d);
+                        }
+                        irk = false;
+                    }
+                }
+                if (irk) {
                     Region region_dest = null;
                     for (Region r : regions) {
-                        if (r.getName().equals(region_)) region_dest = r;
+                        if (r.getName().equals("Иркутск")) region_dest = r;
                     }
                     if (region_dest != null) {
                         d.setRegion(region_dest);
-                        session.beginTransaction();
-                        session.save(d);
-                        session.getTransaction().commit();
+                        deviceManager.updateDevice(d);
                     }
-                    irk = false;
                 }
             }
-            if (irk) {
-                Region region_dest = null;
-                for (Region r : regions) {
-                    if (r.getName().equals("Иркутск")) region_dest = r;
-                }
-                if (region_dest != null) {
-                    d.setRegion(region_dest);
-                    session.beginTransaction();
-                    session.save(d);
-                    session.getTransaction().commit();
-                }
-            }
-        }
 
-        session.flush();
-        session.close();
+        }
 
         return null;
     }
@@ -75,7 +70,7 @@ public class CheckRegionDevice extends AbstractCommand {
         }
 
         Boolean irk = true;
-        for (Enumeration en = regions_all.keys(); en.hasMoreElements();) {
+        for (Enumeration en = regions_all.keys(); en.hasMoreElements(); ) {
             String region_ = en.nextElement().toString();
             if (Pattern.matches(regions_all.getProperty(region_), device.getName()) && (!region_.equals("Иркутск"))) {
                 Region region_dest = null;

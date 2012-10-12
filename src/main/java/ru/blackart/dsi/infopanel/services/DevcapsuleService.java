@@ -82,7 +82,8 @@ public class DevcapsuleService {
     public Devcapsule getDevcapsule(Integer id) {
         Criteria crt_devcapsule = this.getSession().createCriteria(Devcapsule.class);
         crt_devcapsule.add(Restrictions.eq("id", id));
-        return (Devcapsule) crt_devcapsule.list().get(0);
+        List list =  crt_devcapsule.list();
+        return list.size() > 0 ? (Devcapsule)crt_devcapsule.list().get(0) : null;
     }
 
     public List<Devcapsule> getDevcWithOpenUpDateForDevice(Device device) {

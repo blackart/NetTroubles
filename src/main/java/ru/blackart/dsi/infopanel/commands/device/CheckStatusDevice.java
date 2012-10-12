@@ -8,6 +8,7 @@ import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Device;
+import ru.blackart.dsi.infopanel.services.DevcapsuleService;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -19,17 +20,21 @@ public class CheckStatusDevice extends AbstractCommand {
         String devs = this.getRequest().getParameter("devs");
         String[] ids = devs.split("\\|");
 
-        Session session = SessionFactorySingle.getSessionFactory().openSession();
-
+        DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
         List<Devcapsule> devc_list = new ArrayList<Devcapsule>();
-        for (int i=0; i < ids.length; i++ ) {
-            Criteria crt_devcaps = session.createCriteria(Devcapsule.class);
-            crt_devcaps.add(Restrictions.eq("id", Integer.valueOf(ids[i])));
-            devc_list.add((Devcapsule)crt_devcaps.list().get(0));
-        }
 
-        session.flush();
-        session.close();
+        synchronized (devcapsuleService) {
+            for (int i = 0; i < ids.length; i++) {
+                int id = -1;
+                try {
+                    id = Integer.valueOf(ids[i]);
+                } catch (Exception e) {
+                    continue;
+                }
+                Devcapsule devcapsule = devcapsuleService.getDevcapsule(id);
+                devc_list.add(devcapsule);
+            }
+        }
 
         BasicXmlData xml = new BasicXmlData("device_message");
 
@@ -37,11 +42,11 @@ public class CheckStatusDevice extends AbstractCommand {
             Device d = devc.getDevice();
             if (d.getHoststatus() == null) {
                 BasicXmlData xml_level_1 = new BasicXmlData("device");
-                xml_level_1.addKid(new BasicXmlData("id",String.valueOf(d.getId())));
-                xml_level_1.addKid(new BasicXmlData("name",d.getName()));
-                xml_level_1.addKid(new BasicXmlData("desc",d.getDescription()));
-                xml_level_1.addKid(new BasicXmlData("group_id",String.valueOf(d.getHostgroup().getId())));
-                xml_level_1.addKid(new BasicXmlData("region_id",String.valueOf(d.getRegion().getId())));
+                xml_level_1.addKid(new BasicXmlData("id", String.valueOf(d.getId())));
+                xml_level_1.addKid(new BasicXmlData("name", d.getName()));
+                xml_level_1.addKid(new BasicXmlData("desc", d.getDescription()));
+                xml_level_1.addKid(new BasicXmlData("group_id", String.valueOf(d.getHostgroup().getId())));
+                xml_level_1.addKid(new BasicXmlData("region_id", String.valueOf(d.getRegion().getId())));
                 xml.addKid(xml_level_1);
             }
         }

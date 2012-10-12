@@ -52,61 +52,76 @@ public class EditDevice extends AbstractCommand {
 
         log.info("Input parameters : name - " + name + "; description - " + desc + "; status_id - " + status_id + "; group_id - " + group_id + "; region_id - " + region_id);
 
-        Device device = null;
-        Hostgroup hostgroup = null;
-        Hoststatus hoststatus = null;
-        Region region = null;
-
         synchronized (deviceManager) {
             if (name.equals("")) {
                 log.error("Host name is empty!");
                 BasicXmlData xml = this.generateXMLResponse("message", "Информация об устройстве не может быть изменена, так как имя устройства не может быть пустым!");
                 xml.save(out);
                 return null;
-            } else {
-                int id;
-                try {
-                    id = Integer.valueOf(device_id);
-                } catch (Exception e) {
-                    log.error("Device id don't cast to Number!\n" + e.getStackTrace());
-                    return null;
-                }
-
-                device = deviceManager.getDevice(id);
-
-                if (device == null) {
-                    log.error("Could not find device with request id - " + device_id);
-                    BasicXmlData xml = this.generateXMLResponse("message", "Информация об устройстве не может быть изменена, так как устройство не найдено в системе!");
-                    xml.save(out);
-                    return null;
-                }
             }
 
-            if (status_id.equals("") || group_id.equals("") || (region_id.equals(""))) {
-                if (status_id.equals("")) log.error("Host status is empty!");
-                if (group_id.equals("")) log.error("Host group is empty!");
-                if (region_id.equals("")) log.error("Region is empty!");
+            int id;
+            try {
+                id = Integer.valueOf(device_id);
+            } catch (Exception e) {
+                log.error("Device id don't cast to Number!\n" + e.getStackTrace());
+                return null;
+            }
 
-                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его статуса, группы или региона пусто!");
+            Device device = deviceManager.getDevice(id);
+
+            if (device == null) {
+                log.error("Could not find device with request id - " + device_id);
+                BasicXmlData xml = this.generateXMLResponse("message", "Информация об устройстве не может быть изменена, так как устройство не найдено в системе!");
                 xml.save(out);
                 return null;
-            } else {
-                hoststatus = deviceManager.getStatus(status_id);
-                hostgroup = deviceManager.getHostGroup(group_id);
-                region = deviceManager.getRegion(region_id);
-
-                if ((hoststatus == null) || (hostgroup == null) || (region == null)) {
-                    if (hostgroup == null) log.error("Not found host group with " + group_id + " id");
-                    if (hoststatus == null) log.error("Not found host status with " + status_id + " id");
-                    if (region == null) log.error("Not found region with " + region_id + " id");
-
-                    BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если статус, группа или регион с таким значением не существует в системе!");
-                    xml.save(out);
-                    return null;
-                } else {
-                    log.info("Host group - " + hostgroup.getName() + ", host status - " + hoststatus.getName() + ", region - " + region.getName());
-                }
             }
+
+            if (status_id.equals("")) {
+                log.error("Host status value empty!");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его статуса пусто!");
+                xml.save(out);
+                return null;
+            }
+
+            if (group_id.equals("")) {
+                log.error("Host group value empty!");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его группы пусто!");
+                xml.save(out);
+                return null;
+            }
+
+            if (region_id.equals("")) {
+                log.error("Region value empty!");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не может быть добавлено, если значение его региона пусто!");
+                xml.save(out);
+                return null;
+            }
+
+            Hoststatus hoststatus = deviceManager.getStatusFromDB(status_id);
+            Hostgroup hostgroup = deviceManager.getHostGroupFromDB(group_id);
+            Region region = deviceManager.getRegionFromDB(region_id);
+
+            if (hostgroup == null) {
+                log.error("Not found host group with " + group_id + " id");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не добавлено. Группа устройства не найдена.");
+                xml.save(out);
+                return null;
+            }
+            if (hoststatus == null) {
+                log.error("Not found host status with " + status_id + " id");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не добавлено. Не удалось присвоить статус устройстве. Такого статуса не существует.");
+                xml.save(out);
+                return null;
+            }
+            if (region == null) {
+                log.error("Not found region with " + region_id + " id");
+                BasicXmlData xml = this.generateXMLResponse("message", "Устройство не добавлено. Регион для устройства указан неверно");
+                xml.save(out);
+                return null;
+            }
+
+            log.info("Host group - " + hostgroup.getName() + ", host status - " + hoststatus.getName() + ", region - " + region.getName());
 
             device.setName(name);
             device.setDescription(desc);
@@ -114,7 +129,7 @@ public class EditDevice extends AbstractCommand {
             device.setHostgroup(hostgroup);
             device.setRegion(region);
 
-            deviceManager.updateExistDevice(device);
+            deviceManager.updateDevice(device);
 
             log.info("Update device - " + device.getName());
 

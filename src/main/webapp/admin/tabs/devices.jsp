@@ -1,18 +1,14 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Device" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Hostgroup" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Hoststatus" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Region" %>
-<%@ page import="java.util.Properties" %>
 <%@ page import="ru.blackart.dsi.infopanel.commands.device.DeviceManager" %>
-<%@ page import="java.util.Enumeration" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.lang.reflect.Array" %>
+<%@ page import="java.util.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-//    ArrayList<Device> devices = (ArrayList<Device>) config.getServletContext().getAttribute("deviceList");
     DeviceManager deviceManager = DeviceManager.getInstance();
-    Properties devices = deviceManager.getDevice_list();
+    HashMap devices = deviceManager.getDevice_list();
 
     ArrayList<Hostgroup> hostgroups = (ArrayList<Hostgroup>) config.getServletContext().getAttribute("hostgroups");
     ArrayList<Hoststatus> hoststatuses = (ArrayList<Hoststatus>) config.getServletContext().getAttribute("hoststatuses");
@@ -79,9 +75,7 @@
                 <%
                     try {
                         int i = 0;
-                        for (Enumeration en = devices.keys(); en.hasMoreElements();) {
-                            String device_name = (String)en.nextElement();
-                            Device device = (Device)devices.get(device_name);
+                        for (Device device : (Collection<Device>)devices.values()) {
                             i++;
                 %>
                             <tr id="<%=device.getId()%>_device">

@@ -50,17 +50,18 @@ public class DownTrapsHandler extends Thread {
         synchronized (deviceManager) {
             device = deviceManager.getDevice(this.requestData.getDevice());
             if (device == null) {                                   //если даннх о узле в DB нет, записываем.
-                device = deviceManager.addNewDevice(this.requestData.getDevice(), this.requestData.getGroup(), this.requestData.getDesc());
+                deviceManager.addNewDevice(this.requestData.getDevice(), this.requestData.getGroup(), this.requestData.getDesc());
 //                log.info("Save info about new device - " + device);
             } else {                                                //если данные о узле в DB есть
                 if (true) {                                         //и включен режим обучения
                     //сохраняем новые данные в DB и возвращаем объект
-                    device = deviceManager.updateDevice(device, this.requestData.getDevice(), this.requestData.getGroup(), this.requestData.getDesc());
+                    deviceManager.updateDevice(device, this.requestData.getDevice(), this.requestData.getGroup(), this.requestData.getDesc());
 //                    log.info("ENABLED MOD LEARN INFO DEVICE. Update info about new device - " + device);
                 } else {                                            //если режим обучения не включен
 //                    log.info("Get info about " + device + " from DB");
                 }
             }
+            device = deviceManager.getDevice(this.requestData.getDevice());
         }
         return device;
     }
