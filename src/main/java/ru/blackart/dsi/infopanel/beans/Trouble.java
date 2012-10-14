@@ -89,7 +89,8 @@ public class Trouble implements Persistent {
 
     @OneToMany(
             targetEntity = Devcapsule.class,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY
     )
     @JoinTable(
             name = "dev_trouble",
@@ -104,7 +105,7 @@ public class Trouble implements Persistent {
         this.devcapsules = devcapsules;
     }
 
-    @ManyToMany(
+    @OneToMany(
             targetEntity = Service.class,
             cascade = {CascadeType.MERGE,CascadeType.PERSIST},
             fetch = FetchType.LAZY

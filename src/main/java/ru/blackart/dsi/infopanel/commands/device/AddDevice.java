@@ -8,10 +8,10 @@ import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hostgroup;
 import ru.blackart.dsi.infopanel.beans.Hoststatus;
 import ru.blackart.dsi.infopanel.beans.Region;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Properties;
 
 public class AddDevice extends AbstractCommand {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());

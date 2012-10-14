@@ -43,28 +43,4 @@ public class AccessItemMenu implements Serializable {
     public List<AccessTab> getChildrens() {
         return childrens;
     }
-
-/*    private int position;
-private AccessTab item;
-
-public AccessItemMenu(int position, AccessTab item) {
-    this.position = position;
-    this.item = item;
-}
-
-public int getPosition() {
-    return position;
-}
-
-public void setPosition(int position) {
-    this.position = position;
-}
-
-public AccessTab getItem() {
-    return item;
-}
-
-public void setItem(AccessTab item) {
-    this.item = item;
-}*/
 }

@@ -3,8 +3,7 @@ package ru.blackart.dsi.infopanel.utils.searching;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.beans.TroubleList;
-import ru.blackart.dsi.infopanel.commands.device.DeviceManager;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
 import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 

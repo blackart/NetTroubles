@@ -1,25 +1,5 @@
 package ru.blackart.dsi.infopanel.temp;
 
-import org.hibernate.LazyInitializationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.blackart.dsi.infopanel.SessionFactorySingle;
-import ru.blackart.dsi.infopanel.beans.*;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import ru.blackart.dsi.infopanel.commands.device.DeviceManager;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
-
-import javax.jms.JMSException;
-
 public class LogEngine {
     /*private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private static LogEngine logEngine;

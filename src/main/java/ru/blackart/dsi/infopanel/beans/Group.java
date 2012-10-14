@@ -9,6 +9,7 @@ public class Group implements Persistent {
     private int id;
     private String name;
     private List<Tab> tabs;
+    private String menuConfig;
 
     @Id
     @Column(name = "id")
@@ -28,6 +29,15 @@ public class Group implements Persistent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "menu_config")
+    public String getMenuConfig() {
+        return menuConfig;
+    }
+
+    public void setMenuConfig(String menuConfig) {
+        this.menuConfig = menuConfig;
     }
 
     @ManyToMany(

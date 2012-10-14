@@ -408,7 +408,6 @@ $(document).ready(function() {
 
                 var $service = $.trim($(this).find(".content").find("div[id$='_service']").text().replace("&nbsp;", ""));
                 $.each($service.split(";"), function() {
-                    debugger;
                     var service = $.trim(this.replace(";", ""));
                     if (service !== "") {
                         $("select[id='service_merge'] option").each(function() {

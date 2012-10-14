@@ -6,6 +6,8 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.menu.*" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 //    Logger log = LoggerFactory.getLogger(this.getClass().getName());
@@ -362,36 +364,33 @@
     <div id="v_tabs">
         <ul>
             <%
-            DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-            if (accessUserObject != null) {
-                for (AccessItemMenu menu : accessUserObject.getTabs()) {
-                    if (menu.getChildrens().size() == 0) {%>
-                        <li><a href="tabs/<%=menu.getTab().getTab().getFile_name()%>" class="menu_item"><%=menu.getTab().getTab().getCaption()%></a></li>
-                  <%} else {%>
-                        <h3><%=menu.getTab().getTab().getCaption()%></h3>
-                        <div>
-                            <%for (AccessTab tab : menu.getChildrens()) {%>
-                                <%
-                                TroubleList troubleList = dataModelConstructor.getTroubleListForName(tab.getTab().getCaption().toLowerCase());
+                DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+                if (accessUserObject != null) {
+                    Menu menu = accessUserObject.getMenu();
+                    for (ru.blackart.dsi.infopanel.access.menu.Group group : menu.getGroups()) {
+                        if ((group.getItems() == null) || (group.getItems().size() == 0)) {
+                            %><li><a href="tabs/<%=group.getUrl()%>" class="menu_item"><%=group.getName()%></a></li><%
+                        } else {
+                            %><h3><%=group.getName()%></h3><div><%
+                            for (Item item : group.getItems()) {
+                                TroubleList troubleList = dataModelConstructor.getTroubleListForName(item.getName().toLowerCase());
                                 String count_trobles = " ";
                                 if (troubleList != null) {
-                                    if (troubleList.getName().equals("current")) {
-                                        count_trobles += "<div class='count_need_actual_problem_troubles'></div>/<div class='count_waiting_close_troubles'></div>/<div class='count_current_troubles'></div>";
-                                    } else if (troubleList.getName().equals("complete")) {
-                                        count_trobles += "<div class='count_complete_troubles'></div>";
-                                    } else if (troubleList.getName().equals("trash")) {
-                                        count_trobles += "<div class='count_trash_troubles'></div>";
-                                    }
+                                        if (troubleList.getName().equals("current")) {
+                                            count_trobles += "<div class='count_need_actual_problem_troubles'></div>/<div class='count_waiting_close_troubles'></div>/<div class='count_current_troubles'></div>";
+                                        } else if (troubleList.getName().equals("complete")) {
+                                            count_trobles += "<div class='count_complete_troubles'></div>";
+                                        } else if (troubleList.getName().equals("trash")) {
+                                            count_trobles += "<div class='count_trash_troubles'></div>";
+                                        }
                                 }
-                                %>
-                                <li><a href="tabs/<%=tab.getTab().getFile_name()%>"><%=tab.getTab().getCaption() + count_trobles%></a></li>
-                          <%}%>
-                        </div>
-                  <%}
+                                %><li><a href="tabs/<%=item.getUrl()%>"><%=item.getName()+ count_trobles%></a></li><%
+                            }
+                            %></div><%
+                        }
+                    }
                 }
-            }
-            %>
-        </ul>
+        %></ul>
     </div>
 </div>
 </body>

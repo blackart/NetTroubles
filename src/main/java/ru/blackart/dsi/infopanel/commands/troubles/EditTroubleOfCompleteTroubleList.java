@@ -48,7 +48,7 @@ public class EditTroubleOfCompleteTroubleList extends AbstractCommand {
 
         int id = Integer.valueOf(this.getRequest().getParameter("id"));
         String title = this.getRequest().getParameter("title").trim();
-        String actual_problem = this.getRequest().getParameter("actual_problem").trim();
+        String actual_problem = this.getRequest().getParameter("actual_problem").replace("&nbsp;","").trim();
 
         synchronized (dataModelConstructor) {
             Trouble trouble = dataModelConstructor.getTroubleForId(id);

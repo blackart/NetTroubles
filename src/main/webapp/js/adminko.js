@@ -161,8 +161,8 @@ $(document).ready(function() {
                             $("#settings_trouble_close_list").submit();
                         } else {
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
-                            $.fn.update_trouble_counters();
                         }
+                        $.fn.update_trouble_counters();
 
                         var message = $(data).find("message");
                         if (message.length == 1) alert($(message).text());

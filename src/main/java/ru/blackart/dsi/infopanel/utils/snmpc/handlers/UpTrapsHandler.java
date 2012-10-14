@@ -6,7 +6,7 @@ import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Trouble;
 import ru.blackart.dsi.infopanel.beans.TroubleList;
-import ru.blackart.dsi.infopanel.commands.device.DeviceManager;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.services.DevcapsuleService;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
@@ -103,11 +103,6 @@ public class UpTrapsHandler extends Thread {
                     TroubleList targetTrList = this.dataModelConstructor.getTargetTroubleListForTrouble(trouble);
                     TroubleList sourceTrList = this.dataModelConstructor.getTroubleListForTrouble(trouble);
                     this.dataModelConstructor.moveTroubleList(trouble, sourceTrList, targetTrList);
-
-                    synchronized (this.troubleListService) {
-                        this.troubleListService.update(targetTrList);
-                        this.troubleListService.update(sourceTrList);
-                    }
 
                     if (trouble.getCrm()) {
                         CrmTrouble crmTrouble = new CrmTrouble(trouble, "2");

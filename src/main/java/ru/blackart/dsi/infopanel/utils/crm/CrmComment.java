@@ -28,17 +28,6 @@ public class CrmComment {
         format.applyPattern("dd/MM/yyyy HH:mm:ss");
 
         try {
-            String service = "";
-            for (Service s : trouble.getServices()) {
-                service = service + s.getId() + ";";
-            }
-
-            String sw = "";
-            for (Devcapsule d : trouble.getDevcapsules()) {
-                Device device = d.getDevice();
-                sw = sw + device.getName() + (device.getHoststatus() != null ? ", " + device.getHoststatus().getName() : "") + "; ";
-            }
-
             BasicXmlData xml = new BasicXmlData("action");
             xml.setAttribute("name", "Comment");
 
@@ -51,7 +40,7 @@ public class CrmComment {
 
             BasicXmlData xml_level_2_id_comment = new BasicXmlData("parameter");
             xml_level_2_id_comment.setAttribute("name", "id_comment");
-            xml_level_2_id_comment.setAttribute("value", String.valueOf(trouble.getId()));
+            xml_level_2_id_comment.setAttribute("value", String.valueOf(comment.getId()));
             xml_level_1.addKid(xml_level_2_id_comment);
 
             BasicXmlData xml_level_2_author = new BasicXmlData("parameter");

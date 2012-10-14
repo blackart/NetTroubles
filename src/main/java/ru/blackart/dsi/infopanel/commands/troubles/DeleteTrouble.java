@@ -40,7 +40,7 @@ public class DeleteTrouble extends AbstractCommand {
             }
 
             String title = this.getRequest().getParameter("title").trim();
-            String actual_problem = this.getRequest().getParameter("actual_problem").trim();
+            String actual_problem = this.getRequest().getParameter("actual_problem").replace("&nbsp;","").trim();
 
             trouble.setAuthor((Users) this.getSession().getAttribute("info"));
             trouble.setTitle(title);
@@ -72,10 +72,7 @@ public class DeleteTrouble extends AbstractCommand {
                     CrmTrouble crmTrouble = new CrmTrouble(trouble, "3");
                     if (crmTrouble.send()) {
                         TroubleList now_troubleList = dataModelConstructor.getTroubleListForTrouble(trouble);
-
                         dataModelConstructor.moveTroubleList(trouble, now_troubleList, dataModelConstructor.getList_of_trash_troubles());
-                        troubleListService.update(now_troubleList);
-                        troubleListService.update(dataModelConstructor.getList_of_trash_troubles());
                         xml.addKid(new BasicXmlData("status", "true"));
                     } else {
                         xml.addKid(new BasicXmlData("status", "false"));
@@ -84,10 +81,7 @@ public class DeleteTrouble extends AbstractCommand {
                     /*-----------------------------------------------------------------*/
                 } else {
                     TroubleList now_troubleList = dataModelConstructor.getTroubleListForTrouble(trouble);
-
                     dataModelConstructor.moveTroubleList(trouble, now_troubleList, dataModelConstructor.getList_of_trash_troubles());
-                    troubleListService.update(now_troubleList);
-                    troubleListService.update(dataModelConstructor.getList_of_trash_troubles());
                 }
             }
 

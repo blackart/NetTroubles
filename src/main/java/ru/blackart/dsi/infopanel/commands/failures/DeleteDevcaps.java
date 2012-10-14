@@ -31,10 +31,6 @@ public class DeleteDevcaps extends AbstractCommand {
 
                 dataModelConstructor.moveTroubleList(trouble, now_troubleList, dataModelConstructor.getList_of_trash_troubles());
 
-                synchronized (troubleListService) {
-                    troubleListService.update(now_troubleList);
-                    troubleListService.update(dataModelConstructor.getList_of_trash_troubles());
-                }
                 synchronized (troubleListsManager) {
                     troubleListsManager.sortTroubleList(dataModelConstructor.getList_of_trash_troubles());
                 }

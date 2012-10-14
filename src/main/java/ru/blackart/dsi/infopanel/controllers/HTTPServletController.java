@@ -1,9 +1,13 @@
 package ru.blackart.dsi.infopanel.controllers;
 
+import com.google.gson.Gson;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.blackart.dsi.infopanel.access.AccessTab;
+import ru.blackart.dsi.infopanel.access.menu.*;
+import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.commands.FactoryCommandCommand;
 import ru.blackart.dsi.infopanel.commands.Command;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
@@ -25,14 +29,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
 import org.hibernate.Criteria;
-import ru.blackart.dsi.infopanel.commands.device.DeviceManager;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 
 public class HTTPServletController extends HttpServlet {
@@ -92,8 +92,54 @@ public class HTTPServletController extends HttpServlet {
             g.setTabs(new ArrayList<Tab>(g.getTabs()));
             tabs_of_groups.add(new AccessMenuForGroup(g,tabs));
         }
+
         config.getServletContext().setAttribute("tabs_of_groups", tabs_of_groups);
         config.getServletContext().setAttribute("groups", groups);
+
+
+        //todo генерация json конфигурации меню, убрать после адаптации для ДСИ
+        Gson gson = new Gson();
+
+        for (int i = 0; i < tabs_of_groups.size(); i++) {
+            AccessMenuForGroup accessMenuForGroup = tabs_of_groups.get(i);
+            ArrayList menuItems = (ArrayList) accessMenuForGroup.getItemMenu();
+
+            Menu menu = new Menu();
+            ArrayList<ru.blackart.dsi.infopanel.access.menu.Group> groups_ = new ArrayList<ru.blackart.dsi.infopanel.access.menu.Group>();
+
+            for (int j = 0; j < menuItems.size(); j++) {
+                AccessItemMenu accessItemMenu = (AccessItemMenu) menuItems.get(j);
+                AccessTab accessTab = accessItemMenu.getTab();
+                if (accessTab.isPolicy()) {
+                    ru.blackart.dsi.infopanel.access.menu.Group group = new ru.blackart.dsi.infopanel.access.menu.Group();
+                    group.setId(accessTab.getTab().getMenu_group());
+                    group.setName(accessTab.getTab().getCaption());
+                    group.setUrl(accessItemMenu.getChildrens().size() > 0 ? null : accessTab.getTab().getFile_name());
+                    if (accessItemMenu.getChildrens().size() > 0) {
+                        List<Item> items = new ArrayList<Item>();
+                        for (int k = 0; k < accessItemMenu.getChildrens().size(); k++) {
+                            AccessTab children = accessItemMenu.getChildrens().get(k);
+                            if (children.isPolicy()) {
+                                Item item = new Item();
+                                Tab tab_children = children.getTab();
+                                item.setName(tab_children.getCaption());
+                                item.setPosition(tab_children.getGroup_position());
+                                item.setUrl(tab_children.getFile_name());
+                                items.add(item);
+                            }
+                        }
+                        group.setItems(items);
+                    }
+                    groups_.add(group);
+                }
+            }
+            menu.setGroups(groups_);
+            Group group_s = accessMenuForGroup.getGroup();
+            group_s.setMenuConfig(gson.toJson(menu));
+            session.getTransaction().begin();
+            session.save(group_s);
+            session.getTransaction().commit();
+        }
 
         //Users
         Criteria crt_5 = session.createCriteria(Users.class);

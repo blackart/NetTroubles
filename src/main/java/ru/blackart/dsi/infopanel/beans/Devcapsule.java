@@ -52,7 +52,7 @@ public class Devcapsule implements Persistent {
         this.timeup = timeup;
     }
 
-    @ManyToMany(
+    /*@ManyToMany(
             mappedBy = "devcapsules",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             targetEntity = Trouble.class
@@ -63,7 +63,7 @@ public class Devcapsule implements Persistent {
 
     public void setTroubles(List<Trouble> troubles) {
         this.troubles = troubles;
-    }
+    }*/
 
     @Column(name = "complete")
     public Boolean getComplete() {

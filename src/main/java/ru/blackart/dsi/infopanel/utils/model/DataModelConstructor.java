@@ -1,6 +1,5 @@
 package ru.blackart.dsi.infopanel.utils.model;
 
-import net.sf.hibernate.mapping.Array;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,8 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.*;
-import ru.blackart.dsi.infopanel.commands.device.DeviceManager;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
+import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
+import sun.awt.windows.ThemeReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,30 +61,22 @@ public class DataModelConstructor {
 
         TroubleList troubleList = (TroubleList) crt_curr_trouble.list().get(0);
 
-        for (int i = 0; i < troubleList.getTroubles().size(); i++) {
-            ArrayList<Devcapsule> dev_c = new ArrayList<Devcapsule>();
-            dev_c.addAll(troubleList.getTroubles().get(i).getDevcapsules());
+        List<Trouble> troubles = troubleList.getTroubles();
 
-            for (Devcapsule d : dev_c) {
-                d.setDevice(deviceManager.getDevice(d.getDevice()));
-            }
+        for (Trouble trouble : troubles) {
+            trouble.getComments();
 
-            troubleList.getTroubles().get(i).setDevcapsules(dev_c);
+            List<Devcapsule> devcapsules = trouble.getDevcapsules();
+            devcapsules.size();
 
-            ArrayList<Service> serv = new ArrayList<Service>();
-            serv.addAll(troubleList.getTroubles().get(i).getServices());
-            troubleList.getTroubles().get(i).setServices(serv);
-
-            ArrayList<Comment> comments = new ArrayList<Comment>();
-            comments.addAll(troubleList.getTroubles().get(i).getComments() == null ? new ArrayList<Comment>() : troubleList.getTroubles().get(i).getComments());
-            troubleList.getTroubles().get(i).setComments(comments);
+            List<Service> services = trouble.getServices();
+            services.size();
         }
 
-        session.getTransaction().commit();
+        this.troubleLists.add(troubleList);
+
         session.flush();
         session.close();
-
-        this.troubleLists.add(troubleList);
 
         return troubleList;
     }
@@ -97,8 +90,13 @@ public class DataModelConstructor {
             dataModelConstructor.list_of_current_troubles = dataModelConstructor.loadTroubleList("current", dataModelConstructor.sessionFactory.openSession());
             dataModelConstructor.list_of_trash_troubles = dataModelConstructor.loadTroubleList("trash", dataModelConstructor.sessionFactory.openSession());
             dataModelConstructor.list_of_complete_troubles = dataModelConstructor.loadTroubleList("complete", dataModelConstructor.sessionFactory.openSession());
+//            dataModelConstructor.list_of_complete_troubles = dataModelConstructor.loadTroubleList("trash", dataModelConstructor.sessionFactory.openSession());
             dataModelConstructor.list_of_waiting_close_troubles = dataModelConstructor.loadTroubleList("waiting_close", dataModelConstructor.sessionFactory.openSession());
             dataModelConstructor.list_of_need_actual_problem = dataModelConstructor.loadTroubleList("need_actual_problem", dataModelConstructor.sessionFactory.openSession());
+
+            dataModelConstructor.errorCorrectionComplianceTroublesAndList(dataModelConstructor.list_of_current_troubles);
+            dataModelConstructor.errorCorrectionComplianceTroublesAndList(dataModelConstructor.list_of_need_actual_problem);
+            dataModelConstructor.errorCorrectionComplianceTroublesAndList(dataModelConstructor.list_of_waiting_close_troubles);
 
             //методы класса TroubleListsManager сохраняют ссылки на эти объекты для доступа к ним из дркгого контроллера.
             TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
@@ -171,6 +169,30 @@ public class DataModelConstructor {
         return t_list;
     }
 
+    public void errorCorrectionComplianceTroublesAndList(TroubleList troubleList) {
+        List<Trouble> needMoveTroubles = new ArrayList<Trouble>();
+        for (Trouble trouble : troubleList.getTroubles()) {
+            if (!this.checkComplianceTroubleAndList(trouble, troubleList)) {
+                needMoveTroubles.add(trouble);
+            }
+        }
+        for (Trouble trouble : needMoveTroubles) {
+            TroubleList targetTroubleList = this.getTargetTroubleListForTrouble(trouble);
+            this.moveTroubleList(trouble, troubleList, targetTroubleList);
+        }
+    }
+
+    public Boolean checkComplianceTroubleAndList(Trouble trouble) {
+        TroubleList sourceTroubleList = this.getTroubleListForTrouble(trouble);
+        return this.checkComplianceTroubleAndList(trouble, sourceTroubleList);
+    }
+
+    public boolean checkComplianceTroubleAndList(Trouble trouble, TroubleList sourceTroubleList) {
+        TroubleList targetTroubleList = this.getTargetTroubleListForTrouble(trouble);
+        if (targetTroubleList == null) return false;
+        return targetTroubleList.getId() == sourceTroubleList.getId();
+    }
+
     public TroubleList getTargetTroubleListForTrouble(Trouble trouble) {
         boolean complete = true;
         boolean wait = true;
@@ -194,10 +216,10 @@ public class DataModelConstructor {
             }
         }
 
-        wait = wait && (complete_devc && trouble.getClose() && !trouble.getCrm() && trouble.getClose() && actual_problem_empty);
+        wait = wait && (complete_devc && trouble.getClose() && !trouble.getCrm());
         complete = complete && (complete_devc && trouble.getClose() && trouble.getCrm() && !actual_problem_empty);
-        current = current || !complete_devc;
         need_actual = need_actual && (complete_devc && trouble.getClose() && trouble.getCrm() && actual_problem_empty);
+        current = current || !complete_devc;
 
         TroubleList troubleList = null;
         if (complete) {
@@ -222,6 +244,8 @@ public class DataModelConstructor {
     }
 
     public void moveTroubleList(Trouble trouble, TroubleList sourceTroubleList, TroubleList targetTroubleList) {
+        TroubleListService troubleListService = TroubleListService.getInstance();
+
         if (sourceTroubleList.getId() != targetTroubleList.getId()) {
             int index = -1;
             for (Trouble t : sourceTroubleList.getTroubles()) {
@@ -231,6 +255,11 @@ public class DataModelConstructor {
             }
             sourceTroubleList.getTroubles().remove(index);
             targetTroubleList.getTroubles().add(trouble);
+            synchronized (troubleListService) {
+                troubleListService.update(sourceTroubleList);
+                troubleListService.update(targetTroubleList);
+            }
+            log.info("The trouble " + trouble.getTitle() + " [" + trouble.getId() + "] moved from " + sourceTroubleList.getName() + " to " + targetTroubleList.getName() + " trouble list");
         }
     }
 

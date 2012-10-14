@@ -2,7 +2,7 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Hostgroup" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Hoststatus" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Region" %>
-<%@ page import="ru.blackart.dsi.infopanel.commands.device.DeviceManager" %>
+<%@ page import="ru.blackart.dsi.infopanel.services.DeviceManager" %>
 <%@ page import="java.lang.reflect.Array" %>
 <%@ page import="java.util.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

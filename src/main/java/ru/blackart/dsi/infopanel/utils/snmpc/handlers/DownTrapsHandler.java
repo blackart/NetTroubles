@@ -3,7 +3,7 @@ package ru.blackart.dsi.infopanel.utils.snmpc.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.beans.*;
-import ru.blackart.dsi.infopanel.commands.device.DeviceManager;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.services.DevcapsuleService;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;

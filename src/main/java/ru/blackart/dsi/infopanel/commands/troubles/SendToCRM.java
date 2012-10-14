@@ -1,6 +1,8 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
 import com.myjavatools.xml.BasicXmlData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.services.CommentService;
@@ -20,6 +22,7 @@ public class SendToCRM extends AbstractCommand {
     DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
     TroubleService troubleService = TroubleService.getInstance();
     ServiceService serviceService = ServiceService.getInstance();
+    private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     @Override
     public String execute() throws Exception {
@@ -35,13 +38,16 @@ public class SendToCRM extends AbstractCommand {
 
         int id = Integer.valueOf(this.getRequest().getParameter("id"));
         String title = this.getRequest().getParameter("title").trim();
-        String actual_problem = this.getRequest().getParameter("actual_problem").trim();
+        String actual_problem = this.getRequest().getParameter("actual_problem").replace("&nbsp;", "").trim();
         String timeout_str = this.getRequest().getParameter("timeout");
+
+        log.info("Start sending trouble " + title + " [" + id + "] to CRM");
         /*-------------------------------------------------------------------------------------------*/
 
         synchronized (dataModelConstructor) {
             Trouble trouble = dataModelConstructor.getTroubleForId(id);
             TroubleList tList = dataModelConstructor.getTroubleListForTrouble(trouble);        //выясняем в какой очереде (листе) находится проблема
+            log.info("The trouble [" + id + "] belongs to the " + tList.getName() + " trouble list");
 
             if (tList.getName().equals("current")) {
                 String timeout = null;
@@ -82,7 +88,9 @@ public class SendToCRM extends AbstractCommand {
             CrmTrouble crmTrouble = new CrmTrouble(trouble, status_crm);                       //создаём объект, который отправит в CRM проблему
 
             if (crmTrouble.validation()) {                                                     //вызываем метод validation() для проверки все ли поля проблемы корректно заполнены
+                log.info("Preparing the trouble [" + id + "] to sending to CRM");
                 Boolean send_to_crm = crmTrouble.send();                                       //отправляем проблему в CRM, если всё прошло успешно, метод возвратит true
+                log.info("The trouble [" + id + "] posted to CRM");
                 if (send_to_crm) {
                     trouble.setCrm(true);                                                      //отмечаем, что проблема отправлена в CRM
 
@@ -105,16 +113,13 @@ public class SendToCRM extends AbstractCommand {
                     }
 
                     TroubleList targetTroubleList = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
+                    log.info("Target list for the trouble [" + id + "] is " + targetTroubleList.getName() + " trouble list");
 
-                    TroubleListService troubleListService = TroubleListService.getInstance();
-                    synchronized (troubleListService) {
-                        if (tList.getId() != targetTroubleList.getId()) {
-                            //перемещаем и сохраняем состояние обоих очередей в DB.
-                            dataModelConstructor.moveTroubleList(trouble, tList, targetTroubleList);
-                            troubleListService.update(tList);
-                            troubleListService.update(targetTroubleList);
-                        }
+                    if (tList.getId() != targetTroubleList.getId()) {
+                        //перемещаем и сохраняем состояние обоих очередей в DB.
+                        dataModelConstructor.moveTroubleList(trouble, tList, targetTroubleList);
                     }
+
                 } else {
                     xml.addKid(new BasicXmlData("message", "Информация по проблеме заполнена верно, но при отправке в CRM возникла ошибка. Сообщите об этом разработчику."));
                 }

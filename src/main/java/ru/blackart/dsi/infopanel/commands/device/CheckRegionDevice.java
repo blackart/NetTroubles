@@ -1,11 +1,9 @@
 package ru.blackart.dsi.infopanel.commands.device;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
-import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Region;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 
 import java.util.*;
 import java.util.regex.Pattern;

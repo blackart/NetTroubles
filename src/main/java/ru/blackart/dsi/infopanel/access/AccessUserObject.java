@@ -1,9 +1,11 @@
 package ru.blackart.dsi.infopanel.access;
 
+import com.google.gson.Gson;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
+import ru.blackart.dsi.infopanel.access.menu.Menu;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.Tab;
 import ru.blackart.dsi.infopanel.beans.Users;
@@ -14,10 +16,14 @@ import java.util.List;
 public class AccessUserObject {
     private Users user;
     private List<AccessItemMenu> tabs;
+    private Menu menu;
 
     public AccessUserObject(Users user) {
         this.user = user;
         this.tabs = new ArrayList<AccessItemMenu>();
+
+        Gson gson = new Gson();
+
 
         Session session = SessionFactorySingle.getSessionFactory().openSession();
 
@@ -29,11 +35,10 @@ public class AccessUserObject {
 
         try {
             Group group = groups.get(0);
+            this.menu = gson.fromJson(group.getMenuConfig(), Menu.class);
+
             List<Tab> tabs = group.getTabs();
             this.tabs = this.generateMenuTabs(tabs);
-
-//            this.tabs.addAll(tabs);
-
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -74,6 +79,14 @@ public class AccessUserObject {
         return sortMenu(menu);
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
     public Users getUser() {
         return user;
     }
@@ -89,4 +102,6 @@ public class AccessUserObject {
     public void setTabs(List<AccessItemMenu> tabs) {
         this.tabs = tabs;
     }
+
+
 }

@@ -74,8 +74,12 @@ public class CrmTrouble {
 
         try {
             String service = "";
-            for (Service s : trouble.getServices()) {
-                service = service + s.getId() + ";";
+            try {
+                for (Service s : trouble.getServices()) {
+                    service = service + s.getId() + ";";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             String sw = "";
@@ -169,7 +173,7 @@ public class CrmTrouble {
         }
 
         if (complete_send_to_crm) {
-            log.info("Trouble " + trouble.getTitle() + " [" + trouble.getId() + "] successfully submitted to CRM successfully. Trouble CRM status - [" + getStatusCrm(Integer.valueOf(status_crm)) + "]");
+            log.info("Trouble " + trouble.getTitle() + " [" + trouble.getId() + "] submitted to CRM successfully. Trouble CRM status - [" + getStatusCrm(Integer.valueOf(status_crm)) + "]");
         }
 
         return complete_send_to_crm;

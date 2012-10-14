@@ -31,7 +31,6 @@ public class TroubleList implements Persistent {
         this.name = name;
     }
 
-
     @ManyToMany(
             targetEntity = DeviceFilter.class,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST},
@@ -52,7 +51,9 @@ public class TroubleList implements Persistent {
 
     @OneToMany(
             targetEntity = Trouble.class,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY
+
     )
     @JoinTable(
             name = "tl_t",

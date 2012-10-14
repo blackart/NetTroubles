@@ -346,7 +346,12 @@ $(document).ready(function() {
 
                 var $service = $.trim($(this).find(".content").find("div[id$='_service']").text().replace("&nbsp;", ""));
                 $.each($service.split(";"), function() {
-                    if ($.trim(this.replace(";", "")) !== "") $("select[@id=service_merge] option[value='" + $.trim(this.replace(";", "")) + "']").attr('selected', 'selected');
+                    var service = $.trim(this.replace(";", ""));
+                    if (service !== "") {
+                        $("select[id='service_merge'] option").each(function() {
+                            if (this.value == service) $(this).attr('selected', 'selected');
+                        })
+                    }
                 });
             }
         });
@@ -369,7 +374,6 @@ $(document).ready(function() {
         } else {
             alert("Отметьте хотя бы одну проблему");
         }
-        $.fn.update_trouble_counters();
     });
 
     $("#service_merge").addClass("ui-autocomplete-input ui-widget ui-widget-content ui-corner-left");

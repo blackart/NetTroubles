@@ -116,7 +116,7 @@ public class MergeTroubles extends AbstractCommand {
     public String execute() throws Exception {
         String ids = this.getRequest().getParameter("id");
         String title = this.getRequest().getParameter("title");
-        String actual_problem = this.getRequest().getParameter("actual_problem");
+        String actual_problem = this.getRequest().getParameter("actual_problem").replace("&nbsp;","").trim();
         String service = this.getRequest().getParameter("service");
 
         String[] ids_arr = ids.trim().split(";");

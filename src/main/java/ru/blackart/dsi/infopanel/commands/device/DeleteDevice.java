@@ -1,17 +1,13 @@
 package ru.blackart.dsi.infopanel.commands.device;
 
 import com.myjavatools.xml.BasicXmlData;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
-import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Device;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 
 import java.io.OutputStream;
-import java.util.List;
 
 public class DeleteDevice extends AbstractCommand {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());

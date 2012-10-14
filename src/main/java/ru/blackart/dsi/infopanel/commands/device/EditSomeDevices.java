@@ -1,19 +1,13 @@
 package ru.blackart.dsi.infopanel.commands.device;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
-import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hostgroup;
 import ru.blackart.dsi.infopanel.beans.Hoststatus;
 import ru.blackart.dsi.infopanel.beans.Region;
-
-import java.util.List;
-import java.util.Properties;
+import ru.blackart.dsi.infopanel.services.DeviceManager;
 
 public class EditSomeDevices extends AbstractCommand {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());

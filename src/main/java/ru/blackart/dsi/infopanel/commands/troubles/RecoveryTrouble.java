@@ -24,11 +24,6 @@ public class RecoveryTrouble extends AbstractCommand {
 
             dataModelConstructor.moveTroubleList(trouble, troubleListSource, troubleListTarget);
 
-            synchronized (troubleListService) {
-                troubleListService.update(troubleListTarget);
-                troubleListService.update(troubleListSource);
-            }
-
             if ((!trouble.getClose()) && (trouble.getCrm())) {
                 CrmTrouble crmTrouble = new CrmTrouble(trouble, "1");
                 crmTrouble.send();
@@ -39,8 +34,12 @@ public class RecoveryTrouble extends AbstractCommand {
 
             TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
             synchronized (troubleListsManager) {
-                troubleListsManager.sortTroubleList(troubleListTarget);
-                troubleListsManager.sortTroubleList(troubleListSource);
+                synchronized (troubleListTarget) {
+                    troubleListsManager.sortTroubleList(troubleListTarget);
+                }
+                synchronized (troubleListSource) {
+                    troubleListsManager.sortTroubleList(troubleListSource);
+                }
             }
         }
         return null;

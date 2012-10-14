@@ -1,6 +1,8 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
 import com.myjavatools.xml.BasicXmlData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.services.CommentService;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class UnmergeTrouble extends AbstractCommand {
+    private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
     DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
     TroubleListService troubleListService = TroubleListService.getInstance();
@@ -33,7 +36,7 @@ public class UnmergeTrouble extends AbstractCommand {
                     Devcapsule devcapsule = devcapsuleService.getDevcapsule(Integer.valueOf(id_devc));
                     Trouble trouble = dataModelConstructor.getTroubleForDevcapsule(devcapsule);
                     TroubleList troubleList = dataModelConstructor.getTroubleListForTrouble(trouble);
-                    String list_name = dataModelConstructor.getTroubleListForTrouble(trouble).getName();
+                    String list_name = troubleList.getName();
 
                     int index = -1;
                     for (Devcapsule d : trouble.getDevcapsules()) {
@@ -66,6 +69,7 @@ public class UnmergeTrouble extends AbstractCommand {
                         if (complete && (list_name.equals("current") || list_name.equals("need_actual_problem"))) {
                             trouble.setClose(true);
                             trouble.setDate_out(dataModelConstructor.sortDevcapsuleByTime(trouble.getDevcapsules()).get(0).getTimeup());
+
                             if (trouble.getCrm()) {
                                 CrmTrouble crmTrouble = new CrmTrouble(trouble, "2");
                                 if (crmTrouble.validation()) {
@@ -109,11 +113,6 @@ public class UnmergeTrouble extends AbstractCommand {
                     TroubleList targetTroubleList = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
                     dataModelConstructor.moveTroubleList(trouble, troubleList, targetTroubleList);
 
-                    synchronized (troubleListService) {
-                        troubleListService.update(troubleList);
-                        troubleListService.update(targetTroubleList);
-                    }
-
                     /*--------------------------------------------------------------------------------------------------------*/
 
                     Trouble new_trouble = new Trouble();
@@ -124,16 +123,11 @@ public class UnmergeTrouble extends AbstractCommand {
                     new_trouble.setAuthor((Users) this.getSession().getAttribute("info"));
                     new_trouble.setComments(new ArrayList<Comment>());
                     new_trouble.setActualProblem("");
-
-                    if (list_name.equals("complete")) {
-                        new_trouble.setCrm(true);
-                    } else {
-                        new_trouble.setCrm(false);
-                    }
+                    new_trouble.setCrm(false);
 
                     if (devcapsule.getComplete()) {
                         new_trouble.setDate_out(devcapsule.getTimeup());
-                        new_trouble.setTimeout(trouble.getDate_out() == null ? devcapsule.getTimeup() : trouble.getDate_out());
+                        new_trouble.setTimeout(devcapsule.getTimeup());
                         new_trouble.setClose(true);
                     } else {
                         new_trouble.setClose(false);
@@ -144,8 +138,8 @@ public class UnmergeTrouble extends AbstractCommand {
                     synchronized (troubleService) {
                         troubleService.save(new_trouble);
                     }
-
                     troubleList.getTroubles().add(new_trouble);
+                    log.info("The trouble " + new_trouble.getTitle() + " added to " + troubleList.getName() + " trouble list.");
 
                     synchronized (troubleListService) {
                         troubleListService.update(troubleList);
