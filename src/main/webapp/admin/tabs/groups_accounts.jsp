@@ -5,6 +5,7 @@
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessMenuForGroup" %>
+<%@ page import="java.awt.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
@@ -12,6 +13,7 @@
     ArrayList<Tab> tabs = (ArrayList<Tab>) config.getServletContext().getAttribute("tabs");
     ArrayList<AccessMenuForGroup> tabs_of_groups = (ArrayList<AccessMenuForGroup>) config.getServletContext().getAttribute("tabs_of_groups");
     ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
+
 %>
 
     <script type="text/javascript" src="../js/groups.js"></script>
