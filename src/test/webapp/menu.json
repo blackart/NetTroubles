@@ -1,0 +1,79 @@
+{
+    "groups":[
+        {
+            "name":"Troubles",
+            "id":"1",
+            "items":[
+                {
+                    "name":"Current",
+                    "url":"trouble.jsp",
+                    "position":"1"
+                },
+                {
+                    "name":"Complete",
+                    "url":"trouble_close.jsp",
+                    "position":"2"
+                },
+                {
+                    "name":"Trash",
+                    "url":"trouble_trash.jsp",
+                    "position":"3"
+                }
+            ]
+        },
+        {
+            "name":"Failures list",
+            "id":"2",
+            "url":"failures.jsp"
+        },
+        {
+            "name":"Host menager",
+            "id":"3",
+            "url":"devices.jsp"
+        },
+        {
+            "name":"Filters",
+            "id":"4",
+            "items":[
+                {
+                    "name":"Main",
+                    "url":"filters_main_filter.jsp",
+                    "position":"1"
+                },
+                {
+                    "name":"Failures",
+                    "url":"filters_devcaps_list_filter.jsp",
+                    "position":"2"
+                }
+            ]
+        },
+        {
+            "name":"Security",
+            "id":"5",
+            "items":[
+                {
+                    "name":"Accounts of users",
+                    "url":"user_accounts.jsp",
+                    "position":"1"
+                },
+                {
+                    "name":"Groups of accounts",
+                    "url":"group_accounts",
+                    "position":"2"
+                }
+            ]
+        },
+        {
+            "name":"Administrate",
+            "id":"6",
+            "items":[
+                {
+                    "name":"Administrate",
+                    "url":"admin.jsp",
+                    "position":"1"
+                }
+            ]
+        }
+    ]
+
+}
