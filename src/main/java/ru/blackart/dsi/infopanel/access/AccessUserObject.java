@@ -24,7 +24,6 @@ public class AccessUserObject {
 
         Gson gson = new Gson();
 
-
         Session session = SessionFactorySingle.getSessionFactory().openSession();
 
         session.beginTransaction();
