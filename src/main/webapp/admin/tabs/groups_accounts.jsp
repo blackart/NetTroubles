@@ -6,22 +6,23 @@
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessMenuForGroup" %>
 <%@ page import="java.awt.*" %>
+<%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
+    ArrayList<Group> menuGroups = (ArrayList<Group>) config.getServletContext().getAttribute("menuGroups");
     ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
     ArrayList<Tab> tabs = (ArrayList<Tab>) config.getServletContext().getAttribute("tabs");
     ArrayList<AccessMenuForGroup> tabs_of_groups = (ArrayList<AccessMenuForGroup>) config.getServletContext().getAttribute("tabs_of_groups");
     ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
-
+    AccessService accessService = AccessService.getInstance();
 %>
 
-    <script type="text/javascript" src="../js/groups.js"></script>
+    <script type="text/javascript" src="../js/menuGroups.js"></script>
 
     <div class="settings" >
 
         <div class="settings_block">
-            <div class="title">Add group of account</div>
+            <div class="title">Add menuGroup of account</div>
 
             <table id="groups_add"  class="settings_add" cellpadding="0" cellspacing="0">
                 <tr class="header">

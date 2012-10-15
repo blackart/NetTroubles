@@ -41,7 +41,7 @@ public class SessionFactorySingle {
 
             /*aconf.addAnnotatedClass(Region.class);
             aconf.addAnnotatedClass(Tab.class);
-            aconf.addAnnotatedClass(Group.class);
+            aconf.addAnnotatedClass(MenuGroup.class);
             aconf.addAnnotatedClass(UserSettings.class);
             aconf.addAnnotatedClass(Users.class);
             aconf.addAnnotatedClass(TypeDeviceFilter.class);

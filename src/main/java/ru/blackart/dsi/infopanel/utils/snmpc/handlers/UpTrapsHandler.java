@@ -10,7 +10,7 @@ import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.services.DevcapsuleService;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
-import ru.blackart.dsi.infopanel.services.UserService;
+import ru.blackart.dsi.infopanel.services.AccessService;
 import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
 import ru.blackart.dsi.infopanel.utils.snmpc.transport.RequestDataImpl;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
@@ -32,7 +32,7 @@ public class UpTrapsHandler extends Thread {
     private DeviceManager deviceManager = DeviceManager.getInstance();
     private DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
     private DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-    private UserService userService = UserService.getInstance();
+    private AccessService accessService = AccessService.getInstance();
     private TroubleService troubleService = TroubleService.getInstance();
     private TroubleListService troubleListService = TroubleListService.getInstance();
     private TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();

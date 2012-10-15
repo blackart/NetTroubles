@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import org.hibernate.Session;
 import org.hibernate.Criteria;
+import ru.blackart.dsi.infopanel.services.AccessService;
 import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 
@@ -78,40 +79,40 @@ public class HTTPServletController extends HttpServlet {
         ArrayList<TypeDeviceFilter> typeDeviceFilters = new ArrayList<TypeDeviceFilter>(crt_2.list());
         config.getServletContext().setAttribute("typeDeviceFilters", typeDeviceFilters);
 
-        Criteria crt_4 = session.createCriteria(Tab.class);
+        /*Criteria crt_4 = session.createCriteria(Tab.class);
         ArrayList<Tab> tabs = new ArrayList<Tab>(crt_4.list());
-        config.getServletContext().setAttribute("tabs", tabs);
+        config.getServletContext().setAttribute("tabs", tabs);*/
 
-        List<AccessItemMenu> generalMenu = AccessUserObject.generateMenuTabs(tabs);
-        config.getServletContext().setAttribute("generalMenu", generalMenu);
+//        List<AccessItemMenu> generalMenu = AccessUserObject.generateMenuTabs(tabs);
+//        config.getServletContext().setAttribute("generalMenu", generalMenu);
 
         Criteria crt_3 = session.createCriteria(Group.class);
         ArrayList<Group> groups = new ArrayList<Group>(crt_3.list());
-        ArrayList<AccessMenuForGroup> tabs_of_groups = new ArrayList<AccessMenuForGroup>();
-        for (Group g : groups) {
+        /*ArrayList<AccessMenuForGroup> tabs_of_groups = new ArrayList<AccessMenuForGroup>();
+        for (MenuGroup g : groups) {
             g.setTabs(new ArrayList<Tab>(g.getTabs()));
             tabs_of_groups.add(new AccessMenuForGroup(g,tabs));
         }
 
-        config.getServletContext().setAttribute("tabs_of_groups", tabs_of_groups);
+        config.getServletContext().setAttribute("tabs_of_groups", tabs_of_groups);*/
         config.getServletContext().setAttribute("groups", groups);
 
 
         //todo генерация json конфигурации меню, убрать после адаптации для ДСИ
-        Gson gson = new Gson();
+        /*Gson gson = new Gson();
 
         for (int i = 0; i < tabs_of_groups.size(); i++) {
             AccessMenuForGroup accessMenuForGroup = tabs_of_groups.get(i);
             ArrayList menuItems = (ArrayList) accessMenuForGroup.getItemMenu();
 
             Menu menu = new Menu();
-            ArrayList<ru.blackart.dsi.infopanel.access.menu.Group> groups_ = new ArrayList<ru.blackart.dsi.infopanel.access.menu.Group>();
+            ArrayList<ru.blackart.dsi.infopanel.access.menu.MenuGroup> groups_ = new ArrayList<ru.blackart.dsi.infopanel.access.menu.MenuGroup>();
 
             for (int j = 0; j < menuItems.size(); j++) {
                 AccessItemMenu accessItemMenu = (AccessItemMenu) menuItems.get(j);
                 AccessTab accessTab = accessItemMenu.getTab();
                 if (accessTab.isPolicy()) {
-                    ru.blackart.dsi.infopanel.access.menu.Group group = new ru.blackart.dsi.infopanel.access.menu.Group();
+                    ru.blackart.dsi.infopanel.access.menu.MenuGroup group = new ru.blackart.dsi.infopanel.access.menu.MenuGroup();
                     group.setId(accessTab.getTab().getMenu_group());
                     group.setName(accessTab.getTab().getCaption());
                     group.setUrl(accessItemMenu.getChildrens().size() > 0 ? null : accessTab.getTab().getFile_name());
@@ -133,13 +134,13 @@ public class HTTPServletController extends HttpServlet {
                     groups_.add(group);
                 }
             }
-            menu.setGroups(groups_);
-            Group group_s = accessMenuForGroup.getGroup();
+            menu.setMenuGroups(groups_);
+            MenuGroup group_s = accessMenuForGroup.getGroup();
             group_s.setMenuConfig(gson.toJson(menu));
             session.getTransaction().begin();
             session.save(group_s);
             session.getTransaction().commit();
-        }
+        }*/
 
         //Users
         Criteria crt_5 = session.createCriteria(Users.class);
@@ -175,7 +176,8 @@ public class HTTPServletController extends HttpServlet {
         session.close();
 
         //Devices
-        DeviceManager deviceManager = DeviceManager.getInstance();
+        DeviceManager.getInstance();
+        AccessService.getInstance();
     }
 
     @Override

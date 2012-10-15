@@ -3,7 +3,7 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Users" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
+    ArrayList<Group> menuGroups = (ArrayList<Group>) config.getServletContext().getAttribute("menuGroups");
     ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
 %>
 
@@ -19,7 +19,7 @@
                     <td>login</td>
                     <td>passwd</td>
                     <td>name</td>
-                    <td>group</td>
+                    <td>menuGroup</td>
                     <td>block</td>
                     <td>add</td>
                 </tr>
@@ -29,7 +29,7 @@
                     <td width="30%"><input type="text" class="account_name"/></td>
                     <td width="15%">
                         <select class="account_group">
-                            <%for (Group g : groups) {%>
+                            <%for (Group g : menuGroups) {%>
                                 <option value="<%=g.getId()%>"><%=g.getName()%></option>
                             <%}%>
                         </select>
@@ -46,7 +46,7 @@
                     <td>login</td>
                     <td>passwd</td>
                     <td>name</td>
-                    <td>group</td>
+                    <td>menuGroup</td>
                     <td>block</td>
                     <td>edit</td>
                     <td>delete</td>

@@ -222,16 +222,16 @@ CREATE TABLE group_tabs (
 ALTER TABLE public.group_tabs OWNER TO root;
 
 --
--- Name: groups; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+-- Name: menuGroups; Type: TABLE; Schema: public; Owner: root; Tablespace:
 --
 
-CREATE TABLE groups (
+CREATE TABLE menuGroups (
     id integer NOT NULL,
     name text
 );
 
 
-ALTER TABLE public.groups OWNER TO root;
+ALTER TABLE public.menuGroups OWNER TO root;
 
 --
 -- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: root
@@ -251,7 +251,7 @@ ALTER TABLE public.groups_id_seq OWNER TO root;
 -- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
-ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+ALTER SEQUENCE groups_id_seq OWNED BY menuGroups.id;
 
 
 --
@@ -803,7 +803,7 @@ ALTER TABLE device_filter ALTER COLUMN id SET DEFAULT nextval('device_filter_id_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: root
 --
 
-ALTER TABLE groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+ALTER TABLE menuGroups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
 
 
 --
@@ -21602,10 +21602,10 @@ COPY group_tabs (_group, _menu_tabs) FROM stdin;
 
 
 --
--- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: root
+-- Data for Name: menuGroups; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-COPY groups (id, name) FROM stdin;
+COPY menuGroups (id, name) FROM stdin;
 1	system
 2	admin
 3	OMS_user
@@ -34077,7 +34077,7 @@ COPY troublestatus (id, name) FROM stdin;
 
 COPY type_device_filters (id, name) FROM stdin;
 1	name
-2	group
+2	menuGroup
 \.
 
 
@@ -34171,7 +34171,7 @@ ALTER TABLE ONLY group_tabs
 -- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: root; Tablespace: 
 --
 
-ALTER TABLE ONLY groups
+ALTER TABLE ONLY menuGroups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
 
 
@@ -34364,7 +34364,7 @@ ALTER TABLE ONLY device_filter
 --
 
 ALTER TABLE ONLY group_tabs
-    ADD CONSTRAINT group_tabs__group_fkey FOREIGN KEY (_group) REFERENCES groups(id);
+    ADD CONSTRAINT group_tabs__group_fkey FOREIGN KEY (_group) REFERENCES menuGroups(id);
 
 
 --
@@ -34452,7 +34452,7 @@ ALTER TABLE ONLY trouble_service
 --
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT users__group_fkey FOREIGN KEY (_group) REFERENCES groups(id);
+    ADD CONSTRAINT users__group_fkey FOREIGN KEY (_group) REFERENCES menuGroups(id);
 
 
 --

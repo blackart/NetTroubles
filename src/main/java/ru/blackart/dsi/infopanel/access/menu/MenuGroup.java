@@ -2,11 +2,11 @@ package ru.blackart.dsi.infopanel.access.menu;
 
 import java.util.List;
 
-public class Group {
+public class MenuGroup {
     private String name;
     private int id;
     private String url;
-    private List<Item> items;
+    private List<MenuItem> items;
 
     public String getName() {
         return name;
@@ -32,11 +32,11 @@ public class Group {
         this.url = url;
     }
 
-    public List<Item> getItems() {
+    public List<MenuItem> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<MenuItem> items) {
         this.items = items;
     }
 }

@@ -27,7 +27,7 @@
                     <td>name</td>
                     <td>description</td>
                     <td>status</td>
-                    <td>group</td>
+                    <td>menuGroup</td>
                     <td>region</td>
                     <td>add</td>
                 </tr>
@@ -67,7 +67,7 @@
                     <td>name</td>
                     <td>description</td>
                     <td>status</td>
-                    <td>group</td>
+                    <td>menuGroup</td>
                     <td>region</td>
                     <td>edit</td>
                     <td>delete</td>

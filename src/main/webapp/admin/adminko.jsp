@@ -41,7 +41,7 @@
 <%
     ArrayList<Service> services = (ArrayList<Service>) config.getServletContext().getAttribute("services");
     ArrayList<TypeDeviceFilter> typeDeviceFilters = (ArrayList<TypeDeviceFilter>) config.getServletContext().getAttribute("typeDeviceFilters");
-    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
+    ArrayList<Group> menuGroups = (ArrayList<Group>) config.getServletContext().getAttribute("menuGroups");
     ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
     ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
     ArrayList<Hostgroup> hostgroups = (ArrayList<Hostgroup>) config.getServletContext().getAttribute("hostgroups");
@@ -251,7 +251,7 @@
                     <td>login</td>
                     <td>passwd</td>
                     <td>name</td>
-                    <td>group</td>
+                    <td>menuGroup</td>
                     <td>block</td>
                 </tr>
                 <tr>
@@ -260,7 +260,7 @@
                     <td width="30%"><input type="text" id="users_edit_name"/></td>
                     <td width="15%">
                         <select id="users_edit_group">
-                            <%for (Group g : groups) {%>
+                            <%for (Group g : menuGroups) {%>
                                 <option value="<%=g.getId()%>"><%=g.getName()%></option>
                             <%}%>
                         </select>
@@ -326,7 +326,7 @@
             <td>name</td>
             <td>description</td>
             <td>status</td>
-            <td>group</td>
+            <td>menuGroup</td>
             <td>region</td>
         </tr>
         <tr>
@@ -367,13 +367,13 @@
                 DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
                 if (accessUserObject != null) {
                     Menu menu = accessUserObject.getMenu();
-                    for (ru.blackart.dsi.infopanel.access.menu.Group group : menu.getGroups()) {
-                        if ((group.getItems() == null) || (group.getItems().size() == 0)) {
-                            %><li><a href="tabs/<%=group.getUrl()%>" class="menu_item"><%=group.getName()%></a></li><%
+                    for (MenuGroup menuGroup : menu.getGroups()) {
+                        if ((menuGroup.getItems() == null) || (menuGroup.getItems().size() == 0)) {
+                            %><li><a href="tabs/<%=menuGroup.getUrl()%>" class="menu_item"><%=menuGroup.getName()%></a></li><%
                         } else {
-                            %><h3><%=group.getName()%></h3><div><%
-                            for (Item item : group.getItems()) {
-                                TroubleList troubleList = dataModelConstructor.getTroubleListForName(item.getName().toLowerCase());
+                            %><h3><%=menuGroup.getName()%></h3><div><%
+                            for (MenuItem menuItem : menuGroup.getItems()) {
+                                TroubleList troubleList = dataModelConstructor.getTroubleListForName(menuItem.getName().toLowerCase());
                                 String count_trobles = " ";
                                 if (troubleList != null) {
                                         if (troubleList.getName().equals("current")) {
@@ -384,7 +384,7 @@
                                             count_trobles += "<div class='count_trash_troubles'></div>";
                                         }
                                 }
-                                %><li><a href="tabs/<%=item.getUrl()%>"><%=item.getName()+ count_trobles%></a></li><%
+                                %><li><a href="tabs/<%=menuItem.getUrl()%>"><%=menuItem.getName()+ count_trobles%></a></li><%
                             }
                             %></div><%
                         }

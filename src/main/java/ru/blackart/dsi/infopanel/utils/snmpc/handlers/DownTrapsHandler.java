@@ -7,7 +7,7 @@ import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.services.DevcapsuleService;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
-import ru.blackart.dsi.infopanel.services.UserService;
+import ru.blackart.dsi.infopanel.services.AccessService;
 import ru.blackart.dsi.infopanel.utils.snmpc.transport.RequestDataImpl;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
@@ -28,7 +28,7 @@ public class DownTrapsHandler extends Thread {
     private DeviceManager deviceManager = DeviceManager.getInstance();
     private DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
     private DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-    private UserService userService = UserService.getInstance();
+    private AccessService accessService = AccessService.getInstance();
     private TroubleService troubleService = TroubleService.getInstance();
     private TroubleListService troubleListService = TroubleListService.getInstance();
     private TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
@@ -127,8 +127,8 @@ public class DownTrapsHandler extends Thread {
 
     private Trouble troubleLevelOperations() {
         Users systemUser;
-        synchronized (userService) {
-            systemUser = userService.get("system");
+        synchronized (accessService) {
+            systemUser = accessService.getUser("system");
         }
 
         Trouble trouble = new Trouble();

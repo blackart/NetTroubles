@@ -1,6 +1,6 @@
 package ru.blackart.dsi.infopanel.access.menu;
 
-public class Item {
+public class MenuItem {
     private String name;
     private String url;
     private int position;

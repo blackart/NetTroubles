@@ -1,16 +1,15 @@
 package ru.blackart.dsi.infopanel.access.menu;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Menu {
-    private ArrayList<Group> groups;
+    private ArrayList<MenuGroup> groups;
 
-    public ArrayList<Group> getGroups() {
+    public ArrayList<MenuGroup> getGroups() {
         return groups;
     }
 
-    public void setGroups(ArrayList<Group> groups) {
+    public void setGroups(ArrayList<MenuGroup> groups) {
         this.groups = groups;
     }
 }

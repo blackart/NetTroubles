@@ -68,7 +68,7 @@
                 <%
                     for (DeviceFilter df : mainFilter) {
                         String value = "";
-                        if (df.getType().getName().equals("group")) {
+                        if (df.getType().getName().equals("menuGroup")) {
                             for (Hostgroup hg : hostgroups) {
                                 if (Integer.valueOf(hg.getNum()) == Integer.valueOf(df.getValue())) {
                                     value = hg.getName();
