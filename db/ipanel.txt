@@ -180,16 +180,16 @@ CREATE TABLE group_tabs (
 ALTER TABLE public.group_tabs OWNER TO postgres;
 
 --
--- Name: menuGroups; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE TABLE menuGroups (
+CREATE TABLE groups (
     id integer NOT NULL,
     name text
 );
 
 
-ALTER TABLE public.menuGroups OWNER TO postgres;
+ALTER TABLE public.groups OWNER TO postgres;
 
 --
 -- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -209,7 +209,7 @@ ALTER TABLE public.groups_id_seq OWNER TO postgres;
 -- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE groups_id_seq OWNED BY menuGroups.id;
+ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 
 --
@@ -742,7 +742,7 @@ ALTER TABLE device_filter ALTER COLUMN id SET DEFAULT nextval('device_filter_id_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE menuGroups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+ALTER TABLE groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
 
 
 --
@@ -19521,10 +19521,10 @@ COPY group_tabs (_group, _menu_tabs) FROM stdin;
 
 
 --
--- Data for Name: menuGroups; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY menuGroups (id, name) FROM stdin;
+COPY groups (id, name) FROM stdin;
 1	system
 2	admin
 3	OMS_user
@@ -33910,7 +33910,7 @@ ALTER TABLE ONLY group_tabs
 -- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY menuGroups
+ALTER TABLE ONLY groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
 
 
@@ -34087,7 +34087,7 @@ ALTER TABLE ONLY device_filter
 --
 
 ALTER TABLE ONLY group_tabs
-    ADD CONSTRAINT group_tabs__group_fkey FOREIGN KEY (_group) REFERENCES menuGroups(id);
+    ADD CONSTRAINT group_tabs__group_fkey FOREIGN KEY (_group) REFERENCES groups(id);
 
 
 --
@@ -34159,7 +34159,7 @@ ALTER TABLE ONLY trouble_service
 --
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT users__group_fkey FOREIGN KEY (_group) REFERENCES menuGroups(id);
+    ADD CONSTRAINT users__group_fkey FOREIGN KEY (_group) REFERENCES groups(id);
 
 
 --

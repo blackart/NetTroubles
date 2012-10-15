@@ -1,13 +1,12 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessUserObject" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
-<%@ page import="org.slf4j.Logger" %>
-<%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.AccessUserObject" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuGroup" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
 <%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.menu.*" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 //    Logger log = LoggerFactory.getLogger(this.getClass().getName());
@@ -41,12 +40,13 @@
 <%
     ArrayList<Service> services = (ArrayList<Service>) config.getServletContext().getAttribute("services");
     ArrayList<TypeDeviceFilter> typeDeviceFilters = (ArrayList<TypeDeviceFilter>) config.getServletContext().getAttribute("typeDeviceFilters");
-    ArrayList<Group> menuGroups = (ArrayList<Group>) config.getServletContext().getAttribute("menuGroups");
+    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
     ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
     ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
     ArrayList<Hostgroup> hostgroups = (ArrayList<Hostgroup>) config.getServletContext().getAttribute("hostgroups");
     ArrayList<Hoststatus> hoststatuses = (ArrayList<Hoststatus>) config.getServletContext().getAttribute("hoststatuses");
     ArrayList<Region> regions = (ArrayList<Region>) config.getServletContext().getAttribute("regions");
+    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
 %>
 
 <%
@@ -251,7 +251,7 @@
                     <td>login</td>
                     <td>passwd</td>
                     <td>name</td>
-                    <td>menuGroup</td>
+                    <td>group</td>
                     <td>block</td>
                 </tr>
                 <tr>
@@ -260,7 +260,7 @@
                     <td width="30%"><input type="text" id="users_edit_name"/></td>
                     <td width="15%">
                         <select id="users_edit_group">
-                            <%for (Group g : menuGroups) {%>
+                            <%for (Group g : groups) {%>
                                 <option value="<%=g.getId()%>"><%=g.getName()%></option>
                             <%}%>
                         </select>
@@ -364,29 +364,30 @@
     <div id="v_tabs">
         <ul>
             <%
-                DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-                if (accessUserObject != null) {
-                    Menu menu = accessUserObject.getMenu();
-                    for (MenuGroup menuGroup : menu.getGroups()) {
-                        if ((menuGroup.getItems() == null) || (menuGroup.getItems().size() == 0)) {
-                            %><li><a href="tabs/<%=menuGroup.getUrl()%>" class="menu_item"><%=menuGroup.getName()%></a></li><%
-                        } else {
-                            %><h3><%=menuGroup.getName()%></h3><div><%
-                            for (MenuItem menuItem : menuGroup.getItems()) {
-                                TroubleList troubleList = dataModelConstructor.getTroubleListForName(menuItem.getName().toLowerCase());
-                                String count_trobles = " ";
-                                if (troubleList != null) {
-                                        if (troubleList.getName().equals("current")) {
-                                            count_trobles += "<div class='count_need_actual_problem_troubles'></div>/<div class='count_waiting_close_troubles'></div>/<div class='count_current_troubles'></div>";
-                                        } else if (troubleList.getName().equals("complete")) {
-                                            count_trobles += "<div class='count_complete_troubles'></div>";
-                                        } else if (troubleList.getName().equals("trash")) {
-                                            count_trobles += "<div class='count_trash_troubles'></div>";
-                                        }
+                synchronized (dataModelConstructor) {
+                    if (accessUserObject != null) {
+                        Menu menu = accessUserObject.getMenu();
+                        for (MenuGroup menuGroup : menu.getGroups()) {
+                            if ((menuGroup.getItems() == null) || (menuGroup.getItems().size() == 0)) {
+                                %><li><a href="tabs/<%=menuGroup.getUrl()%>" class="menu_item"><%=menuGroup.getName()%></a></li><%
+                            } else {
+                                %><h3><%=menuGroup.getName()%></h3><div><%
+                                for (MenuItem menuItem : menuGroup.getItems()) {
+                                    TroubleList troubleList = dataModelConstructor.getTroubleListForName(menuItem.getName().toLowerCase());
+                                    String count_trobles = " ";
+                                    if (troubleList != null) {
+                                            if (troubleList.getName().equals("current")) {
+                                                count_trobles += "<div class='count_need_actual_problem_troubles'></div>/<div class='count_waiting_close_troubles'></div>/<div class='count_current_troubles'></div>";
+                                            } else if (troubleList.getName().equals("complete")) {
+                                                count_trobles += "<div class='count_complete_troubles'></div>";
+                                            } else if (troubleList.getName().equals("trash")) {
+                                                count_trobles += "<div class='count_trash_troubles'></div>";
+                                            }
+                                    }
+                                    %><li><a href="tabs/<%=menuItem.getUrl()%>"><%=menuItem.getName()+ count_trobles%></a></li><%
                                 }
-                                %><li><a href="tabs/<%=menuItem.getUrl()%>"><%=menuItem.getName()+ count_trobles%></a></li><%
+                                %></div><%
                             }
-                            %></div><%
                         }
                     }
                 }

@@ -1,8 +1,7 @@
-<%@ page import="java.util.List" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.DeviceFilter" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.Hostgroup" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.TypeDeviceFilter" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
-<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -68,7 +67,7 @@
                 <%
                     for (DeviceFilter df : mainFilter) {
                         String value = "";
-                        if (df.getType().getName().equals("menuGroup")) {
+                        if (df.getType().getName().equals("group")) {
                             for (Hostgroup hg : hostgroups) {
                                 if (Integer.valueOf(hg.getNum()) == Integer.valueOf(df.getValue())) {
                                     value = hg.getName();

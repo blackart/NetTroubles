@@ -5,16 +5,19 @@
             "id":"1",
             "items":[
                 {
+                    "id":"11",
                     "name":"Current",
                     "url":"trouble.jsp",
                     "position":"1"
                 },
                 {
+                    "id":"12",
                     "name":"Complete",
                     "url":"trouble_close.jsp",
                     "position":"2"
                 },
                 {
+                    "id":"13",
                     "name":"Trash",
                     "url":"trouble_trash.jsp",
                     "position":"3"
@@ -36,11 +39,13 @@
             "id":"4",
             "items":[
                 {
+                    "id":"41",
                     "name":"Main",
                     "url":"filters_main_filter.jsp",
                     "position":"1"
                 },
                 {
+                    "id":"42",
                     "name":"Failures",
                     "url":"filters_devcaps_list_filter.jsp",
                     "position":"2"
@@ -52,11 +57,13 @@
             "id":"5",
             "items":[
                 {
+                    "id":"51",
                     "name":"Accounts of users",
                     "url":"user_accounts.jsp",
                     "position":"1"
                 },
                 {
+                    "id":"52",
                     "name":"Groups of accounts",
                     "url":"group_accounts",
                     "position":"2"
@@ -68,6 +75,7 @@
             "id":"6",
             "items":[
                 {
+                    "id":"61",
                     "name":"Administrate",
                     "url":"admin.jsp",
                     "position":"1"

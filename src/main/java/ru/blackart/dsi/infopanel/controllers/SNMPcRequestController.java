@@ -1,33 +1,28 @@
 package ru.blackart.dsi.infopanel.controllers;
 
-import net.sf.cglib.core.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hostgroup;
 import ru.blackart.dsi.infopanel.tasksSystem.TaskQueueController;
 import ru.blackart.dsi.infopanel.temp.thread.ManagerQueueRequests;
+import ru.blackart.dsi.infopanel.utils.GenerateMonitoringPanel;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
-import ru.blackart.dsi.infopanel.utils.*;
 import ru.blackart.dsi.infopanel.utils.snmpc.handlers.DownTrapsHandler;
 import ru.blackart.dsi.infopanel.utils.snmpc.handlers.UpTrapsHandler;
 import ru.blackart.dsi.infopanel.utils.snmpc.services.ManagerUpDevcListCleaningThread;
-import ru.blackart.dsi.infopanel.utils.snmpc.transport.RequestDataObject;
 import ru.blackart.dsi.infopanel.utils.snmpc.storage.Storage;
+import ru.blackart.dsi.infopanel.utils.snmpc.transport.RequestDataObject;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.ServletConfig;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
-import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class SNMPcRequestController extends HttpServlet {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());

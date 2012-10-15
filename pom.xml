@@ -8,11 +8,14 @@
     <artifactId>infopanel</artifactId>
     <version>2.0</version>
 
+    <packaging>war</packaging>
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
+
                 <includes>
                     <include>*.cfg.xml</include>
                 </includes>
@@ -20,27 +23,48 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.0</version>
                 <configuration>
-                    <failOnMissingWebXml>true</failOnMissingWebXml>
-                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-                <version>1.1</version>
-                <configuration>
+                    <port>8080</port>
                     <path>/</path>
-                    <url>http://localhost/manager</url>
-                    <server>site.local</server>
+                    <contextFile>C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\conf\context.xml</contextFile>
+                    <!--<tomcatWebXml>WEB-INF/web.xml</tomcatWebXml>-->
+                    <systemProperties>
+                        <!--<appserver.base>C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\</appserver.base>-->
+                        <!--<appserver.home>C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\</appserver.home>-->
+                    </systemProperties>
                 </configuration>
+                <!--<executions>
+                    <execution>
+                        <id>tomcat-run</id>
+                        <goals>
+                            <goal>exec-war-only</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <serverXml>C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\conf\server.xml</serverXml>
+                            <warRunDependencies>
+                                <warRunDependency>
+                                    <dependency>
+                                        <groupId>u.blackart.dsi.infopaneld</groupId>
+                                        <artifactId>infopanel</artifactId>
+                                        <version>2.0</version>
+                                        <type>war</type>
+                                        <scope>tomcat</scope>
+                                    </dependency>
+                                    <contextPath>/</contextPath>
+                                </warRunDependency>
+                            </warRunDependencies>
+                        </configuration>
+                    </execution>
+                </executions>-->
             </plugin>
         </plugins>
         <finalName>ROOT</finalName>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -66,29 +90,11 @@
             <version>2.2.2</version>
         </dependency>
 
-		<!--<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>3.6.3.Final</version>
-		</dependency>
-
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
-        </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-commons-annotations</artifactId>
-            <version>3.2.0.Final</version>
-        </dependency>-->
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-c3p0</artifactId>
-			<version>3.6.3.Final</version>
-		</dependency>
+            <artifactId>hibernate-c3p0</artifactId>
+            <version>3.6.3.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>net.sf.hibernate</groupId>
@@ -126,17 +132,17 @@
             <version>1.6.1</version>
         </dependency>
 
-    <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-all</artifactId>
-        <version>5.5.0</version>
-    </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.5.0</version>
+        </dependency>
 
-    <dependency>
-        <groupId>concurrent</groupId>
-        <artifactId>concurrent</artifactId>
-        <version>1.3.4</version>
-    </dependency>
+        <dependency>
+            <groupId>concurrent</groupId>
+            <artifactId>concurrent</artifactId>
+            <version>1.3.4</version>
+        </dependency>
 
 
     </dependencies>

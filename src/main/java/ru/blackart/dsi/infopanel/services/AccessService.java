@@ -16,9 +16,8 @@ import ru.blackart.dsi.infopanel.beans.Users;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 
 import javax.servlet.ServletConfig;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +44,10 @@ public class AccessService {
         return groups;
     }
 
+    public Menu getCanonicalMenu() {
+        return canonicalMenu;
+    }
+
     private AccessService() {
         this.session = SessionFactorySingle.getSessionFactory().openSession();
         this.groups.addAll(this.getGroupsFromDB());
@@ -52,18 +55,11 @@ public class AccessService {
 
         TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
         ServletConfig config = troubleListsManager.getHTTPServletConfig();
-        Properties paths = (Properties) config.getServletContext().getAttribute("pathToDataFile");
-        File file = new File(config.getInitParameter("pathToCatalina") + paths.getProperty("pathToApplication") + config.getInitParameter("root") + paths.getProperty("menuConfig"));
 
-//        File ff = new File(config.getInitParameter("base") + paths.getProperty("pathToApplication") + config.getInitParameter("root") + paths.getProperty("menuConfig"));
-        File ff = new File("./");
-        try {
-            System.out.println(ff.getAbsolutePath());
-            FileReader fileReader = new FileReader(file);
-            this.canonicalMenu = this.gson.fromJson(fileReader, Menu.class);
-        } catch (IOException e) {
-            log.error("Fail to load menu file - " + e.getMessage());
-        }
+        Properties paths = (Properties) config.getServletContext().getAttribute("pathToDataFile");
+        InputStream inputStream = config.getServletContext().getResourceAsStream(paths.getProperty("menuConfig"));
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        this.canonicalMenu = this.gson.fromJson(inputStreamReader, Menu.class);
     }
 
     public static AccessService getInstance() {

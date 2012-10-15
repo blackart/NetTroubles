@@ -3,8 +3,9 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Hoststatus" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Region" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.DeviceManager" %>
-<%@ page import="java.lang.reflect.Array" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     DeviceManager deviceManager = DeviceManager.getInstance();
@@ -27,7 +28,7 @@
                     <td>name</td>
                     <td>description</td>
                     <td>status</td>
-                    <td>menuGroup</td>
+                    <td>group</td>
                     <td>region</td>
                     <td>add</td>
                 </tr>
@@ -67,7 +68,7 @@
                     <td>name</td>
                     <td>description</td>
                     <td>status</td>
-                    <td>menuGroup</td>
+                    <td>group</td>
                     <td>region</td>
                     <td>edit</td>
                     <td>delete</td>

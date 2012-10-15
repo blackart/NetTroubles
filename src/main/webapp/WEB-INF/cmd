@@ -47,9 +47,9 @@ reloadPage=ru.blackart.dsi.infopanel.commands.security.users.settings.SetReloadP
 timeOutReloadPage=ru.blackart.dsi.infopanel.commands.security.users.settings.SetTimeOutReloadPage
 
 #menuGroup
-addGroup=ru.blackart.dsi.infopanel.commands.security.menuGroups.AddGroup
-editGroup=ru.blackart.dsi.infopanel.commands.security.menuGroups.EditGroup
-deleteGroup=ru.blackart.dsi.infopanel.commands.security.menuGroups.DeleteGroup
+addGroup=ru.blackart.dsi.infopanel.commands.security.groups.AddGroup
+editGroup=ru.blackart.dsi.infopanel.commands.security.groups.EditGroup
+deleteGroup=ru.blackart.dsi.infopanel.commands.security.groups.DeleteGroup
 
 #device
 addDevice=ru.blackart.dsi.infopanel.commands.device.AddDevice

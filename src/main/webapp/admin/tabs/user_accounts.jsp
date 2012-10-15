@@ -1,9 +1,9 @@
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Users" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    ArrayList<Group> menuGroups = (ArrayList<Group>) config.getServletContext().getAttribute("menuGroups");
+    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
     ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
 %>
 
@@ -29,7 +29,7 @@
                     <td width="30%"><input type="text" class="account_name"/></td>
                     <td width="15%">
                         <select class="account_group">
-                            <%for (Group g : menuGroups) {%>
+                            <%for (Group g : groups) {%>
                                 <option value="<%=g.getId()%>"><%=g.getName()%></option>
                             <%}%>
                         </select>
@@ -69,7 +69,7 @@
                 %>
                             <tr id="<%=u.getId()%>_user">
                                 <td  class="account_login"><%=u.getLogin()%></td>
-                                <td  class="account_passwd"><%for (int i=0; i < u.getPasswd().length(); i++) out.print("*");%></td>
+                                <td  class="account_passwd"><%for (int i=0; i < u.getPasswd().length(); i++) {%>*<%}%></td>
                                 <td  class="account_name"><%=u.getFio()%></td>
                                 <td  class="account_group"><%=u.getGroup_id().getName()%></td>
                                 <td  class="account_block"><%=u.getBlock() ? "true" : "false"%></td>
