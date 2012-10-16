@@ -40,12 +40,12 @@
                                         Menu menu = accessService.getCanonicalMenu();
                                         for (MenuGroup group : menu.getGroups()) {
                                             if (group.getItems() == null) {
-                                                %><li id="new-group-id-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                %><li class="group" id="group-add-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
                                             } else {
-                                                %><li id="<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                %><li class="group" id="group-add-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
                                                 %><ul class="l2"><%
                                                 for (MenuItem item : group.getItems()) {
-                                                    %><li id="new-item-id-<%=item.getId()%>"><input type="checkbox"/><%=item.getName()%></li><%
+                                                    %><li class="item" id="group-add-<%=item.getId()%>"><input type="checkbox"/><%=item.getName()%></li><%
                                                 }
                                                 %></ul><%
                                             }

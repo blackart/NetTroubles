@@ -8,11 +8,13 @@ import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.access.AccessMenuForGroup;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.Tab;
+import ru.blackart.dsi.infopanel.services.AccessService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddGroup extends AbstractCommand {
+    AccessService accessService = AccessService.getInstance();
 
     @Override
     public String execute() throws Exception {

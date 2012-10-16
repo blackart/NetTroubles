@@ -18,11 +18,16 @@ $(document).ready(function() {
 
     $(".group_add_button").click(function() {
         var $name = $("#groups_add .group_name").val();
-        var $tabs = "";
+        var $groups = {"groups":[]};
 //        alert($login + " | " + $passwd + " | " + $name + " | " + $group + "|" + $block);
-        $.each($("#groups_add").find("li"), function() {
+        $.each($("#groups_add").find("li.group"), function() {
             if ($(this).find("input").attr("checked")) {
-                $tabs += $(this).attr("id") + ";";
+                var group = {"id": $(this).attr("id").replace("group-add-","")};
+                group.items = [];
+                $.each($(this).next("ul").find("li.item"), function() {
+                    group.items.push({"id": $(this).attr("id").replace("group-add-","")});
+                });
+                $groups["groups"].push(group);
             }
         });
 
@@ -32,7 +37,7 @@ $(document).ready(function() {
             data : {
                 cmd: "addGroup",
                 name: $name,
-                tabs: $tabs
+                tabs: $groups
             },
             beforeSend: function() {
                 if ($.trim($name) === '') {
