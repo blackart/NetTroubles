@@ -109,16 +109,17 @@ public class HTTPServletController extends HttpServlet {
             ArrayList menuItems = (ArrayList) accessMenuForGroup.getItemMenu();
 
             Menu menu = new Menu();
-            ArrayList<ru.blackart.dsi.infopanel.access.menu.MenuGroup> groups_ = new ArrayList<ru.blackart.dsi.infopanel.access.menu.MenuGroup>();
+            ArrayList<MenuItem> groups_ = new ArrayList<MenuItem>();
 
             for (int j = 0; j < menuItems.size(); j++) {
                 AccessItemMenu accessItemMenu = (AccessItemMenu) menuItems.get(j);
                 AccessTab accessTab = accessItemMenu.getTab();
                 if (accessTab.isPolicy()) {
-                    ru.blackart.dsi.infopanel.access.menu.MenuGroup group = new ru.blackart.dsi.infopanel.access.menu.MenuGroup();
+                    MenuItem group = new MenuItem();
                     group.setId(accessTab.getTab().getMenu_group());
                     group.setName(accessTab.getTab().getCaption());
                     group.setUrl(accessItemMenu.getChildrens().size() > 0 ? null : accessTab.getTab().getFile_name());
+                    group.setPosition(0);
                     if (accessItemMenu.getChildrens().size() > 0) {
                         List<MenuItem> items = new ArrayList<MenuItem>();
                         for (int k = 0; k < accessItemMenu.getChildrens().size(); k++) {
@@ -138,7 +139,7 @@ public class HTTPServletController extends HttpServlet {
                     groups_.add(group);
                 }
             }
-            menu.setGroups(groups_);
+            menu.setItems(groups_);
             Group group_s = accessMenuForGroup.getGroup();
             group_s.setMenuConfig(gson.toJson(menu));
             session.getTransaction().begin();

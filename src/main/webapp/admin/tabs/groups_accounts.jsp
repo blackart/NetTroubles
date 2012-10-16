@@ -1,14 +1,13 @@
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessMenuForGroup" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuGroup" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Tab" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Users" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
@@ -38,7 +37,7 @@
                                 <ul class="l1">
                                     <%
                                         Menu menu = accessService.getCanonicalMenu();
-                                        for (MenuGroup group : menu.getGroups()) {
+                                        for (MenuItem group : menu.getItems()) {
                                             if (group.getItems() == null) {
                                                 %><li class="group" id="group-add-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
                                             } else {
@@ -67,11 +66,14 @@
                     <td width="10%">Delete</td>
                 </tr>
                 <%
-                    for (AccessMenuForGroup menu1 : tabs_of_groups) {
-                        if (menu1.getGroup().getName().equals("system")) {
+                    HashMap<Integer, Menu> menuForGroups = accessService.getMenuForGroups();
+                    HashMap<Integer, Group> groups_ = accessService.getGroups();
+
+                    for (Group group_ : groups_.values()) {
+                        if (group_.getName().equals("system")) {
                 %>
-                            <tr id="<%=menu1.getGroup().getId()%>_group" class="item">
-                                <td class="group_name"><%=menu1.getGroup().getName()%></td>
+                            <tr id="<%=group_.getId()%>_group" class="item">
+                                <td class="group_name"><%=group_.getName()%></td>
                                 <td class="menu_items">
                                     <ul class="l1">
                                         <li>all</li>
@@ -84,24 +86,22 @@
                 <%
                         } else {
                 %>
-                            <tr id="<%=menu1.getGroup().getId()%>_group" class="item">
-                                <td class="group_name"><%=menu1.getGroup().getName()%></td>
+                            <tr id="<%=group_.getId()%>_group" class="item">
+                                <td class="group_name"><%=group_.getName()%></td>
                                 <td class="menu_items">
                                     <ul class="l1">
                                         <%
-                                            for (AccessItemMenu item : menu1.getItemMenu()) {
-                                                if (item.getChildrens().size() == 0) {%>
-                                                    <li id="<%=item.getTab().getTab().getId()%>_<%=item.getTab().getTab().getMenu_group()%>_main-<%=menu1.getGroup().getId()%>"><input type="checkbox" <%=item.getTab().isPolicy() ? "checked=\"checked\"" : ""%> DISABLED/><%=item.getTab().getTab().getCaption()%></li>
-                                                <%
+                                            for (MenuItem item0 : menuForGroups.get(group_.getId()).getItems()) {
+                                                if (item0.getItems() == null) {
+                                                    %><li class="group" id="group-<%=group_.getId()%>-edit-<%=item0.getId()%>"><input type="checkbox"/><%=item0.getName()%></li><%
                                                 } else {
-                                                %>
-                                                    <li id="<%=item.getTab().getTab().getId()%>_<%=item.getTab().getTab().getMenu_group()%>_main-<%=menu1.getGroup().getId()%>"><input type="checkbox" <%=item.getTab().isPolicy() ? "checked=\"checked\"" : ""%> DISABLED/><%=item.getTab().getTab().getCaption()%></li>
-                                                    <ul class="l2">
-                                                    <%for (AccessTab tab : item.getChildrens()) {%>
-                                                        <li id="<%=tab.getTab().getId()%>_<%=tab.getTab().getMenu_group()%>_child-<%=menu1.getGroup().getId()%>"><input type="checkbox" <%=tab.isPolicy() ? "checked=\"checked\"" : ""%> DISABLED/><%=tab.getTab().getCaption()%></li>
-                                                    <%}%>
-                                                    </ul>
-                                                <%}
+                                                    %><li class="group" id="group-<%=group_.getId()%>-edit-<%=item0.getId()%>"><input type="checkbox"/><%=item0.getName()%></li><%
+                                                    %><ul class="l2"><%
+                                                        for (MenuItem item1 : item0.getItems()) {
+                                                    %><li class="item" id="group-<%=group_.getId()%>-edit-<%=item1.getId()%>"><input type="checkbox"/><%=item1.getName()%></li><%
+                                                    }
+                                                %></ul><%
+                                            }
                                             }
                                         %>
                                     </ul>

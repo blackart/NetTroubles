@@ -2,7 +2,6 @@
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessUserObject" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuGroup" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
 <%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
@@ -367,7 +366,7 @@
                 synchronized (dataModelConstructor) {
                     if (accessUserObject != null) {
                         Menu menu = accessUserObject.getMenu();
-                        for (MenuGroup menuGroup : menu.getGroups()) {
+                        for (MenuItem menuGroup : menu.getItems()) {
                             if ((menuGroup.getItems() == null) || (menuGroup.getItems().size() == 0)) {
                                 %><li><a href="tabs/<%=menuGroup.getUrl()%>" class="menu_item"><%=menuGroup.getName()%></a></li><%
                             } else {

@@ -1,8 +1,8 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Trouble;
 import ru.blackart.dsi.infopanel.beans.TroubleList;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
@@ -25,7 +25,7 @@ public class RecoveryTrouble extends AbstractCommand {
             dataModelConstructor.moveTroubleList(trouble, troubleListSource, troubleListTarget);
 
             if ((!trouble.getClose()) && (trouble.getCrm())) {
-                CrmTrouble crmTrouble = new CrmTrouble(trouble, "1");
+                CrmTrouble crmTrouble = new CrmTrouble(trouble, "3");
                 crmTrouble.send();
             } else if (trouble.getCrm() && trouble.getClose()) {
                 CrmTrouble crmTrouble = new CrmTrouble(trouble, "2");

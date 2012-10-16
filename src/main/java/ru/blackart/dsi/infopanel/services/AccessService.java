@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.access.menu.Menu;
-import ru.blackart.dsi.infopanel.access.menu.MenuGroup;
 import ru.blackart.dsi.infopanel.access.menu.MenuItem;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.Users;
@@ -18,7 +17,7 @@ import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 import javax.servlet.ServletConfig;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -26,21 +25,23 @@ import java.util.Properties;
 public class AccessService {
     private static AccessService AccessService;
     private Session session;
-    private HashMap<Group, Menu> menuConfigsForGroups = new HashMap<Group, Menu>();
-    private List<Group> groups = new ArrayList<Group>();
     private Gson gson = new Gson();
+    private HashMap<Integer, Menu> menuForGroups = new HashMap<Integer, Menu>();
+    private HashMap<Integer, HashMap<Integer, MenuItem>> indexingMenuForGroups = new HashMap<Integer, HashMap<Integer, MenuItem>>();
+    private HashMap<Integer, Group> groups = new HashMap<Integer, Group>();
     private Menu canonicalMenu;
+    private HashMap<Integer, MenuItem> canonicalIndexingMenu = new HashMap<Integer, MenuItem>();
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     private synchronized Session getSession() {
         return session;
     }
 
-    public HashMap<Group, Menu> getMenuConfigsForGroups() {
-        return menuConfigsForGroups;
+    public HashMap<Integer, Menu> getMenuForGroups() {
+        return menuForGroups;
     }
 
-    public List<Group> getGroups() {
+    public HashMap<Integer, Group> getGroups() {
         return groups;
     }
 
@@ -48,11 +49,26 @@ public class AccessService {
         return canonicalMenu;
     }
 
+    public HashMap<Integer, MenuItem> getCanonicalIndexingMenu() {
+        return canonicalIndexingMenu;
+    }
+
+    private HashMap<Integer, MenuItem> indexingMenu(List<MenuItem> menuItems, HashMap<Integer, MenuItem> targetIndexingMenu) {
+        if (targetIndexingMenu == null) return null;
+        for (MenuItem menuItem : menuItems) {
+            targetIndexingMenu.put(menuItem.getId(), menuItem);
+            if (menuItem.getItems() != null) this.indexingMenu(menuItem.getItems(), targetIndexingMenu);
+        }
+        return targetIndexingMenu;
+    }
+
     private AccessService() {
         this.session = SessionFactorySingle.getSessionFactory().openSession();
-        this.groups.addAll(this.getGroupsFromDB());
-        this.createMenuForGroups(groups);
-
+        List<Group> groupList = this.getGroupsFromDB() ;
+        for (Group group : groupList) {
+            this.groups.put(group.getId(), group);
+        }
+        this.createMenuForGroups(groups.values());
         TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
         ServletConfig config = troubleListsManager.getHTTPServletConfig();
 
@@ -60,6 +76,10 @@ public class AccessService {
         InputStream inputStream = config.getServletContext().getResourceAsStream(paths.getProperty("menuConfig"));
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         this.canonicalMenu = this.gson.fromJson(inputStreamReader, Menu.class);
+
+        this.indexingMenu(this.getCanonicalMenu().getItems(), this.canonicalIndexingMenu);
+
+        System.out.print("");
     }
 
     public static AccessService getInstance() {
@@ -76,14 +96,16 @@ public class AccessService {
         return this.sortMenu(menu);
     }
 
-    public void createMenuForGroups(List<Group> groups) {
+    public void createMenuForGroups(Collection<Group> groups) {
         for (Group group : groups) {
-            this.menuConfigsForGroups.put(group, this.createMenuForGroup(group));
+            Menu menu = this.createMenuForGroup(group);
+            this.menuForGroups.put(group.getId(), menu);
+            this.indexingMenuForGroups.put(group.getId(), this.indexingMenu(menu.getItems(), new HashMap<Integer, MenuItem>()));
         }
     }
 
     private Menu sortMenu(Menu menu) {
-        for (MenuGroup menuGroup : menu.getGroups()) {
+        for (MenuItem menuGroup : menu.getItems()) {
             List<MenuItem> menuItems = menuGroup.getItems();
             if (menuItems != null) {
                 for (int i=0; i < menuItems.size(); i++) {
@@ -105,6 +127,31 @@ public class AccessService {
     private List<Group> getGroupsFromDB() {
         Criteria crt_trouble = this.getSession().createCriteria(Group.class);
         return (List<Group>)crt_trouble.list();
+    }
+
+    public synchronized boolean saveGroup(Group group) {
+        this.saveGroupToDB(group);
+        this.groups.put(group.getId(), group);
+        Menu menu = this.createMenuForGroup(group);
+        this.menuForGroups.put(group.getId(), menu);
+        this.indexingMenuForGroups.put(group.getId(), this.indexingMenu(menu.getItems(), new HashMap<Integer, MenuItem>()));
+        return true;
+    }
+
+    private synchronized void saveGroupToDB(Group group) {
+        Session session = this.getSession();
+        try {
+            session.beginTransaction();
+            session.save(group);
+            session.getTransaction().commit();
+            session.clear();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            session.getTransaction().rollback();
+            session.flush();
+            session.close();
+            this.session = SessionFactorySingle.getSessionFactory().openSession();
+        }
     }
 
     public synchronized void updateUser(Users user) {

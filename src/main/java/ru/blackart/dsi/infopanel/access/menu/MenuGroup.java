@@ -3,8 +3,8 @@ package ru.blackart.dsi.infopanel.access.menu;
 import java.util.List;
 
 public class MenuGroup {
-    private String name;
     private int id;
+    private String name;
     private String url;
     private List<MenuItem> items;
 

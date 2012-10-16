@@ -207,12 +207,12 @@ public class DeviceManager {
     }
 
     /*-----------------------------------------delete-----------------------------------------------------*/
-    public boolean deleteDevice(String name) {
+    public synchronized boolean deleteDevice(String name) {
         Device device = this.getDevice(name);
         return this.deleteDevice(device);
     }
 
-    public boolean deleteDevice(Device device) {
+    public synchronized boolean deleteDevice(Device device) {
         this.getDevice(device);
         boolean result = this.deleteDeviceFromDB(device);
         if (result) {
