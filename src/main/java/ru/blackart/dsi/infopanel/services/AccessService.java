@@ -219,12 +219,18 @@ public class AccessService {
         group = this.getGroup(group.getId());
         if (group == null) return false;
         if (this.containGroupName(group.getName(), group.getId())) return false;
-        this.getGroups().put(group.getId(), group);
-        this.updateGroupToDB(group);
+        if (!this.updateGroupToDB(group)) return false;
+
+        this.groups.put(group.getId(), group);
+        Menu menu = this.createMenuForGroup(group);
+        this.menuForGroups.put(group.getId(), menu);
+        this.indexingMenuForGroups.put(group.getId(), this.indexingMenu(menu.getItems(), new HashMap<Integer, MenuItem>()));
+
+        log.info("Group '" + group.getName() + "' [" + group.getId() + "] has been changed");
         return true;
     }
 
-    private synchronized void updateGroupToDB(Group group) {
+    private synchronized boolean updateGroupToDB(Group group) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -232,12 +238,14 @@ public class AccessService {
             session.getTransaction().commit();
             session.clear();
         } catch (HibernateException e) {
-            e.printStackTrace();
+            log.error("Can't update group - '" + group.getName() + "' \n" + e.getMessage());
             session.getTransaction().rollback();
             session.flush();
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
         }
+        return true;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -249,6 +257,7 @@ public class AccessService {
 
     public synchronized boolean deleteGroup(Group group) {
         if (group == null) return false;
+        if (!this.deleteGroupFromDB(group)) return false;
         try {
             this.getGroups().remove(group.getId());
         } catch (Exception e) {
@@ -259,7 +268,7 @@ public class AccessService {
         this.menuForGroups.remove(group.getId());
         this.indexingMenuForGroups.remove(group.getId());
 
-        return this.deleteGroupFromDB(group);
+        return true;
     }
 
     private synchronized boolean deleteGroupFromDB(Group group) {

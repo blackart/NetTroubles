@@ -1,12 +1,10 @@
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessUserObject" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
+<%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
 <%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
 <%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
@@ -290,12 +288,12 @@
                                             Menu menu = accessService.getCanonicalMenu();
                                             for (MenuItem group : menu.getItems()) {
                                                 if (group.getItems() == null) {
-                                                    %><li class="group" id="group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                    %><li class="group" id="diag-group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
                                                 } else {
-                                                    %><li class="group" id="group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                    %><li class="group" id="diag-group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
                                                     %><ul class="l2"><%
                                                     for (MenuItem item : group.getItems()) {
-                                                        %><li class="item" id="group-edit-<%=item.getId()%>"><input type="checkbox"/><%=item.getName()%></li><%
+                                                        %><li class="item" id="diag-group-edit-<%=item.getId()%>"><input type="checkbox"/><%=item.getName()%></li><%
                                                     }
                                                     %></ul><%
                                                 }

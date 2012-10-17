@@ -65,7 +65,7 @@
                 {
                     "id":"52",
                     "name":"Groups of accounts",
-                    "url":"group_accounts",
+                    "url":"groups_accounts.jsp",
                     "position":"2"
                 }
             ]

@@ -364,11 +364,11 @@ $(document).ready(function() {
                 var $menu = {"items":[]};
                 $.each($("#groups_edit_dialog").find("li.group"), function() {
                     if ($(this).find("input").attr("checked")) {
-                        var item = {"id": $(this).attr("id").replace("group-edit-","")};
+                        var item = {"id": $(this).attr("id").replace("diag-group-edit-","")};
                         item.items = [];
                         $.each($(this).next("ul").find("li.item"), function() {
                             if ($(this).find("input").attr("checked")) {
-                                item.items.push({"id": $(this).attr("id").replace("group-edit-","")});
+                                item.items.push({"id": $(this).attr("id").replace("diag-group-edit-","")});
                             }
                         });
                         $menu.items.push(item);
@@ -544,9 +544,9 @@ $(document).ready(function() {
         var real_id = id.replace("_group", "");
         $("#groups_edit_id").val(real_id);
         $("#groups_edit_name").val($("#" + id + " .group_name").html());
+
         $("#" + id + " .l1 li").each(function() {
-            //todo
-            $("#groups_edit_dialog .l1").find("li[id=" + $(this).attr("id").replace("-" + real_id, "_d") + "]").find("input").attr("checked", $(this).find("input").attr("checked"));
+            $("#groups_edit_dialog .l1").find("li[id=" + $(this).attr("id").replace("group-" + real_id, "diag-group") + "] input").attr("checked", $(this).find("input").attr("checked"));
         });
 
         $("#groups_edit_dialog").dialog('open');
