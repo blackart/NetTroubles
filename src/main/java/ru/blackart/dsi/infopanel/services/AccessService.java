@@ -26,11 +26,13 @@ public class AccessService {
     private static AccessService AccessService;
     private Session session;
     private Gson gson = new Gson();
+    private Menu canonicalMenu;
+    private HashMap<Integer, MenuItem> canonicalIndexingMenu = new HashMap<Integer, MenuItem>();
+
     private HashMap<Integer, Menu> menuForGroups = new HashMap<Integer, Menu>();
     private HashMap<Integer, HashMap<Integer, MenuItem>> indexingMenuForGroups = new HashMap<Integer, HashMap<Integer, MenuItem>>();
     private HashMap<Integer, Group> groups = new HashMap<Integer, Group>();
-    private Menu canonicalMenu;
-    private HashMap<Integer, MenuItem> canonicalIndexingMenu = new HashMap<Integer, MenuItem>();
+
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     private synchronized Session getSession() {
@@ -49,8 +51,46 @@ public class AccessService {
         return canonicalMenu;
     }
 
+    public HashMap<Integer, HashMap<Integer, MenuItem>> getIndexingMenuForGroups() {
+        return indexingMenuForGroups;
+    }
+
     public HashMap<Integer, MenuItem> getCanonicalIndexingMenu() {
         return canonicalIndexingMenu;
+    }
+
+    public synchronized Menu resolveMenu(String json) {
+        Menu menu = null;
+        try {
+            menu = gson.fromJson(json, Menu.class);
+        } catch (Exception e) {
+            log.error("Can't cast json to Menu.class \n" + e.getMessage());
+            return menu;
+        }
+        return this.resolveMenu(menu);
+    }
+
+    public synchronized Menu resolveMenu(Menu menu) {
+        for (MenuItem item0 : menu.getItems()) {
+            if (canonicalIndexingMenu.containsKey(item0.getId())) {
+                MenuItem canonicalMenuItem = canonicalIndexingMenu.get(item0.getId());
+                item0.setName(canonicalMenuItem .getName());
+                item0.setPosition(canonicalMenuItem.getPosition());
+                item0.setUrl(canonicalMenuItem .getUrl());
+                if (item0.getItems() != null) {
+                    for (MenuItem item1 : item0.getItems()) {
+                        if (canonicalIndexingMenu.containsKey(item1.getId())) {
+                            canonicalMenuItem = canonicalIndexingMenu.get(item1.getId());
+                            item1.setName(canonicalMenuItem .getName());
+                            item1.setPosition(canonicalMenuItem.getPosition());
+                            item1.setUrl(canonicalMenuItem .getUrl());
+                        }
+                    }
+                }
+            }
+        }
+
+        return menu;
     }
 
     private HashMap<Integer, MenuItem> indexingMenu(List<MenuItem> menuItems, HashMap<Integer, MenuItem> targetIndexingMenu) {
@@ -129,20 +169,66 @@ public class AccessService {
         return (List<Group>)crt_trouble.list();
     }
 
+    private synchronized boolean containGroupName(String name, int excludeId) {
+        for (Group g : this.getGroups().values()) {
+            if ((g.getName().equals(name)) && (excludeId != g.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
     public synchronized boolean saveGroup(Group group) {
-        this.saveGroupToDB(group);
+        if (this.containGroupName(group.getName(),-1)) {
+            log.error("Can't save group. Duplicate group name. Group with name - '" + group.getName() + "' already exists");
+            return false;
+        }
+        if (!this.saveGroupToDB(group)) return false;
+
         this.groups.put(group.getId(), group);
         Menu menu = this.createMenuForGroup(group);
         this.menuForGroups.put(group.getId(), menu);
         this.indexingMenuForGroups.put(group.getId(), this.indexingMenu(menu.getItems(), new HashMap<Integer, MenuItem>()));
+        log.info("Group '" + group.getName() + "' [" + group.getId() + "] has been added");
         return true;
     }
 
-    private synchronized void saveGroupToDB(Group group) {
+    private synchronized boolean saveGroupToDB(Group group) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
             session.save(group);
+            session.getTransaction().commit();
+            session.clear();
+        } catch (HibernateException e) {
+            log.error("Can't save group - '" + group.getName() + "' \n" + e.getMessage());
+            session.getTransaction().rollback();
+            session.flush();
+            session.close();
+            this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
+        }
+        return true;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public synchronized boolean updateGroup(Group group) throws Exception {
+        group = this.getGroup(group.getId());
+        if (group == null) return false;
+        if (this.containGroupName(group.getName(), group.getId())) return false;
+        this.getGroups().put(group.getId(), group);
+        this.updateGroupToDB(group);
+        return true;
+    }
+
+    private synchronized void updateGroupToDB(Group group) {
+        Session session = this.getSession();
+        try {
+            session.beginTransaction();
+            session.update(group);
             session.getTransaction().commit();
             session.clear();
         } catch (HibernateException e) {
@@ -153,6 +239,59 @@ public class AccessService {
             this.session = SessionFactorySingle.getSessionFactory().openSession();
         }
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public synchronized boolean deleteGroup(int id) {
+        Group group = this.getGroup(id);
+        return group != null && this.deleteGroup(group);
+    }
+
+    public synchronized boolean deleteGroup(Group group) {
+        if (group == null) return false;
+        try {
+            this.getGroups().remove(group.getId());
+        } catch (Exception e) {
+            log.error("Can't delete group " + group.getName() + " [" + group.getId() + "] \n" + e.getMessage());
+            return false;
+        }
+
+        this.menuForGroups.remove(group.getId());
+        this.indexingMenuForGroups.remove(group.getId());
+
+        return this.deleteGroupFromDB(group);
+    }
+
+    private synchronized boolean deleteGroupFromDB(Group group) {
+        Session session = this.getSession();
+        try {
+            session.beginTransaction();
+            session.delete(group);
+            session.getTransaction().commit();
+            session.clear();
+        } catch (HibernateException e) {
+            log.error("Can't delete group from DB '" + group.getName() + "' [" + group.getId() + "] \n" + e.getMessage());
+            session.getTransaction().rollback();
+            session.flush();
+            session.close();
+            this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
+        }
+        return true;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    public synchronized Group getGroup(int id) {
+        Group group = this.groups.get(id);
+        return group == null ? this.getGroupFromDB(id) : group;
+    }
+
+    private synchronized Group getGroupFromDB(int id) {
+        Criteria crt_groups = this.getSession().createCriteria(Group.class);
+        crt_groups.add(Restrictions.eq("id", id));
+        return crt_groups.list().size() == 1 ? (Group)crt_groups.list().get(0) : null;
+    }
+    //----------------------------------------------------------------------------------------------------
 
     public synchronized void updateUser(Users user) {
         Session session = this.getSession();

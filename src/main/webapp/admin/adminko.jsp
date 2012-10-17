@@ -6,6 +6,8 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
 <%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
+<%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 //    Logger log = LoggerFactory.getLogger(this.getClass().getName());
@@ -39,16 +41,14 @@
 <%
     ArrayList<Service> services = (ArrayList<Service>) config.getServletContext().getAttribute("services");
     ArrayList<TypeDeviceFilter> typeDeviceFilters = (ArrayList<TypeDeviceFilter>) config.getServletContext().getAttribute("typeDeviceFilters");
-    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
-    ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
-    ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
     ArrayList<Hostgroup> hostgroups = (ArrayList<Hostgroup>) config.getServletContext().getAttribute("hostgroups");
     ArrayList<Hoststatus> hoststatuses = (ArrayList<Hoststatus>) config.getServletContext().getAttribute("hoststatuses");
     ArrayList<Region> regions = (ArrayList<Region>) config.getServletContext().getAttribute("regions");
     DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-%>
+    AccessService accessService = AccessService.getInstance();
+    Collection<Group> groups = accessService.getGroups().values();
 
-<%
+
     AccessUserObject accessUserObject = (AccessUserObject) session.getAttribute("access");
 %>
 
@@ -282,34 +282,29 @@
                 <tr>
                     <td width="40%"><input type="text" id="groups_edit_name"/></td>
                     <td width="60%">
-
-
                         <div class="settings">
                             <div class="settings_block">
                                 <div class="menu_items">
                                         <ul class="l1">
                                             <%
-                                                for (AccessItemMenu item : generalMenu) {
-                                                    if (item.getChildrens().size() == 0) {%>
-                                                        <li id="<%=item.getTab().getTab().getId()%>_<%=item.getTab().getTab().getMenu_group()%>_main_d"><input type="checkbox"/><%=item.getTab().getTab().getCaption()%></li>
-                                                    <%
-                                                    } else {
-                                                    %>
-                                                        <li id="<%=item.getTab().getTab().getId()%>_<%=item.getTab().getTab().getMenu_group()%>_main_d"><input type="checkbox"/><%=item.getTab().getTab().getCaption()%></li>
-                                                        <ul class="l2">
-                                                        <%for (AccessTab tab : item.getChildrens()) {%>
-                                                            <li id="<%=tab.getTab().getId()%>_<%=tab.getTab().getMenu_group()%>_child_d"><input type="checkbox"/><%=tab.getTab().getCaption()%></li>
-                                                        <%}%>
-                                                        </ul>
-                                                    <%}
+                                            Menu menu = accessService.getCanonicalMenu();
+                                            for (MenuItem group : menu.getItems()) {
+                                                if (group.getItems() == null) {
+                                                    %><li class="group" id="group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                } else {
+                                                    %><li class="group" id="group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                    %><ul class="l2"><%
+                                                    for (MenuItem item : group.getItems()) {
+                                                        %><li class="item" id="group-edit-<%=item.getId()%>"><input type="checkbox"/><%=item.getName()%></li><%
+                                                    }
+                                                    %></ul><%
                                                 }
+                                            }
                                             %>
                                         </ul>
                                 </div>
                             </div>
                         </div>
-
-
                     </td>
                 </tr>
             </table>
@@ -365,8 +360,8 @@
             <%
                 synchronized (dataModelConstructor) {
                     if (accessUserObject != null) {
-                        Menu menu = accessUserObject.getMenu();
-                        for (MenuItem menuGroup : menu.getItems()) {
+                        Menu general_menu = accessUserObject.getMenu();
+                        for (MenuItem menuGroup : general_menu.getItems()) {
                             if ((menuGroup.getItems() == null) || (menuGroup.getItems().size() == 0)) {
                                 %><li><a href="tabs/<%=menuGroup.getUrl()%>" class="menu_item"><%=menuGroup.getName()%></a></li><%
                             } else {

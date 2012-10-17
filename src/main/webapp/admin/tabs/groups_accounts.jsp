@@ -10,11 +10,6 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
-    ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
-    ArrayList<Tab> tabs = (ArrayList<Tab>) config.getServletContext().getAttribute("tabs");
-    ArrayList<AccessMenuForGroup> tabs_of_groups = (ArrayList<AccessMenuForGroup>) config.getServletContext().getAttribute("tabs_of_groups");
-    ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
     AccessService accessService = AccessService.getInstance();
 %>
 
@@ -66,7 +61,8 @@
                     <td width="10%">Delete</td>
                 </tr>
                 <%
-                    HashMap<Integer, Menu> menuForGroups = accessService.getMenuForGroups();
+                    Menu canonicalMenu = accessService.getCanonicalMenu();
+                    HashMap<Integer, HashMap<Integer, MenuItem>> indexingMenuForGroups = accessService.getIndexingMenuForGroups();
                     HashMap<Integer, Group> groups_ = accessService.getGroups();
 
                     for (Group group_ : groups_.values()) {
@@ -91,17 +87,18 @@
                                 <td class="menu_items">
                                     <ul class="l1">
                                         <%
-                                            for (MenuItem item0 : menuForGroups.get(group_.getId()).getItems()) {
+                                            for (MenuItem item0 : canonicalMenu.getItems()) {
+                                                HashMap<Integer, MenuItem> indexingMenuForGroup = indexingMenuForGroups.get(group_.getId());
                                                 if (item0.getItems() == null) {
-                                                    %><li class="group" id="group-<%=group_.getId()%>-edit-<%=item0.getId()%>"><input type="checkbox"/><%=item0.getName()%></li><%
+                                                    %><li class="group" id="group-<%=group_.getId()%>-edit-<%=item0.getId()%>"><input type="checkbox" <%=indexingMenuForGroup.containsKey(item0.getId()) ? "checked=\"checked\"" : ""%> DISABLED="true"/><%=item0.getName()%></li><%
                                                 } else {
-                                                    %><li class="group" id="group-<%=group_.getId()%>-edit-<%=item0.getId()%>"><input type="checkbox"/><%=item0.getName()%></li><%
+                                                    %><li class="group" id="group-<%=group_.getId()%>-edit-<%=item0.getId()%>"><input type="checkbox" <%=indexingMenuForGroup.containsKey(item0.getId()) ? "checked=\"checked\"" : ""%> DISABLED="true"/><%=item0.getName()%></li><%
                                                     %><ul class="l2"><%
-                                                        for (MenuItem item1 : item0.getItems()) {
-                                                    %><li class="item" id="group-<%=group_.getId()%>-edit-<%=item1.getId()%>"><input type="checkbox"/><%=item1.getName()%></li><%
+                                                    for (MenuItem item1 : item0.getItems()) {
+                                                        %><li class="item" id="group-<%=group_.getId()%>-edit-<%=item1.getId()%>"><input type="checkbox" <%=indexingMenuForGroup.containsKey(item1.getId()) ? "checked=\"checked\"" : ""%> DISABLED="true"/><%=item1.getName()%></li><%
                                                     }
-                                                %></ul><%
-                                            }
+                                                    %></ul><%
+                                                }
                                             }
                                         %>
                                     </ul>

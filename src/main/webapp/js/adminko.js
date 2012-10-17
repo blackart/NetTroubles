@@ -361,10 +361,17 @@ $(document).ready(function() {
                 var $id = $("#groups_edit_id").val();
                 var $name = $("#groups_edit_name").val();
 
-                var $tabs = "";
-                $.each($("#groups_edit_dialog .l1").find("li"), function() {
+                var $menu = {"items":[]};
+                $.each($("#groups_edit_dialog").find("li.group"), function() {
                     if ($(this).find("input").attr("checked")) {
-                        $tabs += $(this).attr("id") + ";";
+                        var item = {"id": $(this).attr("id").replace("group-edit-","")};
+                        item.items = [];
+                        $.each($(this).next("ul").find("li.item"), function() {
+                            if ($(this).find("input").attr("checked")) {
+                                item.items.push({"id": $(this).attr("id").replace("group-edit-","")});
+                            }
+                        });
+                        $menu.items.push(item);
                     }
                 });
 
@@ -375,7 +382,7 @@ $(document).ready(function() {
                         cmd: "editGroup",
                         id: $id,
                         name: $name,
-                        tabs: $tabs
+                        menu_config: JSON.stringify($menu)
                     },
                     beforeSend: function() {
                         if ($.trim($name) === '') {
@@ -538,6 +545,7 @@ $(document).ready(function() {
         $("#groups_edit_id").val(real_id);
         $("#groups_edit_name").val($("#" + id + " .group_name").html());
         $("#" + id + " .l1 li").each(function() {
+            //todo
             $("#groups_edit_dialog .l1").find("li[id=" + $(this).attr("id").replace("-" + real_id, "_d") + "]").find("input").attr("checked", $(this).find("input").attr("checked"));
         });
 

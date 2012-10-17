@@ -19,29 +19,7 @@ public class AddGroup extends AbstractCommand {
         String group_name = this.getRequest().getParameter("name");
         String menu_config = this.getRequest().getParameter("menu_config");
 
-        HashMap<Integer, MenuItem> canonicalIndexingMenu = accessService.getCanonicalIndexingMenu();
-        Menu newMenu = gson.fromJson(menu_config, Menu.class);
-
-
-        for (MenuItem item0 : newMenu.getItems()) {
-            if (canonicalIndexingMenu.containsKey(item0.getId())) {
-                MenuItem canonicalMenuItem = canonicalIndexingMenu.get(item0.getId());
-                item0.setName(canonicalMenuItem .getName());
-                item0.setPosition(canonicalMenuItem.getPosition());
-                item0.setUrl(canonicalMenuItem .getUrl());
-                if (item0.getItems() != null) {
-                    for (MenuItem item1 : item0.getItems()) {
-                        if (canonicalIndexingMenu.containsKey(item1.getId())) {
-                            canonicalMenuItem = canonicalIndexingMenu.get(item1.getId());
-                            item1.setName(canonicalMenuItem .getName());
-                            item1.setPosition(canonicalMenuItem.getPosition());
-                            item1.setUrl(canonicalMenuItem .getUrl());
-                        }
-                    }
-                }
-            }
-        }
-
+        Menu newMenu = accessService.resolveMenu(menu_config);
 
         Group new_group = new Group();
         new_group.setName(group_name);

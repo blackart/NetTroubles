@@ -66,11 +66,9 @@ public class HTTPServletController extends HttpServlet {
         }
         PropertyConfigurator.configure(log4jConfig);
 
-
-
-
         //инициализируем Фабрику Комманд
         this.factory = FactoryCommandCommand.getInstance(this.getServletConfig());
+
         //забираем из базы занчения
         Session session = SessionFactorySingle.getSessionFactory().openSession();
         //Services
@@ -82,7 +80,7 @@ public class HTTPServletController extends HttpServlet {
         ArrayList<TypeDeviceFilter> typeDeviceFilters = new ArrayList<TypeDeviceFilter>(crt_2.list());
         config.getServletContext().setAttribute("typeDeviceFilters", typeDeviceFilters);
 
-        Criteria crt_4 = session.createCriteria(Tab.class);
+        /*Criteria crt_4 = session.createCriteria(Tab.class);
         ArrayList<Tab> tabs = new ArrayList<Tab>(crt_4.list());
         config.getServletContext().setAttribute("tabs", tabs);
 
@@ -98,11 +96,11 @@ public class HTTPServletController extends HttpServlet {
         }
 
         config.getServletContext().setAttribute("tabs_of_groups", tabs_of_groups);
-        config.getServletContext().setAttribute("groups", groups);
+        config.getServletContext().setAttribute("groups", groups);*/
 
 
         //todo генерация json конфигурации меню, убрать после адаптации для ДСИ
-        Gson gson = new Gson();
+        /*Gson gson = new Gson();
 
         for (int i = 0; i < tabs_of_groups.size(); i++) {
             AccessMenuForGroup accessMenuForGroup = tabs_of_groups.get(i);
@@ -145,7 +143,7 @@ public class HTTPServletController extends HttpServlet {
             session.getTransaction().begin();
             session.save(group_s);
             session.getTransaction().commit();
-        }
+        }*/
 
         //Users
         Criteria crt_5 = session.createCriteria(Users.class);
