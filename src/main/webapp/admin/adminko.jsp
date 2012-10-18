@@ -308,7 +308,7 @@
             </table>
 </div>
 <div id="groups_delete_dialog" style="display: none;">
-    <div>Удалить фильтр <strong id="delete_group" ></strong> ?</div>
+    <div>Удалить группу <strong id="delete_group" ></strong> ?</div>
 </div>
 
 <div id="devices_edit_dialog" class="settings_dialog" style="display: none;">

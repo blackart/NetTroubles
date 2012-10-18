@@ -218,8 +218,18 @@ public class AccessService {
     public synchronized boolean updateGroup(Group group) throws Exception {
         group = this.getGroup(group.getId());
         if (group == null) return false;
-        if (this.containGroupName(group.getName(), group.getId())) return false;
-        if (!this.updateGroupToDB(group)) return false;
+        if (this.containGroupName(group.getName(), group.getId())) {
+            log.error("Can't save group. Duplicate group name. Group with name - '" + group.getName() + "' already exists");
+            Group groupFromDB = this.getGroupFromDB(group.getId());
+            this.groups.put(group.getId(), groupFromDB);
+            log.info("Revert name for group - '" + groupFromDB.getName() + "'[" + groupFromDB.getId() + "]");
+            return false;
+        }
+        if (!this.updateGroupToDB(group)) {
+            Group groupFromDB = this.getGroupFromDB(group.getId());
+            this.groups.put(group.getId(), groupFromDB);
+            return false;
+        }
 
         this.groups.put(group.getId(), group);
         Menu menu = this.createMenuForGroup(group);
@@ -267,7 +277,7 @@ public class AccessService {
 
         this.menuForGroups.remove(group.getId());
         this.indexingMenuForGroups.remove(group.getId());
-
+        log.info("Group '" + group.getName() + "' [" + group.getId() + "] has been deleted");
         return true;
     }
 

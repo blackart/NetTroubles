@@ -391,7 +391,12 @@ $(document).ready(function() {
                         }
                     },
                     success: function(data) {
-                        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        if (data) {
+                            var json_data = JSON.parse(data);
+                            if (json_data.message) alert(json_data.message);
+                        } else {
+                            $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        }
                     }
                 });
                 $(this).dialog("close");
@@ -413,7 +418,12 @@ $(document).ready(function() {
                         id: $group_delete_id
                     },
                     success: function(data) {
-                        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        if (data) {
+                            var json_data = JSON.parse(data);
+                            if (json_data.message) alert(json_data.message);
+                        } else {
+                            $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        }
                     }
                 });
 

@@ -1,28 +1,16 @@
 package ru.blackart.dsi.infopanel.commands.security.groups;
 
-import com.google.gson.Gson;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.access.menu.Menu;
-import ru.blackart.dsi.infopanel.access.menu.MenuItem;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
-import ru.blackart.dsi.infopanel.SessionFactorySingle;
-import ru.blackart.dsi.infopanel.access.AccessMenuForGroup;
 import ru.blackart.dsi.infopanel.beans.Group;
-import ru.blackart.dsi.infopanel.beans.Tab;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.services.AccessService;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import ru.blackart.dsi.infopanel.utils.message.SimpleMessage;
 
 public class EditGroup extends AbstractCommand {
     AccessService accessService = AccessService.getInstance();
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    private Gson gson = new Gson();
 
     @Override
     public String execute() throws Exception {
@@ -40,12 +28,23 @@ public class EditGroup extends AbstractCommand {
         }
 
         Menu menu = accessService.resolveMenu(menu_config);
+        if (menu == null) {
+            SimpleMessage message = new SimpleMessage("Неверная конфигурация меню");
+            this.getResponse().getWriter().print(message.toJson());
+            return null;
+        }
+
         Group group = accessService.getGroup(id);
-
         group.setName(group_name.trim());
-        group.setMenuConfig(gson.toJson(menu));
+        group.setMenuConfig(menu.toJson());
 
-        accessService.updateGroup(group);
+        synchronized (accessService) {
+            if (!accessService.updateGroup(group)) {
+                SimpleMessage message = new SimpleMessage("При редактировании профиля группы произошла ошибка. Изменения не сохранены.");
+                this.getResponse().getWriter().print(message.toJson());
+                return null;
+            }
+        }
 
         return null;
     }
