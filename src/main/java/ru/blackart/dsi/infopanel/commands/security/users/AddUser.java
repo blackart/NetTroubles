@@ -1,15 +1,21 @@
 package ru.blackart.dsi.infopanel.commands.security.users;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
-import ru.blackart.dsi.infopanel.beans.*;
+import ru.blackart.dsi.infopanel.beans.Group;
+import ru.blackart.dsi.infopanel.beans.User;
+import ru.blackart.dsi.infopanel.beans.UserSettings;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.services.AccessService;
 
 import java.util.List;
 
 public class AddUser extends AbstractCommand {
+    private final AccessService accessService = AccessService.getInstance();
+    private Logger log = LoggerFactory.getLogger(this.getClass().getName());
+
     @Override
     public String execute() throws Exception {
         String login = this.getRequest().getParameter("login");
@@ -18,38 +24,44 @@ public class AddUser extends AbstractCommand {
         String group_id = this.getRequest().getParameter("group");
         String block = this.getRequest().getParameter("block");
 
-        Session session = SessionFactorySingle.getSessionFactory().openSession();
+        int group_int_id;
+        try {
+            group_int_id = Integer.valueOf(group_id);
+        } catch (Exception e ) {
+            log.error("Can't cast id " + group_id + " to Integer type \n" + e.getMessage());
+            return null;
+        }
 
-        Criteria crt_trouble = session.createCriteria(Group.class);
-        crt_trouble.add(Restrictions.eq("id", Integer.valueOf(group_id)));
-        Group group = (Group)crt_trouble.list().get(0);
+        synchronized (accessService) {
+            Group group = accessService.getGroup(group_int_id);
+            User user = new User();
+            user.setLogin(login);
+            user.setPasswd(passwd);
+            user.setFio(name);
+            user.setGroup_id(group);
+            user.setBlock(Boolean.valueOf(block));
 
-        User user = new User();
-        user.setLogin(login);
-        user.setPasswd(passwd);
-        user.setFio(name);
-        user.setGroup_id(group);
-        user.setBlock(Boolean.valueOf(block));
+            UserSettings userSettings = new UserSettings();
+            userSettings.setOpenControlPanel(false);
+            userSettings.setCurrentTroublesPageReload(true);
+            userSettings.setTimeoutReload("1200000");
+            user.setSettings_id(userSettings);
 
-        UserSettings userSettings = new UserSettings();
-        userSettings.setOpenControlPanel(false);
-        userSettings.setCurrentTroublesPageReload(true);
-        userSettings.setTimeoutReload("1200000");
-        user.setSettings_id(userSettings);
+            Session session = SessionFactorySingle.getSessionFactory().openSession();
 
-        session.beginTransaction();
-        session.save(userSettings);
-        session.getTransaction().commit();
+            session.beginTransaction();
+            session.save(userSettings);
+            session.getTransaction().commit();
 
-        session.beginTransaction();
-        session.save(user);
-        session.getTransaction().commit();
+            session.flush();
+            session.close();
 
-        session.flush();
-        session.close();
+            //todo избавиться от объекта в ServlectContext
+            List<User> users = (List<User>) this.getConfig().getServletContext().getAttribute("users");
+            users.add(user);
 
-        List<User> users = (List<User>) this.getConfig().getServletContext().getAttribute("users");
-        users.add(user);
+            accessService.saveUser(user);
+        }
 
         return null;
     }

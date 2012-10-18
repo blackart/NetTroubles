@@ -21,7 +21,7 @@ $(document).ready(function() {
         var $passwd = $("#users_add .account_passwd").val();
         var $name = $("#users_add .account_name").val();
         var $group = $("#users_add .account_group").val();
-        var $block = $("#users_add .account_block").attr("checked");
+        var $block = $("#users_add .account_block").attr("checked") ? true : false;
 
 //        alert($login + " | " + $passwd + " | " + $name + " | " + $group + "|" + $block);
 

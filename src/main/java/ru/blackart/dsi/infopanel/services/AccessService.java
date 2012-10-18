@@ -33,6 +33,9 @@ public class AccessService {
     private HashMap<Integer, HashMap<Integer, MenuItem>> indexingMenuForGroups = new HashMap<Integer, HashMap<Integer, MenuItem>>();
     private HashMap<Integer, Group> groups = new HashMap<Integer, Group>();
 
+    private HashMap<Integer, User> users = new HashMap<Integer, User>();
+    private HashMap<String, User> usersForLogin = new HashMap<String, User>();
+
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     private synchronized Session getSession() {
@@ -104,6 +107,7 @@ public class AccessService {
 
     private AccessService() {
         this.session = SessionFactorySingle.getSessionFactory().openSession();
+
         List<Group> groupList = this.getGroupsFromDB() ;
         for (Group group : groupList) {
             this.groups.put(group.getId(), group);
@@ -111,11 +115,16 @@ public class AccessService {
         this.createMenuForGroups(groups.values());
         TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
         ServletConfig config = troubleListsManager.getHTTPServletConfig();
-
         Properties paths = (Properties) config.getServletContext().getAttribute("pathToDataFile");
         InputStream inputStream = config.getServletContext().getResourceAsStream(paths.getProperty("menuConfig"));
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         this.canonicalMenu = this.gson.fromJson(inputStreamReader, Menu.class);
+
+        List<User> userList = this.getUsersFromDB();
+        for (User u : userList) {
+            this.users.put(u.getId(), u);
+            this.usersForLogin.put(u.getLogin(), u);
+        }
 
         this.indexingMenu(this.getCanonicalMenu().getItems(), this.canonicalIndexingMenu);
 
@@ -167,6 +176,15 @@ public class AccessService {
     private synchronized boolean containGroupName(String name, int excludeId) {
         for (Group g : this.getGroups().values()) {
             if ((g.getName().equals(name)) && (excludeId != g.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private synchronized boolean containUserLogin(String login, int excludeId) {
+        for (User g : this.users.values()) {
+            if ((g.getLogin().equals(login)) && (excludeId != g.getId())) {
                 return true;
             }
         }
@@ -313,7 +331,28 @@ public class AccessService {
     }
     //----------------------------------------------------------------------------------------------------
 
-    private synchronized boolean updateUser(User user) {
+    public synchronized boolean updateUser(User user) {
+        user = this.getUser(user.getId());
+        if (user == null) return false;
+        if (this.containUserLogin(user.getLogin(), user.getId())) {
+            log.error("Can't save user. Duplicate user name. User with login name - '" + user.getLogin() + "' already exists");
+            User userFromDB = this.getUserFromDB(user.getId());
+            this.users.put(user.getId(), userFromDB);
+            log.info("Revert name for user - '" + userFromDB.getLogin() + "'[" + userFromDB.getId() + "]");
+            return false;
+        }
+        if (!this.updateUserToDB(user)) {
+            User userFromDB = this.getUserFromDB(user.getId());
+            this.users.put(user.getId(), userFromDB);
+            return false;
+        }
+
+        this.users.put(user.getId(), user);
+        log.info("User '" + user.getLogin() + "' [" + user.getId() + "] has been changed");
+        return true;
+    }
+
+    private synchronized boolean updateUserToDB(User user) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -321,18 +360,31 @@ public class AccessService {
             session.getTransaction().commit();
             session.clear();
         } catch (HibernateException e) {
-            e.printStackTrace();
+            log.error("Can't update user to DB '" + user.getLogin() + "' [" + user.getId() + "] \n" + e.getMessage());
             session.getTransaction().rollback();
             session.flush();
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
         }
         return true;
     }
 
     //----------------------------------------------------------------------------------------------------
 
-    private synchronized boolean saveUser(User user) {
+    public synchronized boolean saveUser(User user) {
+        if (this.containUserLogin(user.getLogin(), -1)) {
+            log.error("Can't save user. Duplicate user login. User with login name - '" + user.getLogin() + "' already exists");
+            return false;
+        }
+        if (!this.saveUserToDB(user)) return false;
+
+        this.users.put(user.getId(), user);
+        log.info("User with login name '" + user.getLogin() + "' [" + user.getId() + "] has been added");
+        return true;
+    }
+
+    private synchronized boolean saveUserToDB(User user) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -340,18 +392,38 @@ public class AccessService {
             session.getTransaction().commit();
             session.clear();
         } catch (HibernateException e) {
-            e.printStackTrace();
+            log.error("Can't save user to DB '" + user.getLogin() + "' [" + user.getId() + "] \n" + e.getMessage());
             session.getTransaction().rollback();
             session.flush();
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
         }
         return true;
     }
 
     //----------------------------------------------------------------------------------------------------
 
-    private synchronized boolean deleteUser(User user) {
+    public synchronized boolean deleteUser(int id) {
+        User user = this.getUser(id);
+        return this.deleteUser(user);
+    }
+
+    public synchronized boolean deleteUser(User user) {
+        if (user == null) return false;
+        if (!this.deleteUserFromDB(user)) return false;
+        try {
+            this.users.remove(user.getId());
+        } catch (Exception e) {
+            log.error("Can't delete user " + user.getLogin() + " [" + user.getId() + "] \n" + e.getMessage());
+            return false;
+        }
+
+        log.info("User '" + user.getLogin() + " [" + user.getId() + " has been deleted");
+        return true;
+    }
+
+    private synchronized boolean deleteUserFromDB(User user) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -359,16 +431,26 @@ public class AccessService {
             session.getTransaction().commit();
             session.clear();
         } catch (HibernateException e) {
-            e.printStackTrace();
+            log.error("Can't delete user from DB '" + user.getLogin() + "' [" + user.getId() + "] \n" + e.getMessage());
             session.getTransaction().rollback();
             session.flush();
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
         }
         return true;
     }
 
     //----------------------------------------------------------------------------------------------------
+    public synchronized User getUser(String name) {
+        User user = this.usersForLogin.get(name);
+        return user == null ? this.getUserFromDB(name) : user;
+    }
+
+    public synchronized User getUser(int id) {
+        User user = this.users.get(id);
+        return user == null ? this.getUserFromDB(id) : user;
+    }
 
     private synchronized User getUserFromDB(int id) {
         Criteria crt_user = this.getSession().createCriteria(User.class);
@@ -376,20 +458,14 @@ public class AccessService {
         return crt_user.list().size() == 1 ? (User)crt_user.list().get(0) : null;
     }
 
+    private synchronized User getUserFromDB(String login) {
+        Criteria crt_user = this.getSession().createCriteria(User.class);
+        crt_user.add(Restrictions.eq("login", login));
+        return crt_user.list().size() == 1 ? (User)crt_user.list().get(0) : null;
+    }
+
     private List<User> getUsersFromDB() {
         Criteria crt_trouble = this.getSession().createCriteria(User.class);
         return (List<User>)crt_trouble.list();
-    }
-
-    private synchronized User getUser(int id) {
-        Criteria crt_trouble = this.getSession().createCriteria(User.class);
-        crt_trouble.add(Restrictions.eq("id", id));
-        return (User)crt_trouble.list().get(0);
-    }
-
-    private synchronized User getUser(String login) {
-        Criteria crt_trouble = this.getSession().createCriteria(User.class);
-        crt_trouble.add(Restrictions.eq("login", login));
-        return (User)crt_trouble.list().get(0);
     }
 }
