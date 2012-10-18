@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Users user = (Users)session.getAttribute("info");
+    User user = (User)session.getAttribute("info");
 %>
 
 <script type="text/javascript" src="../../js/trouble_trash.js"></script>
@@ -186,4 +186,4 @@
 
 </div>
 
-<input type="hidden" id="openControlPanel_trash_troubles" value="<%=((Users)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
+<input type="hidden" id="openControlPanel_trash_troubles" value="<%=((User)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>

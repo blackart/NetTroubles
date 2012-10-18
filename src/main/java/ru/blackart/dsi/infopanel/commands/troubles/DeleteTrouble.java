@@ -42,7 +42,7 @@ public class DeleteTrouble extends AbstractCommand {
             String title = this.getRequest().getParameter("title").trim();
             String actual_problem = this.getRequest().getParameter("actual_problem").replace("&nbsp;","").trim();
 
-            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setAuthor((User) this.getSession().getAttribute("info"));
             trouble.setTitle(title);
             trouble.setActualProblem(actual_problem);
             trouble.setTimeout(timeout);

@@ -1,7 +1,7 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Device" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Hoststatus" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.Users" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <script type="text/javascript" src="../js/failures.js"></script>
@@ -29,4 +29,4 @@
 
 <div id="failures" class="failures"></div>
 
-<input type="hidden" id="openControlPanel_failures_list" value="<%=((Users)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
+<input type="hidden" id="openControlPanel_failures_list" value="<%=((User)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>

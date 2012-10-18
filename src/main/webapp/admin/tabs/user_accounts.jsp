@@ -1,5 +1,5 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.Users" %>
+<%@ page import="ru.blackart.dsi.infopanel.beans.User" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collection" %>
@@ -7,7 +7,7 @@
 <%
     AccessService accessService = AccessService.getInstance();
     Collection<Group> groups = accessService.getGroups().values();
-    ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
+    ArrayList<User> users = (ArrayList<User>) config.getServletContext().getAttribute("users");
 %>
 
     <script type="text/javascript" src="../js/users.js"></script>
@@ -54,7 +54,7 @@
                     <td>delete</td>
                 </tr>
                 <%
-                    for (Users u : users) {
+                    for (User u : users) {
                         if (u.getLogin().equals("system")) {
                 %>
                             <tr id="<%=u.getId()%>_user">

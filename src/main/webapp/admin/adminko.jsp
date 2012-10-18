@@ -91,7 +91,7 @@
     <script type="text/javascript" src="../js/adminko.js"></script>
     <%
         if ((session.getAttribute("login") != null) && ((Boolean)(session.getAttribute("login")))) {
-            Users user = (Users)session.getAttribute("info");
+            User user = (User)session.getAttribute("info");
             if ((Boolean)session.getAttribute("change_passwd")) {%>
                 <script type="text/javascript">
                     $(document).ready(function() {
@@ -370,7 +370,7 @@
 
 <div class="logout_bar"><%
     if ((session.getAttribute("login") != null) && ((Boolean) (session.getAttribute("login")))) {
-            Users user = (Users) session.getAttribute("info");
+            User user = (User) session.getAttribute("info");
     %><%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]<%}
 %></div>
 

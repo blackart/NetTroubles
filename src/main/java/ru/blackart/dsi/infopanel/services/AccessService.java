@@ -11,7 +11,7 @@ import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.access.menu.Menu;
 import ru.blackart.dsi.infopanel.access.menu.MenuItem;
 import ru.blackart.dsi.infopanel.beans.Group;
-import ru.blackart.dsi.infopanel.beans.Users;
+import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 
 import javax.servlet.ServletConfig;
@@ -164,11 +164,6 @@ public class AccessService {
         return menu;
     }
 
-    private List<Group> getGroupsFromDB() {
-        Criteria crt_trouble = this.getSession().createCriteria(Group.class);
-        return (List<Group>)crt_trouble.list();
-    }
-
     private synchronized boolean containGroupName(String name, int excludeId) {
         for (Group g : this.getGroups().values()) {
             if ((g.getName().equals(name)) && (excludeId != g.getId())) {
@@ -300,6 +295,12 @@ public class AccessService {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    private List<Group> getGroupsFromDB() {
+        Criteria crt_trouble = this.getSession().createCriteria(Group.class);
+        return (List<Group>)crt_trouble.list();
+    }
+
     public synchronized Group getGroup(int id) {
         Group group = this.groups.get(id);
         return group == null ? this.getGroupFromDB(id) : group;
@@ -312,7 +313,7 @@ public class AccessService {
     }
     //----------------------------------------------------------------------------------------------------
 
-    public synchronized void updateUser(Users user) {
+    private synchronized boolean updateUser(User user) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -326,9 +327,12 @@ public class AccessService {
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
         }
+        return true;
     }
 
-    public synchronized void saveUser(Users user) {
+    //----------------------------------------------------------------------------------------------------
+
+    private synchronized boolean saveUser(User user) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -342,9 +346,12 @@ public class AccessService {
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
         }
+        return true;
     }
 
-    public synchronized void deleteUser(Users user) {
+    //----------------------------------------------------------------------------------------------------
+
+    private synchronized boolean deleteUser(User user) {
         Session session = this.getSession();
         try {
             session.beginTransaction();
@@ -358,17 +365,31 @@ public class AccessService {
             session.close();
             this.session = SessionFactorySingle.getSessionFactory().openSession();
         }
+        return true;
     }
 
-    public Users getUser(int id) {
-        Criteria crt_trouble = this.getSession().createCriteria(Users.class);
+    //----------------------------------------------------------------------------------------------------
+
+    private synchronized User getUserFromDB(int id) {
+        Criteria crt_user = this.getSession().createCriteria(User.class);
+        crt_user.add(Restrictions.eq("id", id));
+        return crt_user.list().size() == 1 ? (User)crt_user.list().get(0) : null;
+    }
+
+    private List<User> getUsersFromDB() {
+        Criteria crt_trouble = this.getSession().createCriteria(User.class);
+        return (List<User>)crt_trouble.list();
+    }
+
+    private synchronized User getUser(int id) {
+        Criteria crt_trouble = this.getSession().createCriteria(User.class);
         crt_trouble.add(Restrictions.eq("id", id));
-        return (Users)crt_trouble.list().get(0);
+        return (User)crt_trouble.list().get(0);
     }
 
-    public Users getUser(String login) {
-        Criteria crt_trouble = this.getSession().createCriteria(Users.class);
+    private synchronized User getUser(String login) {
+        Criteria crt_trouble = this.getSession().createCriteria(User.class);
         crt_trouble.add(Restrictions.eq("login", login));
-        return (Users)crt_trouble.list().get(0);
+        return (User)crt_trouble.list().get(0);
     }
 }

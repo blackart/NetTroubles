@@ -24,7 +24,7 @@ public class AddUser extends AbstractCommand {
         crt_trouble.add(Restrictions.eq("id", Integer.valueOf(group_id)));
         Group group = (Group)crt_trouble.list().get(0);
 
-        Users user = new Users();
+        User user = new User();
         user.setLogin(login);
         user.setPasswd(passwd);
         user.setFio(name);
@@ -48,7 +48,7 @@ public class AddUser extends AbstractCommand {
         session.flush();
         session.close();
 
-        List<Users> users = (List<Users>) this.getConfig().getServletContext().getAttribute("users");
+        List<User> users = (List<User>) this.getConfig().getServletContext().getAttribute("users");
         users.add(user);
 
         return null;

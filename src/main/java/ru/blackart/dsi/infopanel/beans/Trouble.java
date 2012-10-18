@@ -13,7 +13,7 @@ public class Trouble implements Persistent {
     private String timeout;
     private String date_in;
     private String date_out;
-    private Users author;
+    private User author;
     private List<Devcapsule> devcapsules;
     private List<Service> services;
     private Boolean close;
@@ -79,11 +79,11 @@ public class Trouble implements Persistent {
 
     @ManyToOne
     @JoinColumn(name = "_author")
-    public Users getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

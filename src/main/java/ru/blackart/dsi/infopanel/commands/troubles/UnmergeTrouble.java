@@ -120,7 +120,7 @@ public class UnmergeTrouble extends AbstractCommand {
                     new_trouble.getDevcapsules().add(devcapsule);
                     new_trouble.setTitle(devcapsule.getDevice().getName() + ", " + devcapsule.getDevice().getDescription());
                     new_trouble.setDate_in(devcapsule.getTimedown());
-                    new_trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+                    new_trouble.setAuthor((User) this.getSession().getAttribute("info"));
                     new_trouble.setComments(new ArrayList<Comment>());
                     new_trouble.setActualProblem("");
                     new_trouble.setCrm(false);

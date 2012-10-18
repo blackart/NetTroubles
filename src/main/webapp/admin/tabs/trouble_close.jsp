@@ -37,7 +37,7 @@
 <div class="trouble_list_title">Закрытые проблемы:</div>
 <div id="admin_trouble_close_list"></div>
 
-<input type="hidden" id="openControlPanel_close_troubles" value="<%=((Users)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
+<input type="hidden" id="openControlPanel_close_troubles" value="<%=((User)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
 <input type="hidden" id="service_sel" value="
     <%if (services != null) {
         for (Service s : services) {%>

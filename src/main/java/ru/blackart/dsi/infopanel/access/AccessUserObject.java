@@ -8,17 +8,17 @@ import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.access.menu.Menu;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.Tab;
-import ru.blackart.dsi.infopanel.beans.Users;
+import ru.blackart.dsi.infopanel.beans.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccessUserObject {
-    private Users user;
+    private User user;
     private List<AccessItemMenu> tabs;
     private Menu menu;
 
-    public AccessUserObject(Users user) {
+    public AccessUserObject(User user) {
         this.user = user;
         this.tabs = new ArrayList<AccessItemMenu>();
 
@@ -86,11 +86,11 @@ public class AccessUserObject {
         this.menu = menu;
     }
 
-    public Users getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

@@ -12,7 +12,7 @@ public class LogEngine {
     private TroubleList list_of_waiting_close_troubles;*//*
     private boolean learning;
     private HashMap<String,Date> upDevcList;
-    private Users systemUser;
+    private User systemUser;
 
     public synchronized HashMap<String, Date> getUpDevcList() {
         return upDevcList;
@@ -136,13 +136,13 @@ public class LogEngine {
             session.beginTransaction();
 
             //находим system user
-            Criteria crt_user = session.createCriteria(Users.class);
+            Criteria crt_user = session.createCriteria(User.class);
             crt_user.add(Restrictions.eq("login", "system"));
 
             logEngine.log.info("Find system user ...");
 
             if (crt_user.list().size() > 0) {
-                logEngine.systemUser = (Users) crt_user.list().get(0);
+                logEngine.systemUser = (User) crt_user.list().get(0);
                 logEngine.log.info("System user was found");
             } else {
                 logEngine.systemUser = null;
@@ -158,7 +158,7 @@ public class LogEngine {
     }
 
 
-    public synchronized void updateTroubleList(int id, String title, String description, String legend, String date_in, String date_out, String timeout, String[] services, String troubleList, Users author) {
+    public synchronized void updateTroubleList(int id, String title, String description, String legend, String date_in, String date_out, String timeout, String[] services, String troubleList, User author) {
         log.info("Update trouble list ...");
 
         boolean trouble_close = false;
@@ -270,7 +270,7 @@ public class LogEngine {
         session.close();
     }
 
-    public synchronized int addTroubleToTroubleList(Devcapsule devcapsule, String nameTroubleList, Users author) {
+    public synchronized int addTroubleToTroubleList(Devcapsule devcapsule, String nameTroubleList, User author) {
         log.info("Adding trouble to trouble list for devcapsule - " + devcapsule.getDevice().getName());
         int id = -1;
         if (devcapsule != null) {

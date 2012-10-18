@@ -1,10 +1,10 @@
 package ru.blackart.dsi.infopanel.commands.troubles.comments;
 
 import com.myjavatools.xml.BasicXmlData;
+import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Comment;
 import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.beans.Users;
 import ru.blackart.dsi.infopanel.services.CommentService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.crm.CrmComment;
@@ -32,7 +32,7 @@ public class AddComment extends AbstractCommand {
         Comment comment = new Comment();
         comment.setText(text);
         comment.setTime(String.valueOf(calendar.getTimeInMillis()));
-        comment.setAuthor((Users) this.getSession().getAttribute("info"));
+        comment.setAuthor((User) this.getSession().getAttribute("info"));
 
         synchronized (dataModelConstructor) {
             Trouble trouble = dataModelConstructor.getTroubleForId(id);

@@ -1,18 +1,11 @@
 package ru.blackart.dsi.infopanel.controllers;
 
-import com.google.gson.Gson;
 import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
-import ru.blackart.dsi.infopanel.access.AccessItemMenu;
-import ru.blackart.dsi.infopanel.access.AccessMenuForGroup;
-import ru.blackart.dsi.infopanel.access.AccessTab;
-import ru.blackart.dsi.infopanel.access.AccessUserObject;
-import ru.blackart.dsi.infopanel.access.menu.Menu;
-import ru.blackart.dsi.infopanel.access.menu.MenuItem;
 import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.commands.Command;
 import ru.blackart.dsi.infopanel.commands.FactoryCommandCommand;
@@ -31,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 public class HTTPServletController extends HttpServlet {
@@ -146,8 +138,8 @@ public class HTTPServletController extends HttpServlet {
         }*/
 
         //Users
-        Criteria crt_5 = session.createCriteria(Users.class);
-        ArrayList<Users> users = new ArrayList<Users>(crt_5.list());
+        Criteria crt_5 = session.createCriteria(User.class);
+        ArrayList<User> users = new ArrayList<User>(crt_5.list());
         config.getServletContext().setAttribute("users", users);
 
         //Hostgroups

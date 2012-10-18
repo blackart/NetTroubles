@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.access.AccessMenuForGroup;
@@ -12,7 +13,6 @@ import ru.blackart.dsi.infopanel.access.AccessUserObject;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.Tab;
 import ru.blackart.dsi.infopanel.beans.UserSettings;
-import ru.blackart.dsi.infopanel.beans.Users;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class Login extends AbstractCommand {
         Session session = SessionFactorySingle.getSessionFactory().openSession();
 
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Users.class);
+        Criteria criteria = session.createCriteria(User.class);
 
         String login = getRequest().getParameter("login");
         String passwd = getRequest().getParameter("passwd");
@@ -48,7 +48,7 @@ public class Login extends AbstractCommand {
         this.log.info("User - " + login + " trying to login");
 
         criteria.add(Restrictions.eq("login", login)).add(Restrictions.eq("passwd", passwd));
-        List<Users> usersList = criteria.list();
+        List<User> usersList = criteria.list();
 
         session.getTransaction().commit();
         session.flush();
@@ -70,11 +70,11 @@ public class Login extends AbstractCommand {
         if ((login.equals("system")) && (passwd.equals(settings.getProperty("system_password")))) {
             this.log.info("User - " + login + " is GOD!!!");
 
-            Users user = null;
+            User user = null;
             if (usersList.size() == 1) {
                 user = usersList.get(0);
             } else if (usersList.size() == 0) {
-                user = new Users();
+                user = new User();
                 user.setBlock(false);
                 user.setFio(login);
                 user.setPasswd(passwd);
@@ -118,8 +118,8 @@ public class Login extends AbstractCommand {
 
                 //обновление объектов в памяти (ServletContext)
 
-                Criteria crt_5 = session.createCriteria(Users.class);
-                ArrayList<Users> users = new ArrayList<Users>(crt_5.list());
+                Criteria crt_5 = session.createCriteria(User.class);
+                ArrayList<User> users = new ArrayList<User>(crt_5.list());
                 this.getConfig().getServletContext().setAttribute("users", users);
 
                 Criteria crt_6 = session.createCriteria(Tab.class);
@@ -156,7 +156,7 @@ public class Login extends AbstractCommand {
                 answer = "Вход выполнен. Ожидайте...|/admin";
             }
         } else if (usersList.size() == 1) {
-            Users user = usersList.get(0);
+            User user = usersList.get(0);
 
             this.log.info("User - " + user.getLogin() + " FIO - " + user.getFio());
 

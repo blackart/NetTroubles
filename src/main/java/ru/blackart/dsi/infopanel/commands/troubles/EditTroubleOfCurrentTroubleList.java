@@ -1,9 +1,9 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
+import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Service;
 import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.beans.Users;
 import ru.blackart.dsi.infopanel.services.ServiceService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.DateStr;
@@ -43,7 +43,7 @@ public class EditTroubleOfCurrentTroubleList extends AbstractCommand {
             trouble.setTitle(title);
             trouble.setActualProblem(actual_problem);
             trouble.setTimeout(timeout);
-            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setAuthor((User) this.getSession().getAttribute("info"));
             trouble.setCrm(false);
 
             if ((services != null) && (services.length > 0)) {

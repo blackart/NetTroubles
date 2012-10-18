@@ -126,7 +126,7 @@ public class DownTrapsHandler extends Thread {
     }
 
     private Trouble troubleLevelOperations() {
-        Users systemUser;
+        User systemUser;
         synchronized (accessService) {
             systemUser = accessService.getUser("system");
         }

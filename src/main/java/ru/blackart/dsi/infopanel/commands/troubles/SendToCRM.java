@@ -7,7 +7,6 @@ import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.services.CommentService;
 import ru.blackart.dsi.infopanel.services.ServiceService;
-import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.DateStr;
 import ru.blackart.dsi.infopanel.utils.crm.CrmComment;
@@ -60,7 +59,7 @@ public class SendToCRM extends AbstractCommand {
 
             trouble.setTitle(title);
             trouble.setActualProblem(actual_problem);
-            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setAuthor((User) this.getSession().getAttribute("info"));
 
             if ((services != null) && (services.length > 0)) {
                 synchronized (serviceService) {

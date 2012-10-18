@@ -2,8 +2,8 @@ package ru.blackart.dsi.infopanel.commands.troubles;
 
 import ru.blackart.dsi.infopanel.beans.Service;
 import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
-import ru.blackart.dsi.infopanel.beans.Users;
 import ru.blackart.dsi.infopanel.services.ServiceService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
@@ -55,7 +55,7 @@ public class EditTroubleOfCompleteTroubleList extends AbstractCommand {
 
             trouble.setTitle(title);
             trouble.setActualProblem(actual_problem);
-            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setAuthor((User) this.getSession().getAttribute("info"));
 
             if ((services != null) && (services.length > 0)) {
                 synchronized (serviceService) {

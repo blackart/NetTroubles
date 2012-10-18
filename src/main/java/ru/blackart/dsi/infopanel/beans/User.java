@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class Users implements Persistent {
+public class User implements Persistent {
     private int id;
     private String login;
     private String passwd;
@@ -80,10 +80,10 @@ public class Users implements Persistent {
         this.settings_id = settings_id;
     }
 
-    public Users() {
+    public User() {
     }
 
-    public Users(String login, String passwd, Boolean block, Group group_id, String fio) {
+    public User(String login, String passwd, Boolean block, Group group_id, String fio) {
         this.login = login;
         this.passwd = passwd;
         this.block = block;

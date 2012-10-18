@@ -277,7 +277,7 @@ public class MergeTroubles extends AbstractCommand {
                 //----------------------------New Trouble------------------------------------------
                 Trouble new_trouble = new Trouble();
 
-                new_trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+                new_trouble.setAuthor((User) this.getSession().getAttribute("info"));
 
                 new_trouble.setDevcapsules(devc_for_db);
                 new_trouble.setServices(service_for_db);

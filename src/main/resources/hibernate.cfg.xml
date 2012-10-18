@@ -31,7 +31,7 @@
         <mapping class="ru.blackart.dsi.infopanel.beans.Tab"/>
         <mapping class="ru.blackart.dsi.infopanel.beans.Group"/>
         <mapping class="ru.blackart.dsi.infopanel.beans.UserSettings"/>
-        <mapping class="ru.blackart.dsi.infopanel.beans.Users"/>
+        <mapping class="ru.blackart.dsi.infopanel.beans.User"/>
         <mapping class="ru.blackart.dsi.infopanel.beans.TypeDeviceFilter"/>
         <mapping class="ru.blackart.dsi.infopanel.beans.DeviceFilter"/>
         <mapping class="ru.blackart.dsi.infopanel.beans.Device"/>

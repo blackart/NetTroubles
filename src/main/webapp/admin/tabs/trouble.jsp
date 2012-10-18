@@ -486,9 +486,9 @@
     </div>
 </div>
 
-<input type="hidden" id="openControlPanel" value="<%=((Users)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
-<input type="hidden" id="pageReload" value="<%=((Users)session.getAttribute("info")).getSettings_id().getCurrentTroublesPageReload()%>"/>
-<input type="hidden" id="timeoutReloadPage" value="<%=((Users)session.getAttribute("info")).getSettings_id().getTimeoutReload()%>"/>
+<input type="hidden" id="openControlPanel" value="<%=((User)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
+<input type="hidden" id="pageReload" value="<%=((User)session.getAttribute("info")).getSettings_id().getCurrentTroublesPageReload()%>"/>
+<input type="hidden" id="timeoutReloadPage" value="<%=((User)session.getAttribute("info")).getSettings_id().getTimeoutReload()%>"/>
 <input type="hidden" id="service_sel" value="
     <%if (services != null) {
         for (Service s : services) {%>
