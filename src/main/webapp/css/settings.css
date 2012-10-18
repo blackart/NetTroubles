@@ -76,6 +76,7 @@
 }
 
 /*Диалог редактирования фильтра*/
+
 .settings_dialog {
     display: block;
 }
@@ -168,4 +169,19 @@
     font-weight: normal;
 }
 
+.settings_dialog .label_container {
+    position: relative;
+}
+
+.settings_dialog label {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    color: #999999;
+}
+
+.settings_dialog input {
+    margin-right: 10px;
+    width: 150px;
+}
 

@@ -247,14 +247,36 @@
                 <tr class="header">
                     <td>login</td>
                     <td>passwd</td>
+                    <td>passwd confirm</td>
                     <td>name</td>
                     <td>group</td>
                     <td>block</td>
                 </tr>
                 <tr>
-                    <td width="20%"><input type="text" id="users_edit_login"/></td>
-                    <td width="20%"><input type="text" id="users_edit_passwd"/></td>
-                    <td width="30%"><input type="text" id="users_edit_name"/></td>
+                    <td width="15%">
+                        <div class="label_container">
+                            <label for="users_edit_login" class="label">username</label>
+                            <input type="text" id="users_edit_login"/>
+                        </div>
+                    </td>
+                    <td width="15%">
+                        <div class="label_container">
+                            <label for="users_edit_passwd" class="label">password</label>
+                            <input type="password" id="users_edit_passwd"/>
+                        </div>
+                    </td>
+                    <td width="15%">
+                        <div class="label_container">
+                            <label for="users_edit_confirm_passwd" class="label">confirm</label>
+                            <input type="password" id="users_edit_confirm_passwd"/>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <div class="label_container">
+                            <label for="users_edit_name" class="label">name</label>
+                            <input type="text" id="users_edit_name"/>
+                        </div>
+                    </td>
                     <td width="15%">
                         <select id="users_edit_group">
                             <%for (Group g : groups) {%>

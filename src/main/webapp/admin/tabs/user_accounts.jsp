@@ -1,7 +1,7 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Users" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
@@ -47,7 +47,6 @@
             <table id="users_list_table" class="settings_list" cellpadding="0" cellspacing="0">
                 <tr class="header">
                     <td>login</td>
-                    <td>passwd</td>
                     <td>name</td>
                     <td>menuGroup</td>
                     <td>block</td>
@@ -60,7 +59,6 @@
                 %>
                             <tr id="<%=u.getId()%>_user">
                                 <td  class="account_login"><%=u.getLogin()%></td>
-                                <td  class="account_passwd">********</td>
                                 <td  class="account_name"><%=u.getFio()%></td>
                                 <td  class="account_group"><%=u.getGroup_id().getName()%></td>
                                 <td  class="account_block">immortal</td>
@@ -72,7 +70,6 @@
                 %>
                             <tr id="<%=u.getId()%>_user">
                                 <td  class="account_login"><%=u.getLogin()%></td>
-                                <td  class="account_passwd"><%for (int i=0; i < u.getPasswd().length(); i++) {%>*<%}%></td>
                                 <td  class="account_name"><%=u.getFio()%></td>
                                 <td  class="account_group"><%=u.getGroup_id().getName()%></td>
                                 <td  class="account_block"><%=u.getBlock() ? "true" : "false"%></td>

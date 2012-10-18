@@ -282,7 +282,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#users_edit_dialog").dialog({ autoOpen: false, title: "Edit user account", position: "center", modal: true, resizable: false, draggable: true, height: 200, width: 600, maxHeight: 200,maxWidth: 600,
+    $("#users_edit_dialog").dialog({ autoOpen: false, title: "Edit user account", position: "center", modal: true, resizable: false, draggable: true, height: 200, width: 700, maxHeight: 200,maxWidth: 700,
         buttons: {
             "Cancel" : function() {
                 $(this).dialog("close");
@@ -291,9 +291,10 @@ $(document).ready(function() {
                 var $id = $("#users_edit_id").val();
                 var $login = $("#users_edit_login").val();
                 var $passwd = $("#users_edit_passwd").val();
+                var $passwd_confirm = $("#users_edit_confirm_passwd").val();
                 var $name = $("#users_edit_name").val();
                 var $group = $("#users_edit_group").val();
-                var $block = $("#users_edit_block").attr("checked");
+                var $block = $("#users_edit_block").attr("checked") ? true : false;
 
                 $.ajax({
                     url : "/controller",
@@ -311,11 +312,11 @@ $(document).ready(function() {
                         if ($.trim($login) === '') {
                             alert("Введите логин");
                             return false;
-                        } else if ($.trim($passwd) === '') {
-                            alert("Введите пароль");
-                            return false;
                         } else if ($.trim($name) === '') {
                             alert("Введите имя");
+                            return false;
+                        } else if ($passwd !== $passwd_confirm) {
+                            alert("Пароли не совпадают");
                             return false;
                         }
                     },
@@ -532,18 +533,32 @@ $(document).ready(function() {
         $("#users_edit_id").val(id.replace("_user", ""));
 
         $("#users_edit_login").val($("#" + id + " .account_login").html());
-        $("#users_edit_passwd").val($("#" + id + " .account_passwd").html());
         $("#users_edit_name").val($("#" + id + " .account_name").html());
 
         $("#users_edit_group :contains('" + $("#" + id + " .account_group").html() + "')").attr("selected", "selected");
         if ($("#" + id + " .account_block").html() == "true") {
-            $("#users_edit_block").attr("checked", true);
+            $("#users_edit_block").attr("checked", "checked");
         } else {
-            $("#users_edit_block").attr("checked", "");
+            $("#users_edit_block").removeAttr("checked");
         }
+
+        $.each($(".settings_dialog .label_container input"), function() {
+            if ($(this).val() != '') $(this).prev().css({"display": "none"});
+        });
 
         $("#users_edit_dialog").dialog('open');
     };
+
+    $(".settings_dialog .label_container input").focus(function(e){
+        var clicked = $(e.target);
+        if (clicked.val() == '') clicked.prev().css({"display": "none"});
+    });
+
+    $(".settings_dialog .label_container input").blur(function(e){
+        var clicked = $(e.target);
+        if (clicked.val() == '') clicked.prev().css({"display": "block"});
+    });
+
     $.fn.users_delete = function(id, name) {
         $account_delete_id = id;
         $("#delete_user").html(name);
