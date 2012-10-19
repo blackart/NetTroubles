@@ -1,13 +1,12 @@
 <%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.User" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     AccessService accessService = AccessService.getInstance();
     Collection<Group> groups = accessService.getGroups().values();
-    ArrayList<User> users = (ArrayList<User>) config.getServletContext().getAttribute("users");
+    Collection<User> users = accessService.getUsers().values();
 %>
 
     <script type="text/javascript" src="../js/users.js"></script>

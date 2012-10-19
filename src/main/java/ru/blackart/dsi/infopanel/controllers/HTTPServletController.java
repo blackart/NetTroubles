@@ -72,76 +72,6 @@ public class HTTPServletController extends HttpServlet {
         ArrayList<TypeDeviceFilter> typeDeviceFilters = new ArrayList<TypeDeviceFilter>(crt_2.list());
         config.getServletContext().setAttribute("typeDeviceFilters", typeDeviceFilters);
 
-        /*Criteria crt_4 = session.createCriteria(Tab.class);
-        ArrayList<Tab> tabs = new ArrayList<Tab>(crt_4.list());
-        config.getServletContext().setAttribute("tabs", tabs);
-
-        List<AccessItemMenu> generalMenu = AccessUserObject.generateMenuTabs(tabs);
-        config.getServletContext().setAttribute("generalMenu", generalMenu);
-
-        Criteria crt_3 = session.createCriteria(Group.class);
-        ArrayList<Group> groups = new ArrayList<Group>(crt_3.list());
-        ArrayList<AccessMenuForGroup> tabs_of_groups = new ArrayList<AccessMenuForGroup>();
-        for (Group g : groups) {
-            g.setTabs(new ArrayList<Tab>(g.getTabs()));
-            tabs_of_groups.add(new AccessMenuForGroup(g,tabs));
-        }
-
-        config.getServletContext().setAttribute("tabs_of_groups", tabs_of_groups);
-        config.getServletContext().setAttribute("groups", groups);*/
-
-
-        //todo генерация json конфигурации меню, убрать после адаптации для ДСИ
-        /*Gson gson = new Gson();
-
-        for (int i = 0; i < tabs_of_groups.size(); i++) {
-            AccessMenuForGroup accessMenuForGroup = tabs_of_groups.get(i);
-            ArrayList menuItems = (ArrayList) accessMenuForGroup.getItemMenu();
-
-            Menu menu = new Menu();
-            ArrayList<MenuItem> groups_ = new ArrayList<MenuItem>();
-
-            for (int j = 0; j < menuItems.size(); j++) {
-                AccessItemMenu accessItemMenu = (AccessItemMenu) menuItems.get(j);
-                AccessTab accessTab = accessItemMenu.getTab();
-                if (accessTab.isPolicy()) {
-                    MenuItem group = new MenuItem();
-                    group.setId(accessTab.getTab().getMenu_group());
-                    group.setName(accessTab.getTab().getCaption());
-                    group.setUrl(accessItemMenu.getChildrens().size() > 0 ? null : accessTab.getTab().getFile_name());
-                    group.setPosition(0);
-                    if (accessItemMenu.getChildrens().size() > 0) {
-                        List<MenuItem> items = new ArrayList<MenuItem>();
-                        for (int k = 0; k < accessItemMenu.getChildrens().size(); k++) {
-                            AccessTab children = accessItemMenu.getChildrens().get(k);
-                            if (children.isPolicy()) {
-                                MenuItem item = new MenuItem();
-                                Tab tab_children = children.getTab();
-                                item.setName(tab_children.getCaption());
-                                item.setPosition(tab_children.getGroup_position());
-                                item.setUrl(tab_children.getFile_name());
-                                item.setId(Integer.valueOf("" + group.getId() + item.getPosition()));
-                                items.add(item);
-                            }
-                        }
-                        group.setItems(items);
-                    }
-                    groups_.add(group);
-                }
-            }
-            menu.setItems(groups_);
-            Group group_s = accessMenuForGroup.getGroup();
-            group_s.setMenuConfig(gson.toJson(menu));
-            session.getTransaction().begin();
-            session.save(group_s);
-            session.getTransaction().commit();
-        }*/
-
-        //Users
-        Criteria crt_5 = session.createCriteria(User.class);
-        ArrayList<User> users = new ArrayList<User>(crt_5.list());
-        config.getServletContext().setAttribute("users", users);
-
         //Hostgroups
         Criteria crt_6 = session.createCriteria(Hostgroup.class);
         ArrayList<Hostgroup> hostgroups = new ArrayList<Hostgroup>(crt_6.list());
@@ -156,16 +86,6 @@ public class HTTPServletController extends HttpServlet {
         Criteria crt_region = session.createCriteria(Region.class);
         ArrayList<Region> regions = new ArrayList<Region>(crt_region.list());
         config.getServletContext().setAttribute("regions", regions);
-
-        //Devcapsules
-        Criteria crt_8 = session.createCriteria(Devcapsule.class);
-        ArrayList<Devcapsule> devcapsules = new ArrayList<Devcapsule>(crt_8.list());
-        config.getServletContext().setAttribute("devcapsules", devcapsules);
-
-        //TroubleLists
-        Criteria crt_10 = session.createCriteria(TroubleList.class);
-        ArrayList<TroubleList> troubleLists = new ArrayList<TroubleList>(crt_10.list());
-        config.getServletContext().setAttribute("troubleLists", troubleLists);
 
         session.flush();
         session.close();
@@ -182,19 +102,13 @@ public class HTTPServletController extends HttpServlet {
         response.setCharacterEncoding("utf-8");
 
         //Проверка начальных параметров сессии пользователя
-//        log.info("HTTP Session - " + (request.getSession(true) == null ? "null" : "not null"));
-//        log.info("HTTP Session attribute LOGIN - " + (request.getSession(true).getAttribute("login") == null ? "null" : request.getSession(true).getAttribute("login").toString()));
-
         if (request.getSession(true).getAttribute("login") == null) {
-//            log.info("Starting new session for remote host - " + request.getRemoteHost());
             try {
                 Login.start(request.getSession(true));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
-//        log.info("Remote host " + request.getRemoteHost() + " doing " + request.getMethod() + " request to " + request.getServerName());
 
         String redirect = null;
         if (request.getParameterMap().containsKey("cmd")) {

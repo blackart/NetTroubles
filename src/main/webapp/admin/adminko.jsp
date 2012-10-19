@@ -8,31 +8,15 @@
 <%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-//    Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    /*Enumeration en = session.getAttributeNames();
-    log.info("Session elements: ");
-    while (en.hasMoreElements()) {
-        String elem = String.valueOf(en.nextElement());
-        log.info(elem + " - " + session.getAttribute(elem));
-    }*/
-
     HttpSession req_session = request.getSession(true);
-
     if (req_session.getAttribute("login") != null) {
-        if (!(Boolean) req_session.getAttribute("login")) {
-//            log.info("++++++++++++++++++++++++++ Not login !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (!(Boolean)req_session.getAttribute("login")) {
             response.sendRedirect("/login");
         } else {
-            if (req_session.getAttribute("page").equals("admin")) {
-//                log.info("++++++++++++++++++++++++++ login true !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//                response.sendRedirect("/admin");
-            } else {
-//                log.info("++++++++++++++++++++++++++ page - not admin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                response.sendRedirect("/login");
-            }
+            String redirect_page = (String)req_session.getAttribute("page");
+            if (!redirect_page.equals("admin")) response.sendRedirect("/" + redirect_page);
         }
     } else {
-//        log.info("++++++++++++++++++++++++++ Login is null !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         response.sendRedirect("/login");
     }
 %>
@@ -130,6 +114,8 @@
     %>
 </head>
 <body>
+
+<div id='zanaves'><div class='zanaves'></div><img src='../img/ajax-loader_2.gif' alt='load' class='preloader'/></div>
 
 <div style="display: none;">
     <select id="host_status_replace">
@@ -370,8 +356,9 @@
 
 <div class="logout_bar"><%
     if ((session.getAttribute("login") != null) && ((Boolean) (session.getAttribute("login")))) {
-            User user = (User) session.getAttribute("info");
-    %><%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]<%}
+        User user = (User) session.getAttribute("info");
+        %><%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]<%
+    }
 %></div>
 
 <div id="main_menu">

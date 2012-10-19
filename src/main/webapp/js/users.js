@@ -46,8 +46,13 @@ $(document).ready(function() {
                     alert("Введите Ф.И.О. пользователя");
                 }
             },
+            dataType: "json",
             success: function(data) {
-                $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                if (data) {
+                    if (data.message) alert(data.message);
+                } else {
+                    $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                }
             }
         });
 

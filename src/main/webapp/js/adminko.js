@@ -60,25 +60,15 @@ $(document).ready(function() {
         $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
     });
 
-    $("#main_menu").accordion({header: "h3", autoHeight: false, alwaysOpen: false, active: 0, navigation: true, collapsible: false, icons: false
-        /*,change: function(event, ui) {
-         $("#v_tabs").tabs('select', 0);
-         }*/
-    }).removeClass('ui-accordion').addClass('ui-accordion-isem');
+    $("#main_menu").accordion({header: "h3", autoHeight: false, alwaysOpen: false, active: 0, navigation: true, collapsible: false, icons: false}).removeClass('ui-accordion').addClass('ui-accordion-isem');
 
-    $("#v_tabs").tabs({fxSpeed: 'fast', cache: false, selected: 0, ajaxOptions: { async: true }
-        /*select: function(event, ui) {
-
-         }*/
-    }).removeClass('ui-tabs').addClass('ui-tabs-vertical');
+    $("#v_tabs").tabs({fxSpeed: 'fast', cache: false, selected: 0, ajaxOptions: { async: true }}).removeClass('ui-tabs').addClass('ui-tabs-vertical');
 
     $("body").ajaxStart(function() {
-        $("body").append("<div id='zanaves'><div class='zanaves'></div><img src='../img/ajax-loader_2.gif' alt='load' class='preloader'/></div>");
-        $("#zanaves").show();
+        $("#zanaves").css({"display": "block"});
     });
     $("body").ajaxStop(function() {
-        $("#zanaves").hide();
-        $("#zanaves").remove();
+        $("#zanaves").css({"display": "none"});
     });
 
     $.fn.checkDeviceInfo = function(devs) {
@@ -320,8 +310,13 @@ $(document).ready(function() {
                             return false;
                         }
                     },
+                    dataType: "json",
                     success: function(data) {
-                        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        if (data) {
+                            if (data.message) alert(data.message);
+                        } else {
+                            $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        }
                     }
                 });
 
@@ -343,8 +338,13 @@ $(document).ready(function() {
                         cmd: "deleteAccount",
                         id: $account_delete_id
                     },
+                    dataType: "json",
                     success: function(data) {
-                        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        if (data) {
+                            if (data.message) alert(data.message);
+                        } else {
+                            $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+                        }
                     }
                 });
 
@@ -391,10 +391,10 @@ $(document).ready(function() {
                             return false;
                         }
                     },
+                    dataType: "json",
                     success: function(data) {
                         if (data) {
-                            var json_data = JSON.parse(data);
-                            if (json_data.message) alert(json_data.message);
+                            if (data.message) alert(data.message);
                         } else {
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                         }
@@ -418,10 +418,10 @@ $(document).ready(function() {
                         cmd: "deleteGroup",
                         id: $group_delete_id
                     },
+                    dataType: "json",
                     success: function(data) {
                         if (data) {
-                            var json_data = JSON.parse(data);
-                            if (json_data.message) alert(json_data.message);
+                            if (data.message) alert(data.message);
                         } else {
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                         }
@@ -569,7 +569,7 @@ $(document).ready(function() {
         var real_id = id.replace("_group", "");
         $("#groups_edit_id").val(real_id);
         $("#groups_edit_name").val($("#" + id + " .group_name").html());
-
+        $("#groups_edit_dialog input").removeAttr("checked");
         $("#" + id + " .l1 li").each(function() {
             $("#groups_edit_dialog .l1").find("li[id=" + $(this).attr("id").replace("group-" + real_id, "diag-group") + "] input").attr("checked", $(this).find("input").attr("checked"));
         });

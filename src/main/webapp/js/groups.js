@@ -46,10 +46,10 @@ $(document).ready(function() {
                     return false;
                 }
             },
+            dataType: "json",
             success: function(data) {
                 if (data) {
-                    var json_data = JSON.parse(data);
-                    if (json_data.message) alert(json_data.message);
+                    if (data.message) alert(data.message);
                 } else {
                     $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                 }

@@ -1,12 +1,7 @@
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessMenuForGroup" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.Tab" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.User" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%

@@ -12,6 +12,7 @@ import ru.blackart.dsi.infopanel.access.menu.Menu;
 import ru.blackart.dsi.infopanel.access.menu.MenuItem;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.User;
+import ru.blackart.dsi.infopanel.beans.UserSettings;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 
 import javax.servlet.ServletConfig;
@@ -43,23 +44,27 @@ public class AccessService {
     }
 
     public HashMap<Integer, Menu> getMenuForGroups() {
-        return menuForGroups;
+        return this.menuForGroups;
     }
 
     public HashMap<Integer, Group> getGroups() {
-        return groups;
+        return this.groups;
+    }
+
+    public HashMap<Integer, User> getUsers() {
+        return this.users;
     }
 
     public Menu getCanonicalMenu() {
-        return canonicalMenu;
+        return this.canonicalMenu;
     }
 
     public HashMap<Integer, HashMap<Integer, MenuItem>> getIndexingMenuForGroups() {
-        return indexingMenuForGroups;
+        return this.indexingMenuForGroups;
     }
 
     public HashMap<Integer, MenuItem> getCanonicalIndexingMenu() {
-        return canonicalIndexingMenu;
+        return this.canonicalIndexingMenu;
     }
 
     public synchronized Menu resolveMenu(String json) {
@@ -173,7 +178,7 @@ public class AccessService {
         return menu;
     }
 
-    private synchronized boolean containGroupName(String name, int excludeId) {
+    public synchronized boolean containGroupName(String name, int excludeId) {
         for (Group g : this.getGroups().values()) {
             if ((g.getName().equals(name)) && (excludeId != g.getId())) {
                 return true;
@@ -419,7 +424,7 @@ public class AccessService {
             return false;
         }
 
-        log.info("User '" + user.getLogin() + " [" + user.getId() + " has been deleted");
+        log.info("User '" + user.getLogin() + "' [" + user.getId() + "] has been deleted");
         return true;
     }
 
@@ -442,6 +447,7 @@ public class AccessService {
     }
 
     //----------------------------------------------------------------------------------------------------
+
     public synchronized User getUser(String name) {
         User user = this.usersForLogin.get(name);
         return user == null ? this.getUserFromDB(name) : user;
@@ -468,4 +474,26 @@ public class AccessService {
         Criteria crt_trouble = this.getSession().createCriteria(User.class);
         return (List<User>)crt_trouble.list();
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public synchronized boolean saveUserSettingsToDB(UserSettings userSettings) {
+        Session session = this.getSession();
+        try {
+            session.beginTransaction();
+            session.save(userSettings);
+            session.getTransaction().commit();
+            session.clear();
+        } catch (HibernateException e) {
+            log.error("Can't save userSettings to DB [" + userSettings.getId() + "] \n" + e.getMessage());
+            session.getTransaction().rollback();
+            session.flush();
+            session.close();
+            this.session = SessionFactorySingle.getSessionFactory().openSession();
+            return false;
+        }
+        return true;
+    }
+
+
 }

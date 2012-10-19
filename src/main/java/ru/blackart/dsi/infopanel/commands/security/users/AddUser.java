@@ -1,16 +1,13 @@
 package ru.blackart.dsi.infopanel.commands.security.users;
 
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Group;
 import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.beans.UserSettings;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.services.AccessService;
-
-import java.util.List;
+import ru.blackart.dsi.infopanel.utils.message.SimpleMessage;
 
 public class AddUser extends AbstractCommand {
     private final AccessService accessService = AccessService.getInstance();
@@ -34,6 +31,7 @@ public class AddUser extends AbstractCommand {
 
         synchronized (accessService) {
             Group group = accessService.getGroup(group_int_id);
+
             User user = new User();
             user.setLogin(login);
             user.setPasswd(passwd);
@@ -47,20 +45,12 @@ public class AddUser extends AbstractCommand {
             userSettings.setTimeoutReload("1200000");
             user.setSettings_id(userSettings);
 
-            Session session = SessionFactorySingle.getSessionFactory().openSession();
-
-            session.beginTransaction();
-            session.save(userSettings);
-            session.getTransaction().commit();
-
-            session.flush();
-            session.close();
-
-            //todo избавиться от объекта в ServlectContext
-            List<User> users = (List<User>) this.getConfig().getServletContext().getAttribute("users");
-            users.add(user);
-
-            accessService.saveUser(user);
+            accessService.saveUserSettingsToDB(userSettings);
+            if (!accessService.saveUser(user)) {
+                SimpleMessage message = new SimpleMessage("При сохранении аккаунта произошла ошибка. Информация не сохранена.");
+                this.getResponse().getWriter().print(message.toJson());
+                return null;
+            }
         }
 
         return null;
