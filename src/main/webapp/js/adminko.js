@@ -4,9 +4,11 @@ $(document).ready(function() {
     var $group_delete_id;
     var $device_delete_id;
 
-    var $interval_start = 1;
-    var $interval = "";
+    var $interval_start = true;
+    var $interval = null;
     var interval_val = 600000;
+    var $time_out_interval = null;
+    var $time_out = interval_val;
 
     $.fn.update_trouble_counters = function() {
         $.ajax({
@@ -32,22 +34,59 @@ $(document).ready(function() {
     };
 
     $.fn.get_interval_val = function() {
-        return interval_val;
+        return parseInt(interval_val);
     };
-
     $.fn.set_interval_val = function(interval) {
-        interval_val = interval;
+        interval_val = parseInt(interval);
     };
-
-
     $.fn.get_interval_status = function() {
-        return $interval_start;
+        return Boolean($interval_start);
     };
-
     $.fn.set_interval_status = function(interval) {
-        $interval_start = interval;
+        $interval_start = Boolean(interval);
     };
 
+    function r() {
+        var sel = $("#v_tabs").tabs('option', 'selected');
+        if (sel == 0) {
+            $("#v_tabs").tabs('load', sel);
+        }
+        console.log("reload");
+    }
+
+    function check_timeout() {
+        $time_out = $time_out - 1000;
+        $("#current_timeout").html($time_out);
+    }
+
+    $.fn.reload_page = function(num, start) {
+        if (start) {
+            $interval = setInterval(r, num);
+            $interval_start = start;
+
+//            $time_out = num;
+//            $time_out_interval = setInterval(check_timeout, 1000);
+
+        } else {
+            clearInterval($interval);
+            $interval = null;
+
+//            clearInterval($time_out_interval);
+//            $time_out_interval = null;
+//            $time_out = num;
+
+            $interval_start = start;
+        }
+        $.fn.update_trouble_counters();
+        console.log(start);
+        console.log($interval);
+    };
+
+    if ($interval_start) {
+        $.fn.reload_page(interval_val, true);
+    }
+
+    $.fn.update_trouble_counters();
 
     $("#logout").click(function () {
         $.ajax({
@@ -99,6 +138,7 @@ $(document).ready(function() {
                     var $region_str = "<td class='device_host_region'><select id='host_region_device_change'>" + $("#host_region_replace").html() + "</select></td>";
 
                     $("#device_change_dialog #devices_change_list_table").append("<tr id='" + $id + "_device_change'>" + $name_str + $desc_str + $status_str + $group_str + $region_str + "</tr>");
+                    $("#" + $id + "_device_change .device_host_status select [value='1']").attr("selected", "selected");  //1 - конечный
                     $("#" + $id + "_device_change .device_host_group select [value='" + $group_id + "']").attr("selected", "selected");
                     $("#" + $id + "_device_change .device_host_region select [value='" + $region_id + "']").attr("selected", "selected");
                 });
@@ -179,7 +219,6 @@ $(document).ready(function() {
                     status += $(this).find("#host_status_device_change").val() + "|";
                     group += $(this).find("#host_group_device_change").val() + "|";
                     region += $(this).find("#host_region_device_change").val() + "|";
-//                    alert($(this).find(".device_name").text() + " , " + $(this).find("#devices_edit_desc").val() + " , " + $(this).find("#host_status_device_change").val() + " , " + $(this).find("#host_group_device_change").val());
                 });
 
                 $.ajax({
@@ -646,30 +685,4 @@ $(document).ready(function() {
     });
 
     rewidth();
-
-    function r() {
-        var sel = $("#v_tabs").tabs('option', 'selected');
-        if (sel == 0) {
-            $("#v_tabs").tabs('load', sel);
-        }
-    }
-
-    $.fn.reload_page = function(num, start) {
-        if (start == 1) {
-            $interval = setInterval(r, num);
-            $.fn.set_interval_status(start);
-        } else if (start == 0) {
-//            interval = setInterval(r, 0);
-            clearInterval($interval);
-            $interval = "";
-            $.fn.set_interval_status(start);
-        }
-        $.fn.update_trouble_counters();
-    };
-
-    if ($.fn.get_interval_status() == 1) {
-        $.fn.reload_page($.fn.get_interval_val(), 1);
-    }
-    $.fn.update_trouble_counters();
-
 });
