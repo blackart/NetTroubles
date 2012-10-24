@@ -49,7 +49,9 @@
     <script type="text/javascript" src="../js/jQuery/js/jquery.clickToForm.js"></script>
 
     <!-- UI -->
-    <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.2.custom.min.js"></script>
+    <%--<script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.2.custom.min.js"></script>--%>
+    <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.9.0.custom.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.combobox.js"></script>
     <script type="text/javascript" src="../js/jQuery/js/jquery.timepicker.js"></script>
 
     <!--CSS style-->

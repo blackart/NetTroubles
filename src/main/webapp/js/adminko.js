@@ -1,23 +1,23 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var $settings_main_filter_delete_id;
     var $account_delete_id;
     var $group_delete_id;
     var $device_delete_id;
 
-    var $interval_start = true;
+    var $interval_start = false;
     var $interval = null;
     var interval_val = 600000;
     var $time_out_interval = null;
     var $time_out = interval_val;
 
-    $.fn.update_trouble_counters = function() {
+    $.fn.update_trouble_counters = function () {
         $.ajax({
-            url : "/controller",
-            type : "POST",
-            data : {
-                cmd: "getTroubleCounters"
+            url:"/controller",
+            type:"POST",
+            data:{
+                cmd:"getTroubleCounters"
             },
-            success: function(data) {
+            success:function (data) {
                 var $current = $(data).find('current').text();
                 var $waiting_close = $(data).find('waiting_close').text();
                 var $close = $(data).find('close').text();
@@ -33,25 +33,83 @@ $(document).ready(function() {
         });
     };
 
-    $.fn.get_interval_val = function() {
+    $("#logout").click(function () {
+        $.ajax({
+            url:"/controller",
+            type:"POST",
+            data:{
+                cmd:"logout"
+            }
+        });
+        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
+    });
+
+    $("#main_menu").accordion({header:"h3", autoHeight:false, alwaysOpen:false, active:0, navigation:true, collapsible:false, icons:false}).removeClass('ui-accordion').addClass('ui-accordion-isem');
+
+    $("#v_tabs").tabs({
+            fxSpeed:'fast',
+            cache:false,
+            selected:0,
+            ajaxOptions:{
+                async:true
+            },
+            beforeLoad:function (event, ui) {
+                console.log(ui.tab);
+            }
+        }
+    ).removeClass('ui-tabs').addClass('ui-tabs-vertical');
+
+
+    $("body").ajaxStart(function () {
+        $("#zanaves").css({"display":"block"});
+    });
+    $("body").ajaxStop(function () {
+        $("#zanaves").css({"display":"none"});
+    });
+
+
+    $.fn.get_interval_val = function () {
         return parseInt(interval_val);
     };
-    $.fn.set_interval_val = function(interval) {
+    $.fn.set_interval_val = function (interval) {
         interval_val = parseInt(interval);
     };
-    $.fn.get_interval_status = function() {
+    $.fn.get_interval_status = function () {
         return Boolean($interval_start);
     };
-    $.fn.set_interval_status = function(interval) {
+    $.fn.set_interval_status = function (interval) {
         $interval_start = Boolean(interval);
     };
 
-    function r() {
-        var sel = $("#v_tabs").tabs('option', 'selected');
-        if (sel == 0) {
-            $("#v_tabs").tabs('load', sel);
+    function intervalFunction() {
+        var selectTab = $("#v_tabs").tabs('option', 'selected');
+        if (selectTab == 0) {
+            $("#v_tabs").tabs('load', selectTab);
+
+            var timeoutNew = parseInt($("#timeoutReloadPage").val());
+            var reloadPageStatus = Boolean($("#pageReload").val());
+
+            console.log("timeout - " + timeoutNew + "; reloadPageStatus - " + reloadPageStatus);
+
+            if (reloadPageStatus !== $interval_start) {
+                $.fn.reload_page(timeoutNew, reloadPageStatus);
+            } else if (reloadPageStatus) {
+                if (timeoutNew !== interval_val) {
+                    $.fn.reload_page(timeoutNew, false);
+                    $.fn.reload_page(timeoutNew, true);
+                }
+            }
+
+            $("#interval_val").val(timeoutNew);
+
+            if (reloadPageStatus) {
+                $("#reload_page").val("stop reload");
+            } else {
+                $("#reload_page").val("start reload");
+            }
+
         }
-        console.log("reload");
+        console.log("timer worked, select tab - " + selectTab);
     }
 
     function check_timeout() {
@@ -59,71 +117,46 @@ $(document).ready(function() {
         $("#current_timeout").html($time_out);
     }
 
-    $.fn.reload_page = function(num, start) {
+    $.fn.reload_page = function (num, start) {
         if (start) {
-            $interval = setInterval(r, num);
+            $interval = setInterval(intervalFunction, num);
             $interval_start = start;
-
-//            $time_out = num;
-//            $time_out_interval = setInterval(check_timeout, 1000);
+            console.log("interval start " + start + " " + num + " " + $interval);
+            //            $time_out = num;
+            //            $time_out_interval = setInterval(check_timeout, 1000);
 
         } else {
             clearInterval($interval);
             $interval = null;
 
-//            clearInterval($time_out_interval);
-//            $time_out_interval = null;
-//            $time_out = num;
+            //            clearInterval($time_out_interval);
+            //            $time_out_interval = null;
+            //            $time_out = num;
 
             $interval_start = start;
+
+            console.log("interval stop " + start + " " + num + " " + $interval);
         }
         $.fn.update_trouble_counters();
-        console.log(start);
-        console.log($interval);
     };
-
-    if ($interval_start) {
-        $.fn.reload_page(interval_val, true);
-    }
 
     $.fn.update_trouble_counters();
 
-    $("#logout").click(function () {
+
+    $.fn.checkDeviceInfo = function (devs) {
         $.ajax({
-            url: "/controller",
-            type: "POST",
-            data: {
-                cmd: "logout"
-            }
-        });
-        $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
-    });
-
-    $("#main_menu").accordion({header: "h3", autoHeight: false, alwaysOpen: false, active: 0, navigation: true, collapsible: false, icons: false}).removeClass('ui-accordion').addClass('ui-accordion-isem');
-
-    $("#v_tabs").tabs({fxSpeed: 'fast', cache: false, selected: 0, ajaxOptions: { async: true }}).removeClass('ui-tabs').addClass('ui-tabs-vertical');
-
-    $("body").ajaxStart(function() {
-        $("#zanaves").css({"display": "block"});
-    });
-    $("body").ajaxStop(function() {
-        $("#zanaves").css({"display": "none"});
-    });
-
-    $.fn.checkDeviceInfo = function(devs) {
-        $.ajax({
-            url : "/controller",
-            type : "POST",
-            data : {
-                cmd: "checkStatusDevice",
-                devs: devs
+            url:"/controller",
+            type:"POST",
+            data:{
+                cmd:"checkStatusDevice",
+                devs:devs
             },
-            success: function(data) {
+            success:function (data) {
                 $("#device_change_dialog #devices_change_list_table").html("");
                 $("#device_change_dialog #devices_change_list_table").append("<tr class='header'><td>name</td><td>description</td><td>status</td><td>group</td><td>region</td></tr>");
 
                 var $device_count = 0;
-                $.each($(data).find("device"), function() {
+                $.each($(data).find("device"), function () {
                     $device_count++;
                     var $id = $(this).find("id").text();
                     var $name = $(this).find("name").text();
@@ -150,43 +183,43 @@ $(document).ready(function() {
     /*-------------------------for current and close trouble tab-------------------------*/
     /*---------------------------------------dialogs-------------------------------------*/
     $("#title_merge, #actual_problem_merge").combobox();
-    $("#status_merge").combobox({readonly: true});
-    $("#merge_troubles_dialog").dialog({ autoOpen: false, title: "Merge troubles", position: "center", modal: true, resizable: false, draggable: false, height: 400, width: 600, maxHeight: 400,maxWidth: 600,
-        buttons: {
-            "Ok": function() {
+    $("#status_merge").combobox({readonly:true});
+    $("#merge_troubles_dialog").dialog({ autoOpen:false, title:"Merge troubles", position:"center", modal:true, resizable:false, draggable:false, height:400, width:600, maxHeight:400, maxWidth:600,
+        buttons:{
+            "Ok":function () {
 
                 $("#title_merge").combobox("value");
                 var $id = $("#ids_merge").val();
                 var $title = $("#title_merge").combobox("value");
 
                 var $service = "";
-                $("select[id=service_merge] option:selected").each(function() {
+                $("select[id=service_merge] option:selected").each(function () {
                     $service += this.id.replace("_service_merge", "") + ";";
                 });
 
                 var $actual_problem = $("#actual_problem_merge").combobox("value");
 
                 var $dev_id = "";
-                $("select[id=dev_list_merge] option").each(function() {
+                $("select[id=dev_list_merge] option").each(function () {
                     $dev_id += this.id.replace("_dev_merge", "") + "|";
                 });
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "mergeTroubles",
-                        id: $id,
-                        title: $title,
-                        service: $service,
-                        actual_problem: $actual_problem,
-                        id_dev: $dev_id
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"mergeTroubles",
+                        id:$id,
+                        title:$title,
+                        service:$service,
+                        actual_problem:$actual_problem,
+                        id_dev:$dev_id
                     },
-                    beforeSend: function() {
+                    beforeSend:function () {
                         $.fn.checkDeviceInfo($dev_id);
                         return true;
                     },
-                    success: function(data) {
+                    success:function (data) {
                         if ($(data).find("return_").text() === "2") {
                             $("#settings_trouble_close_list").submit();
                         } else {
@@ -204,16 +237,16 @@ $(document).ready(function() {
         }
     });
 
-    $("#device_change_dialog").dialog({ autoOpen: false, title: "Device change", position: "center", width: 800, height: 'auto',  modal: true, resizable: false, draggable: false,
-        buttons: {
-            "save": function() {
+    $("#device_change_dialog").dialog({ autoOpen:false, title:"Device change", position:"center", width:800, height:'auto', modal:true, resizable:false, draggable:false,
+        buttons:{
+            "save":function () {
                 var id = "";
                 var desc = "";
                 var status = "";
                 var group = "";
                 var region = "";
 
-                $.each($("#devices_change_list_table").find("tr[id$='_device_change']"), function() {
+                $.each($("#devices_change_list_table").find("tr[id$='_device_change']"), function () {
                     id += $(this).attr("id").replace("_device_change", "") + "|";
                     desc += $(this).find("#devices_edit_desc").val() + "|";
                     status += $(this).find("#host_status_device_change").val() + "|";
@@ -222,17 +255,17 @@ $(document).ready(function() {
                 });
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "editSomeDevices",
-                        ids: id,
-                        desc: desc,
-                        status_id: status,
-                        group_id: group,
-                        region_id: region
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"editSomeDevices",
+                        ids:id,
+                        desc:desc,
+                        status_id:status,
+                        group_id:group,
+                        region_id:region
                     },
-                    success: function(data) {
+                    success:function (data) {
                         $("#device_change_dialog").dialog("close");
                     }
                 });
@@ -240,12 +273,12 @@ $(document).ready(function() {
         }
     });
 
-    $("#settings_edit_dialog").dialog({ autoOpen: false, title: "Edit filter", position: "center", modal: true, resizable: false, draggable: true, height: 200, width: 600, maxHeight: 200,maxWidth: 600,
-        buttons: {
-            "Cancel" : function() {
+    $("#settings_edit_dialog").dialog({ autoOpen:false, title:"Edit filter", position:"center", modal:true, resizable:false, draggable:true, height:200, width:600, maxHeight:200, maxWidth:600,
+        buttons:{
+            "Cancel":function () {
                 $(this).dialog("close");
             },
-            "Ok": function() {
+            "Ok":function () {
                 var $id = $("#settings_main_filter_edit_id").val();
                 var $name = $("#settings_main_filter_edit_name").val();
 //                var $value = $("#settings_main_filter_edit_value").val();
@@ -260,18 +293,18 @@ $(document).ready(function() {
                 }
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "editMainFilter",
-                        id: $id,
-                        name: $name,
-                        value: $value,
-                        type: $type,
-                        policy: $policy,
-                        enable: $enable
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"editMainFilter",
+                        id:$id,
+                        name:$name,
+                        value:$value,
+                        type:$type,
+                        policy:$policy,
+                        enable:$enable
                     },
-                    beforeSend: function() {
+                    beforeSend:function () {
                         if ($.trim($name) === '') {
                             alert("Введите название фильтра");
                             return false;
@@ -279,7 +312,7 @@ $(document).ready(function() {
                             alert("Введите значение фильтра");
                         }
                     },
-                    success: function(data) {
+                    success:function (data) {
                         $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                     }
                 });
@@ -287,21 +320,21 @@ $(document).ready(function() {
             }
         }
     });
-    $("#settings_delete_dialog").dialog({ autoOpen: false, title: "Edit filter", position: "center", modal: true, resizable: false, draggable: true,
-        buttons: {
-            "No" : function() {
+    $("#settings_delete_dialog").dialog({ autoOpen:false, title:"Edit filter", position:"center", modal:true, resizable:false, draggable:true,
+        buttons:{
+            "No":function () {
                 $(this).dialog("close");
             },
-            "Yes": function() {
+            "Yes":function () {
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "deleteMainFilter",
-                        id: $settings_main_filter_delete_id
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"deleteMainFilter",
+                        id:$settings_main_filter_delete_id
                     },
-                    success: function(data) {
+                    success:function (data) {
                         $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                     }
                 });
@@ -311,12 +344,12 @@ $(document).ready(function() {
         }
     });
 
-    $("#users_edit_dialog").dialog({ autoOpen: false, title: "Edit user account", position: "center", modal: true, resizable: false, draggable: true, height: 200, width: 700, maxHeight: 200,maxWidth: 700,
-        buttons: {
-            "Cancel" : function() {
+    $("#users_edit_dialog").dialog({ autoOpen:false, title:"Edit user account", position:"center", modal:true, resizable:false, draggable:true, height:200, width:700, maxHeight:200, maxWidth:700,
+        buttons:{
+            "Cancel":function () {
                 $(this).dialog("close");
             },
-            "Ok": function() {
+            "Ok":function () {
                 var $id = $("#users_edit_id").val();
                 var $login = $("#users_edit_login").val();
                 var $passwd = $("#users_edit_passwd").val();
@@ -326,18 +359,18 @@ $(document).ready(function() {
                 var $block = $("#users_edit_block").attr("checked") ? true : false;
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "editAccount",
-                        id: $id,
-                        login: $login,
-                        passwd: $passwd,
-                        name: $name,
-                        group: $group,
-                        block: $block
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"editAccount",
+                        id:$id,
+                        login:$login,
+                        passwd:$passwd,
+                        name:$name,
+                        group:$group,
+                        block:$block
                     },
-                    beforeSend: function() {
+                    beforeSend:function () {
                         if ($.trim($login) === '') {
                             alert("Введите логин");
                             return false;
@@ -349,8 +382,8 @@ $(document).ready(function() {
                             return false;
                         }
                     },
-                    dataType: "json",
-                    success: function(data) {
+                    dataType:"json",
+                    success:function (data) {
                         if (data) {
                             if (data.message) alert(data.message);
                         } else {
@@ -363,22 +396,22 @@ $(document).ready(function() {
             }
         }
     });
-    $("#users_delete_dialog").dialog({ autoOpen: false, title: "Delete user account", position: "center", modal: true, resizable: false, draggable: true,
-        buttons: {
-            "No" : function() {
+    $("#users_delete_dialog").dialog({ autoOpen:false, title:"Delete user account", position:"center", modal:true, resizable:false, draggable:true,
+        buttons:{
+            "No":function () {
                 $(this).dialog("close");
             },
-            "Yes": function() {
+            "Yes":function () {
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "deleteAccount",
-                        id: $account_delete_id
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"deleteAccount",
+                        id:$account_delete_id
                     },
-                    dataType: "json",
-                    success: function(data) {
+                    dataType:"json",
+                    success:function (data) {
                         if (data) {
                             if (data.message) alert(data.message);
                         } else {
@@ -392,23 +425,23 @@ $(document).ready(function() {
         }
     });
 
-    $("#groups_edit_dialog").dialog({ autoOpen: false, title: "Edit filter", position: "center", modal: true, resizable: false, draggable: true, height: 450, width: 600, maxHeight: 450,maxWidth: 600,
-        buttons: {
-            "Cancel" : function() {
+    $("#groups_edit_dialog").dialog({ autoOpen:false, title:"Edit filter", position:"center", modal:true, resizable:false, draggable:true, height:450, width:600, maxHeight:450, maxWidth:600,
+        buttons:{
+            "Cancel":function () {
                 $(this).dialog("close");
             },
-            "Ok": function() {
+            "Ok":function () {
                 var $id = $("#groups_edit_id").val();
                 var $name = $("#groups_edit_name").val();
 
                 var $menu = {"items":[]};
-                $.each($("#groups_edit_dialog").find("li.group"), function() {
+                $.each($("#groups_edit_dialog").find("li.group"), function () {
                     if ($(this).find("input").attr("checked")) {
-                        var item = {"id": $(this).attr("id").replace("diag-group-edit-","")};
+                        var item = {"id":$(this).attr("id").replace("diag-group-edit-", "")};
                         item.items = [];
-                        $.each($(this).next("ul").find("li.item"), function() {
+                        $.each($(this).next("ul").find("li.item"), function () {
                             if ($(this).find("input").attr("checked")) {
-                                item.items.push({"id": $(this).attr("id").replace("diag-group-edit-","")});
+                                item.items.push({"id":$(this).attr("id").replace("diag-group-edit-", "")});
                             }
                         });
                         $menu.items.push(item);
@@ -416,22 +449,22 @@ $(document).ready(function() {
                 });
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "editGroup",
-                        id: $id,
-                        name: $name,
-                        menu_config: JSON.stringify($menu)
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"editGroup",
+                        id:$id,
+                        name:$name,
+                        menu_config:JSON.stringify($menu)
                     },
-                    beforeSend: function() {
+                    beforeSend:function () {
                         if ($.trim($name) === '') {
                             alert("Введите название шруппы");
                             return false;
                         }
                     },
-                    dataType: "json",
-                    success: function(data) {
+                    dataType:"json",
+                    success:function (data) {
                         if (data) {
                             if (data.message) alert(data.message);
                         } else {
@@ -443,22 +476,22 @@ $(document).ready(function() {
             }
         }
     });
-    $("#groups_delete_dialog").dialog({ autoOpen: false, title: "Delete group", position: "center", modal: true, resizable: false, draggable: true,
-        buttons: {
-            "No" : function() {
+    $("#groups_delete_dialog").dialog({ autoOpen:false, title:"Delete group", position:"center", modal:true, resizable:false, draggable:true,
+        buttons:{
+            "No":function () {
                 $(this).dialog("close");
             },
-            "Yes": function() {
+            "Yes":function () {
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "deleteGroup",
-                        id: $group_delete_id
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"deleteGroup",
+                        id:$group_delete_id
                     },
-                    dataType: "json",
-                    success: function(data) {
+                    dataType:"json",
+                    success:function (data) {
                         if (data) {
                             if (data.message) alert(data.message);
                         } else {
@@ -472,12 +505,12 @@ $(document).ready(function() {
         }
     });
 
-    $("#devices_edit_dialog").dialog({ autoOpen: false, title: "Edit device", position: "center", modal: true, resizable: false, draggable: true, height: 200, width: 800, maxHeight: 200,maxWidth: 800,
-        buttons: {
-            "Cancel" : function() {
+    $("#devices_edit_dialog").dialog({ autoOpen:false, title:"Edit device", position:"center", modal:true, resizable:false, draggable:true, height:200, width:800, maxHeight:200, maxWidth:800,
+        buttons:{
+            "Cancel":function () {
                 $(this).dialog("close");
             },
-            "Ok": function() {
+            "Ok":function () {
                 var $id = $("#devices_edit_id").val();
                 var $name = $("#device_edit_name").val();
                 var $desc = $("#device_edit_description").val();
@@ -486,24 +519,24 @@ $(document).ready(function() {
                 var $region = $("#device_edit_region").val();
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "editDevice",
-                        id: $id,
-                        name: $name,
-                        desc: $desc,
-                        status: $status,
-                        group: $group,
-                        region: $region
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"editDevice",
+                        id:$id,
+                        name:$name,
+                        desc:$desc,
+                        status:$status,
+                        group:$group,
+                        region:$region
                     },
-                    beforeSend: function() {
+                    beforeSend:function () {
                         if ($.trim($name) === '') {
                             alert("Введите название устройства!");
                             return false;
                         }
                     },
-                    success: function(data) {
+                    success:function (data) {
                         alert($(data).find("message").text());
                         $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                     }
@@ -513,21 +546,21 @@ $(document).ready(function() {
             }
         }
     });
-    $("#devices_delete_dialog").dialog({ autoOpen: false, title: "Delete group", position: "center", modal: true, resizable: false, draggable: true,
-        buttons: {
-            "No" : function() {
+    $("#devices_delete_dialog").dialog({ autoOpen:false, title:"Delete group", position:"center", modal:true, resizable:false, draggable:true,
+        buttons:{
+            "No":function () {
                 $(this).dialog("close");
             },
-            "Yes": function() {
+            "Yes":function () {
 
                 $.ajax({
-                    url : "/controller",
-                    type : "POST",
-                    data : {
-                        cmd: "deleteDevice",
-                        id: $device_delete_id
+                    url:"/controller",
+                    type:"POST",
+                    data:{
+                        cmd:"deleteDevice",
+                        id:$device_delete_id
                     },
-                    success: function(data) {
+                    success:function (data) {
                         alert($(data).find("message").text());
                         $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                     }
@@ -540,7 +573,7 @@ $(document).ready(function() {
 
     /*-----------------------------functions--------------------------------------------*/
 
-    $.fn.settings_main_filter_edit = function(id) {
+    $.fn.settings_main_filter_edit = function (id) {
         $("#settings_main_filter_edit_id").val(id.replace("_mainFilter", ""));
 
         $("#settings_main_filter_edit_name").val($("#" + id + " .filter_name").html());
@@ -562,13 +595,13 @@ $(document).ready(function() {
 
         $("#settings_edit_dialog").dialog('open');
     };
-    $.fn.settings_main_filter_delete = function(id, name) {
+    $.fn.settings_main_filter_delete = function (id, name) {
         $settings_main_filter_delete_id = id;
         $("#delete_main_filter").html(name);
         $("#settings_delete_dialog").dialog('open');
     };
 
-    $.fn.users_edit = function(id) {
+    $.fn.users_edit = function (id) {
         $("#users_edit_id").val(id.replace("_user", ""));
 
         $("#users_edit_login").val($("#" + id + " .account_login").html());
@@ -581,47 +614,47 @@ $(document).ready(function() {
             $("#users_edit_block").removeAttr("checked");
         }
 
-        $.each($(".settings_dialog .label_container input"), function() {
-            if ($(this).val() != '') $(this).prev().css({"display": "none"});
+        $.each($(".settings_dialog .label_container input"), function () {
+            if ($(this).val() != '') $(this).prev().css({"display":"none"});
         });
 
         $("#users_edit_dialog").dialog('open');
     };
 
-    $(".settings_dialog .label_container input").focus(function(e){
+    $(".settings_dialog .label_container input").focus(function (e) {
         var clicked = $(e.target);
-        if (clicked.val() == '') clicked.prev().css({"display": "none"});
+        if (clicked.val() == '') clicked.prev().css({"display":"none"});
     });
 
-    $(".settings_dialog .label_container input").blur(function(e){
+    $(".settings_dialog .label_container input").blur(function (e) {
         var clicked = $(e.target);
-        if (clicked.val() == '') clicked.prev().css({"display": "block"});
+        if (clicked.val() == '') clicked.prev().css({"display":"block"});
     });
 
-    $.fn.users_delete = function(id, name) {
+    $.fn.users_delete = function (id, name) {
         $account_delete_id = id;
         $("#delete_user").html(name);
         $("#users_delete_dialog").dialog('open');
     };
 
-    $.fn.groups_edit = function(id) {
+    $.fn.groups_edit = function (id) {
         var real_id = id.replace("_group", "");
         $("#groups_edit_id").val(real_id);
         $("#groups_edit_name").val($("#" + id + " .group_name").html());
         $("#groups_edit_dialog input").removeAttr("checked");
-        $("#" + id + " .l1 li").each(function() {
+        $("#" + id + " .l1 li").each(function () {
             $("#groups_edit_dialog .l1").find("li[id=" + $(this).attr("id").replace("group-" + real_id, "diag-group") + "] input").attr("checked", $(this).find("input").attr("checked"));
         });
 
         $("#groups_edit_dialog").dialog('open');
     };
-    $.fn.groups_delete = function(id, name) {
+    $.fn.groups_delete = function (id, name) {
         $group_delete_id = id;
         $("#delete_group").html(name);
         $("#groups_delete_dialog").dialog('open');
     };
 
-    $.fn.device_edit = function(id) {
+    $.fn.device_edit = function (id) {
         var real_id = id.replace("_device", "");
         $("#devices_edit_id").val(real_id);
 
@@ -632,13 +665,13 @@ $(document).ready(function() {
         $("#device_edit_region").html("");
         $("#device_edit_region").append($("#host_region_replace").html());
 
-        $("#device_edit_status option").each(function() {
+        $("#device_edit_status option").each(function () {
             $(this).attr("value", $(this).attr("value"));
         });
-        $("#device_edit_group option").each(function() {
+        $("#device_edit_group option").each(function () {
             $(this).attr("value", $(this).attr("value"));
         });
-        $("#device_edit_region option").each(function() {
+        $("#device_edit_region option").each(function () {
             $(this).attr("value", $(this).attr("value"));
         });
 
@@ -651,7 +684,7 @@ $(document).ready(function() {
 
         $("#devices_edit_dialog").dialog('open');
     };
-    $.fn.device_delete = function(id, name) {
+    $.fn.device_delete = function (id, name) {
         $device_delete_id = id;
         $("#delete_device").html(name);
         $("#devices_delete_dialog").dialog('open');
@@ -659,7 +692,7 @@ $(document).ready(function() {
 
     /*---------------------------------------------------------------------------------*/
 
-    $.fn.checkSelectFilterType = function() {
+    $.fn.checkSelectFilterType = function () {
         if ($("#settings_main_filter_edit_type :selected").text() == 'group') {
             $("#filter_edit_value").html("");
             $("#filter_edit_value").append($('#append_hostgroups').html());
@@ -668,11 +701,11 @@ $(document).ready(function() {
             $("#filter_edit_value").append("<input type=\"text\" class=\"filter_value\"/>");
         }
     };
-    $("#settings_main_filter_edit_type").change(function() {
+    $("#settings_main_filter_edit_type").change(function () {
         $.fn.checkSelectFilterType();
     });
 
-    var rewidth = function() {
+    var rewidth = function () {
         var $container_width = $("#v_tabs").css("width").replace("px", "");
         if ($container_width <= 800) {
             $container_width = 800;
@@ -680,7 +713,7 @@ $(document).ready(function() {
         $(".ui-tabs-vertical .ui-tabs-panel").css("width", ($container_width - 245) + "px");
     };
 
-    $(window).bind('resize', function() {
+    $(window).bind('resize', function () {
         rewidth();
     });
 

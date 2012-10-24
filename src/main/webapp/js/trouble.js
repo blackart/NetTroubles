@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     $("#admin_trouble_list").accordion({collapsible: true, header: "h3", autoHeight: false, alwaysOpen: false, active: false, navigation: true, icons: false}).addClass('ui-accordion-trouble');
     $("#admin_waiting_close_trouble_list").accordion({collapsible: true, header: "h3", autoHeight: false, alwaysOpen: false, active: false, navigation: true, icons: false}).removeClass('ui-accordion').addClass('ui-accordion-trouble-wait');
@@ -111,7 +110,6 @@ $(document).ready(function() {
             }
         });
     };
-
 
     $(".troubles_lists").clickToForm({
         header: ".content",
@@ -503,22 +501,6 @@ $(document).ready(function() {
         });
 
     });
-
-    $.fn.set_interval_val($("#timeoutReloadPage").val());
-    $("#interval_val").val($.fn.get_interval_val());
-    $.fn.set_interval_status($("#pageReload").val());
-
-    if ($.fn.get_interval_status()) {
-        $("#reload_page").val("stop reload");
-    } else {
-        $("#reload_page").val("start reload");
-    }
-
-
-
-
-
-
 
 
     $("input[id$=_unmerge]").click(function() {
