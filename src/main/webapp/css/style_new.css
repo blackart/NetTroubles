@@ -1,0 +1,18 @@
+.navi {
+    margin-bottom: 0;
+}
+
+.sidebar-menu {
+    padding: 25px 0 5px 0;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+}
+
+.sidebar-menu ul {
+    padding-left: 25px;
+}
+
+.container-main {
+    padding-left: 0;
+}
