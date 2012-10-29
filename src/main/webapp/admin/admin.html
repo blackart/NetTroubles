@@ -18,6 +18,8 @@
     <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap-responsive.css"/>
     <!--konockout-->
     <script type="text/javascript" src="../js/knockout/knockout-2.1.0.js"></script>
+    <!--page script-->
+    <script type="text/javascript" src="../js/script.js"></script>
 
     <style type="text/css">
         .sidebar-nav {
@@ -87,9 +89,11 @@
             <div class="well sidebar-nav">
                 <ul class="nav nav-list">
                     <li class="nav-header">Troubles</li>
-                    <li class="active"><a href="#">Current</a></li>
-                    <li><a href="#">Closed</a></li>
-                    <li><a href="#">Trash</a></li>
+                    <li class="active">
+                        <a href="#">Current (<span data-bind="html: needActualProblemTroublesCounter"></span>/<span data-bind="html: waitingCloseTroublesCounter"></span>/<span data-bind="html: currentTroublesCounter"></span>)</a>
+                    </li>
+                    <li><a href="#">Closed (<span data-bind="html: closedTroublesCounter">0</span>)</a></li>
+                    <li><a href="#">Trash (<span data-bind="html: trashedTroublesCounter">0</span>)</a></li>
                     <li class="nav-header"><a href="#">Accidents</a></li>
                     <li class="nav-header"><a href="#">Host Manager</a></li>
                     <li class="nav-header">Filters</li>
@@ -152,7 +156,7 @@
                             Нет столь великой вещи, которую не превзошла бы величиною ещё большая. Нет вещи столь малой,
                             в которую не вместилась бы ещё меньшая.
                             <div class="row-fluid">
-                                <div class="btn-group span4 offset8">
+                                <div class="btn-group pull-right">
                                     <button class="btn">save</button>
                                     <button class="btn">delete</button>
                                     <button class="btn btn-primary">send to CRM</button>
