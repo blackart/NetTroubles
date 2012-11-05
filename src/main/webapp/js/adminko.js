@@ -17,12 +17,13 @@ $(document).ready(function () {
             data:{
                 cmd:"getTroubleCounters"
             },
+            dataType: "json",
             success:function (data) {
-                var $current = $(data).find('current').text();
-                var $waiting_close = $(data).find('waiting_close').text();
-                var $close = $(data).find('close').text();
-                var $trash = $(data).find('trash').text();
-                var $need_actual_problem = $(data).find('need_actual_problem').text();
+                var $current = data.current;
+                var $waiting_close = data.waiting_close;
+                var $close = data.close;
+                var $trash = data.trash;
+                var $need_actual_problem = data.need_actual_problem;
 
                 $(".count_need_actual_problem_troubles").html("(" + $need_actual_problem);
                 $(".count_current_troubles").html($current + ")");

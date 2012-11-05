@@ -27,7 +27,10 @@ addComment=ru.blackart.dsi.infopanel.commands.troubles.comments.AddComment
 conv=ru.blackart.dsi.infopanel.commands.troubles.ConvertLegendAndDescToComment
 recoveryTrouble=ru.blackart.dsi.infopanel.commands.troubles.RecoveryTrouble
 getTroubleCounters=ru.blackart.dsi.infopanel.commands.troubles.GetTroubleCounters
+getCurrentTroubleListGroup=ru.blackart.dsi.infopanel.commands.troubles.GetListsTroubles
 
+#services
+getServices=ru.blackart.dsi.infopanel.commands.service.GetListOfServices
 
 #failures
 getFailuresListForDate=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForDate

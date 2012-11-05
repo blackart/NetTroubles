@@ -10,12 +10,14 @@
     <META HTTP-EQUIV="REFRESH" CONTENT="600">
 
     <!-- jQuery -->
-    <script type="text/javascript" src="../js/jQuery/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.8.2.js"></script>
     <!-- bootstrap -->
     <script type="text/javascript" src="../js/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="../js/bootstrap/js/bootstrap-datepicker.js"></script>
     <!-- bootstrap css -->
     <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/datepicker.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap-responsive.css"/>-->
     <!--konockout-->
     <script type="text/javascript" src="../js/knockout/knockout-2.1.0.js"></script>
     <!--page script-->
@@ -37,10 +39,144 @@
             float: left;
             margin: 12px;
         }
+
+        .nav-header a {
+            color: #999;
+        }
+
+       .trouble-entry {
+           margin-bottom: 2px;
+           border: 1px solid #E5E5E5;
+           -webkit-border-radius: 4px;
+           -moz-border-radius: 4px;
+           border-radius: 4px;
+           cursor: pointer;
+           padding: 4px;
+       }
+
+        .trouble-entry input {
+            margin: 0 0 0 10px;
+        }
+
+        .trouble-entry div {
+            margin: 0 0 0 32px;
+        }
+
+        .trouble-entry span {
+            color: #08C;
+            margin-left: 10px;
+        }
+
+        .trouble-entry span:hover {
+            color: #005580;
+        }
+        .trouble-entry .description span {
+            color: #b9b9b9;
+        }
+
+        .datepicker {
+            z-index: 1051;
+        }
+
+        .edition-dialog {
+            width: 40%;
+            left: 30%;
+            margin: auto auto auto auto;
+            top: 10%;
+        }
+
+        .devices-list {
+            width: 25%;
+            left: 4.8%;
+            margin: auto auto auto auto;
+            top: 10%;
+        }
+
+        .comments-list {
+            width: 25%;
+            left: 70.19%;
+            margin: auto auto auto auto;
+            top: 10%;
+        }
     </style>
     <!--<link rel="stylesheet" type="text/css" href="../css/style_new.css"/>-->
 </head>
 <body>
+
+<div id="devicesList" class="modal hide devices-list" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Devices</h3>
+    </div>
+    <div class="modal-body" class="container-fluid">
+        Device List
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+
+<div id="commentsList" class="modal hide comments-list" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Comments</h3>
+    </div>
+    <div class="modal-body" class="container-fluid">
+        Comments
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+
+<div id="editingDialog" class="modal hide edition-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Editing information about the trouble</h3>
+    </div>
+    <div class="modal-body" class="container-fluid" id="edition-dialog-body">
+        <div class="row-fluid" id="row-fluid-edition-dialog">
+            <div class="span12" id="main-column"  data-bind="with: currentTroubleEditing">
+                <div>Title</div>
+                <div>
+                    <input type="text" class="span12" placeholder="the title of trouble" data-bind="value: title">
+                </div>
+
+                <div>Devices</div>
+                <div>
+                    <button class="btn" id="show-device-list" data-bind="visible: !$parent.activeDeviceList()">show devices</button>
+                    <button class="btn" id="hide-device-list" data-bind="visible: $parent.activeDeviceList()">hide devices</button>
+                </div>
+
+                <div>Services</div>
+                <div>
+                    <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id'"></select>
+                </div>
+
+                <div>Terms of elimination</div>
+                <div>
+                    <input type="text" class="span12" id="timeout" placeholder="when resolve the problem?">
+                </div>
+
+                <div>Actual problem</div>
+                <div>
+                    <input type="text" class="span12" placeholder="what's really happened?" data-bind="value: actualProblem">
+                </div>
+
+                <div>Comments</div>
+                <div>
+                    <button class="btn" id="show-comments-list" data-bind="visible: !$parent.activeCommentsList()">show comments</button>
+                    <button class="btn" id="hide-comments-list" data-bind="visible: $parent.activeCommentsList()">hide comments</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn">Save changes</button>
+        <button class="btn btn-primary">Send to SRM</button>
+    </div>
+</div>
 
 <!--------------------------------------------------------------------------------------------------------------------->
 
@@ -90,7 +226,7 @@
                 <ul class="nav nav-list">
                     <li class="nav-header">Troubles</li>
                     <li class="active">
-                        <a href="#">Current (<span data-bind="html: needActualProblemTroublesCounter"></span>/<span data-bind="html: waitingCloseTroublesCounter"></span>/<span data-bind="html: currentTroublesCounter"></span>)</a>
+                        <a href="#">Current (<span data-bind="html: currentTroublesCounter"></span>/<span data-bind="html: waitingCloseTroublesCounter"></span>/<span data-bind="html: needActualProblemTroublesCounter"></span>)</a>
                     </li>
                     <li><a href="#">Closed (<span data-bind="html: closedTroublesCounter">0</span>)</a></li>
                     <li><a href="#">Trash (<span data-bind="html: trashedTroublesCounter">0</span>)</a></li>
@@ -139,69 +275,24 @@
                 </div>
             </div>
 
-            <div class="accordion" id="accordion2">
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <input type="checkbox"/>
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                            Меню №1
-                        </a>
-                    </div>
-                    <div id="collapseOne" class="accordion-body collapse" style="height: 0px; ">
-                        <div class="accordion-inner">
-                            Жизнь нашу можно удобно сравнивать со своенравною рекою, на поверхности которой плавает
-                            чёлн, иногда укачиваемый тихоструйною волною, нередко же задержанный в своём движении мелью
-                            и разбиваемый о подводный камень. - Нужно ли упоминать, что сей утлый чёлн на рынке
-                            скоропреходящего времени есть не кто иной, как сам человек?<br>
-                            Нет столь великой вещи, которую не превзошла бы величиною ещё большая. Нет вещи столь малой,
-                            в которую не вместилась бы ещё меньшая.
-                            <div class="row-fluid">
-                                <div class="btn-group pull-right">
-                                    <button class="btn">save</button>
-                                    <button class="btn">delete</button>
-                                    <button class="btn btn-primary">send to CRM</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <h5 data-bind="visible: needCRMTroubles().length > 0">Enter the value of the actual problem for these troubles:</h5>
+            <div id="need" data-bind="foreach: needCRMTroubles" data-toggle="modal" data-target="#editingDialog">
+                <div class="trouble-entry">
+                    <input type="checkbox"/><span data-bind="text: title"></span>
                 </div>
+            </div>
 
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <input type="checkbox">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                           href="#collapseTwo">
-                            Меню №2
-                        </a>
-                    </div>
-                    <div id="collapseTwo" class="accordion-body collapse" style="height: 0px; ">
-                        <div class="accordion-inner">
-                            Если бы тени предметов зависели не от величины сих последних, а имели бы свой произвольный
-                            рост, то, может быть, вскоре не осталось бы на всём земном шаре ни одного светлого
-                            места.<br>
-                            "Зачем, - говорит эгоист, - стану я работать для потомства, когда оно ровно ничего для меня
-                            не сделало?" - Несправедлив ты, безумец! Потомство сделало для тебя уже то, что ты, сближая
-                            прошедшее с настоящим и будущим, можешь по произволу считать себя: младенцем, юношей и
-                            старцем.
-                        </div>
-                    </div>
+            <h5 data-bind="visible: waitingCloseTroubles().length > 0">Send these troubles to CRM:</h5>
+            <div id="wait" data-bind="foreach: waitingCloseTroubles" data-toggle="modal" data-target="#editingDialog">
+                <div class="trouble-entry">
+                    <input type="checkbox"/><span data-bind="text: title"></span>
                 </div>
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <input type="checkbox">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                           href="#collapseThree">
-                            Меню №3
-                        </a>
-                    </div>
-                    <div id="collapseThree" class="accordion-body collapse" style="height: 0px; ">
-                        <div class="accordion-inner">
-                            Три дела, однажды начавши, трудно кончить: а) вкушать хорошую пищу; б) беседовать с
-                            возвратившимся из похода другом и в) чесать, где чешется.<br>
-                            Если у тебя спрошено будет: что полезнее, солнце или месяц? - ответствуй: месяц. Ибо солнце
-                            светит днём, когда и без того светло; а месяц - ночью.
-                        </div>
-                    </div>
+            </div>
+
+            <h5 data-bind="visible: currentTroubles().length > 0">Current troubles:</h5>
+            <div id="current" data-bind="foreach: currentTroubles" data-toggle="modal" data-target="#editingDialog">
+                <div class="trouble-entry" data-bind="click: $parent.chosenTrouble">
+                    <input type="checkbox"/><span data-bind="text: title"></span>
                 </div>
             </div>
         </div>

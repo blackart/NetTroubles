@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hostgroup;
 import ru.blackart.dsi.infopanel.tasksSystem.TaskQueueController;
-import ru.blackart.dsi.infopanel.temp.thread.ManagerQueueRequests;
 import ru.blackart.dsi.infopanel.utils.GenerateMonitoringPanel;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
 import ru.blackart.dsi.infopanel.utils.snmpc.handlers.DownTrapsHandler;
@@ -73,7 +72,6 @@ public class SNMPcRequestController extends HttpServlet {
 
         storage = new Storage(Boolean.valueOf((String) settings.get("learning")), Integer.valueOf((String) settings.get("trueDownInterval")));
 
-        ManagerQueueRequests.getInstance().start();
         ManagerUpDevcListCleaningThread managerUpDevcListCleaningThread = ManagerUpDevcListCleaningThread.getInstance();
         managerUpDevcListCleaningThread.setStorage(this.storage);
         managerUpDevcListCleaningThread.startCleaningThread();
