@@ -1,4 +1,44 @@
 $(document).ready(function () {
+    var host = "http://localhost:8080/controller";
+
+    function ViewModel() {
+        var self = this;
+        self.activeDeviceList = ko.observable(false);
+        self.showDeviceList = function() {
+            self.activeDeviceList() ? $('#devicesList').modal('hide') : $('#devicesList').modal('show');
+        };
+        self.activeCommentsList = ko.observable(false);
+        self.showCommentsList = function() {
+            self.activeCommentsList() ? $('#commentsList').modal('hide') : $('#commentsList').modal('show');
+        };
+
+        self.needActualProblemTroublesCounter = ko.observable(0);
+        self.waitingCloseTroublesCounter = ko.observable(0);
+        self.currentTroublesCounter = ko.observable(0);
+        self.closedTroublesCounter = ko.observable(0);
+        self.trashedTroublesCounter = ko.observable(0);
+
+        self.currentTroubles = ko.observableArray();
+        self.waitingCloseTroubles = ko.observableArray();
+        self.needCRMTroubles = ko.observableArray();
+
+        self.services = ko.observableArray();
+        self.currentTroubleEditing = ko.observable({
+            title: "",
+            devcapsules: [],
+            services: [],
+            timeout: "",
+            actualProblem: "",
+            comments: []
+        });
+        self.chosenTrouble = function (trouble) {
+            self.currentTroubleEditing(trouble);
+        };
+    }
+
+    var viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
+
     $('#editingDialog').modal({
         show: false
     }).on('hide', function () {
@@ -37,58 +77,6 @@ $(document).ready(function () {
     $('#timeout').datepicker({
         format:'dd/mm/yyyy'
     });
-
-
-    $("#show-device-list").click(function () {
-        alert(111);
-        $('#devicesList').modal('show');
-    });
-
-    $("#show-comments-list").click(function () {
-        $('#commentsList').modal('show');
-    });
-
-    $("#hide-device-list").click(function () {
-        $('#devicesList').modal('hide');
-    });
-
-    $("#hide-comments-list").click(function () {
-        $('#commentsList').modal('hide');
-    });
-
-    var host = "http://localhost:8080/controller";
-
-    function ViewModel() {
-        this.activeDeviceList = ko.observable(false);
-        this.activeCommentsList = ko.observable(false);
-
-        this.needActualProblemTroublesCounter = ko.observable(0);
-        this.waitingCloseTroublesCounter = ko.observable(0);
-        this.currentTroublesCounter = ko.observable(0);
-        this.closedTroublesCounter = ko.observable(0);
-        this.trashedTroublesCounter = ko.observable(0);
-
-        this.currentTroubles = ko.observableArray();
-        this.waitingCloseTroubles = ko.observableArray();
-        this.needCRMTroubles = ko.observableArray();
-        this.services = ko.observableArray();
-        this.currentTroubleEditing = ko.observable(
-            {
-                title: "",
-                devcapsules: [],
-                services: [],
-                timeout: "",
-                actualProblem: "",
-                comments: []
-            }
-        );
-        this.chosenTrouble = function () {
-            viewModel.currentTroubleEditing(this);
-        };
-    }
-
-    var viewModel = new ViewModel();
-    ko.applyBindings(viewModel);
 
     function update_trouble_counters() {
         $.get(host, {cmd:"getTroubleCounters"},

@@ -136,16 +136,15 @@
     </div>
     <div class="modal-body" class="container-fluid" id="edition-dialog-body">
         <div class="row-fluid" id="row-fluid-edition-dialog">
-            <div class="span12" id="main-column"  data-bind="with: currentTroubleEditing">
+            <div class="span12" id="main-column" data-bind="with: currentTroubleEditing">
                 <div>Title</div>
                 <div>
-                    <input type="text" class="span12" placeholder="the title of trouble" data-bind="value: title">
+                    <input type="text" class="span12" placeholder="the title of trouble">
                 </div>
 
                 <div>Devices</div>
                 <div>
-                    <button class="btn" id="show-device-list" data-bind="visible: !$parent.activeDeviceList()">show devices</button>
-                    <button class="btn" id="hide-device-list" data-bind="visible: $parent.activeDeviceList()">hide devices</button>
+                    <button class="btn" data-bind="click: $parent.showDeviceList, text: $parent.activeDeviceList() ? 'hide devices' : 'show devices'"></button>
                 </div>
 
                 <div>Services</div>
@@ -160,13 +159,12 @@
 
                 <div>Actual problem</div>
                 <div>
-                    <input type="text" class="span12" placeholder="what's really happened?" data-bind="value: actualProblem">
+                    <input type="text" class="span12" placeholder="what's really happened?">
                 </div>
 
                 <div>Comments</div>
                 <div>
-                    <button class="btn" id="show-comments-list" data-bind="visible: !$parent.activeCommentsList()">show comments</button>
-                    <button class="btn" id="hide-comments-list" data-bind="visible: $parent.activeCommentsList()">hide comments</button>
+                    <button class="btn" id="show-comments-list" data-bind="click: $parent.showCommentsList, text: $parent.activeCommentsList() ? 'hide comments' : 'show comments'"></button>
                 </div>
             </div>
         </div>
