@@ -33,15 +33,15 @@ $(document).ready(function () {
         });
         self.chosenTrouble = function (trouble) {
             self.currentTroubleEditing(trouble);
+            $('#timeout').datepicker({format:'dd/mm/yyyy'});
         };
     }
 
     var viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 
-    $('#editingDialog').modal({
-        show: false
-    }).on('hide', function () {
+    $('#editingDialog').modal({show: false});
+    $('#editingDialog').bind('hide', function () {
         $('#devicesList').modal('hide');
         $('#commentsList').modal('hide');
     });
@@ -49,12 +49,12 @@ $(document).ready(function () {
     $('#commentsList').modal({
         show: false,
         backdrop: false
-    }).on('show',
+    }).bind('show',
         function() {
             $('#commentsList .modal-body').css({"height":$('#edition-dialog-body').css("height")});
             viewModel.activeCommentsList(true);
         }
-    ).on('hide',
+    ).bind('hide',
         function() {
             viewModel.activeCommentsList(false);
         }
@@ -63,20 +63,16 @@ $(document).ready(function () {
     $('#devicesList').modal({
         show:false,
         backdrop: false
-    }).on('show',
+    }).bind('show',
         function() {
             $('#devicesList .modal-body').css({"height":$('#edition-dialog-body').css("height")});
             viewModel.activeDeviceList(true);
         }
-    ).on('hide',
+    ).bind('hide',
         function() {
             viewModel.activeDeviceList(false);
         }
     );
-
-    $('#timeout').datepicker({
-        format:'dd/mm/yyyy'
-    });
 
     function update_trouble_counters() {
         $.get(host, {cmd:"getTroubleCounters"},
