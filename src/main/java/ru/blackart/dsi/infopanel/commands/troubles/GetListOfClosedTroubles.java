@@ -1,27 +1,26 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
-import ru.blackart.dsi.infopanel.beans.*;
-
-import java.util.Date;
-import java.util.Calendar;
-import java.util.List;
-import java.text.SimpleDateFormat;
-import java.io.OutputStream;
-
 import com.myjavatools.xml.BasicXmlData;
+import ru.blackart.dsi.infopanel.beans.*;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.DateStr;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
+
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class GetListOfClosedTroubles extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
 
     public String execute() throws Exception {
         this.getResponse().setCharacterEncoding("utf-8");
         this.getResponse().setContentType("text/xml");
 
-        synchronized (dataModelConstructor) {
-            TroubleList currTroubleList = dataModelConstructor.getList_of_complete_troubles();
+        synchronized (dataModel) {
+            TroubleList currTroubleList = dataModel.getList_of_complete_troubles();
             List<Trouble> currTroubles = currTroubleList.getTroubles();
 
             SimpleDateFormat format = new SimpleDateFormat();

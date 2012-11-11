@@ -5,17 +5,17 @@ import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Trouble;
 import ru.blackart.dsi.infopanel.beans.TroubleList;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.CommentService;
 import ru.blackart.dsi.infopanel.services.DevcapsuleService;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClearTrashList extends AbstractCommand {
-    private DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    private DataModel dataModel = DataModel.getInstance();
     private TroubleService troubleService = TroubleService.getInstance();
     private DevcapsuleService devcapsuleService = DevcapsuleService.getInstance();
     private CommentService commentService = CommentService.getInstance();
@@ -23,8 +23,8 @@ public class ClearTrashList extends AbstractCommand {
 
     @Override
     public String execute() throws Exception {
-        synchronized (dataModelConstructor) {
-            TroubleList trashTroubleList = dataModelConstructor.getList_of_trash_troubles();
+        synchronized (dataModel) {
+            TroubleList trashTroubleList = dataModel.getList_of_trash_troubles();
             List<Trouble> troubles = new ArrayList<Trouble>(trashTroubleList.getTroubles());
 
             for (Trouble t : troubles) {

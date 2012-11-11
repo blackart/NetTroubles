@@ -1,4 +1,4 @@
-package ru.blackart.dsi.infopanel.utils.model;
+package ru.blackart.dsi.infopanel.model;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -11,14 +11,13 @@ import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
-import sun.awt.windows.ThemeReader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataModelConstructor {
+public class DataModel {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    private static DataModelConstructor dataModelConstructor;
+    private static DataModel dataModel;
     private DeviceManager deviceManager = DeviceManager.getInstance();
     private TroubleList list_of_current_troubles;
     private TroubleList list_of_complete_troubles;
@@ -81,35 +80,35 @@ public class DataModelConstructor {
         return troubleList;
     }
 
-    public static synchronized DataModelConstructor getInstance() {
-        if (dataModelConstructor == null) {
-            dataModelConstructor = new DataModelConstructor();
+    public static synchronized DataModel getInstance() {
+        if (dataModel == null) {
+            dataModel = new DataModel();
 
-            dataModelConstructor.sessionFactory = SessionFactorySingle.getSessionFactory();
+            dataModel.sessionFactory = SessionFactorySingle.getSessionFactory();
 
-            dataModelConstructor.list_of_current_troubles = dataModelConstructor.loadTroubleList("current", dataModelConstructor.sessionFactory.openSession());
-            dataModelConstructor.list_of_trash_troubles = dataModelConstructor.loadTroubleList("trash", dataModelConstructor.sessionFactory.openSession());
-            dataModelConstructor.list_of_complete_troubles = dataModelConstructor.loadTroubleList("complete", dataModelConstructor.sessionFactory.openSession());
-//            dataModelConstructor.list_of_complete_troubles = dataModelConstructor.loadTroubleList("trash", dataModelConstructor.sessionFactory.openSession());
-            dataModelConstructor.list_of_waiting_close_troubles = dataModelConstructor.loadTroubleList("waiting_close", dataModelConstructor.sessionFactory.openSession());
-            dataModelConstructor.list_of_need_actual_problem = dataModelConstructor.loadTroubleList("need_actual_problem", dataModelConstructor.sessionFactory.openSession());
+            dataModel.list_of_current_troubles = dataModel.loadTroubleList("current", dataModel.sessionFactory.openSession());
+            dataModel.list_of_trash_troubles = dataModel.loadTroubleList("trash", dataModel.sessionFactory.openSession());
+            dataModel.list_of_complete_troubles = dataModel.loadTroubleList("complete", dataModel.sessionFactory.openSession());
+//            dataModel.list_of_complete_troubles = dataModel.loadTroubleList("trash", dataModel.sessionFactory.openSession());
+            dataModel.list_of_waiting_close_troubles = dataModel.loadTroubleList("waiting_close", dataModel.sessionFactory.openSession());
+            dataModel.list_of_need_actual_problem = dataModel.loadTroubleList("need_actual_problem", dataModel.sessionFactory.openSession());
 
-            dataModelConstructor.errorCorrectionComplianceTroublesAndList(dataModelConstructor.list_of_current_troubles);
-            dataModelConstructor.errorCorrectionComplianceTroublesAndList(dataModelConstructor.list_of_need_actual_problem);
-            dataModelConstructor.errorCorrectionComplianceTroublesAndList(dataModelConstructor.list_of_waiting_close_troubles);
+            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_current_troubles);
+            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_need_actual_problem);
+            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_waiting_close_troubles);
 
             //методы класса TroubleListsManager сохраняют ссылки на эти объекты для доступа к ним из дркгого контроллера.
             TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
-            troubleListsManager.setCurrTroubleList(dataModelConstructor.list_of_current_troubles);
-            troubleListsManager.setClosedTroubleList(dataModelConstructor.list_of_complete_troubles);
-            troubleListsManager.setWaitingCloseTroubleList(dataModelConstructor.list_of_waiting_close_troubles);
-            troubleListsManager.setTrashTroubleList(dataModelConstructor.list_of_trash_troubles);
-            troubleListsManager.setNeedActualProblemTroubleList(dataModelConstructor.list_of_need_actual_problem);
+            troubleListsManager.setCurrTroubleList(dataModel.list_of_current_troubles);
+            troubleListsManager.setClosedTroubleList(dataModel.list_of_complete_troubles);
+            troubleListsManager.setWaitingCloseTroubleList(dataModel.list_of_waiting_close_troubles);
+            troubleListsManager.setTrashTroubleList(dataModel.list_of_trash_troubles);
+            troubleListsManager.setNeedActualProblemTroubleList(dataModel.list_of_need_actual_problem);
 
-            troubleListsManager.setTroubleListForCallCenter(dataModelConstructor.list_of_current_troubles);
+            troubleListsManager.setTroubleListForCallCenter(dataModel.list_of_current_troubles);
         }
 
-        return dataModelConstructor;
+        return dataModel;
     }
 
 /*------------------------------------------------------------------------------*/

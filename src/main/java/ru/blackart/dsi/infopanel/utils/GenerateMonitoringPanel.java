@@ -1,16 +1,19 @@
 package ru.blackart.dsi.infopanel.utils;
 
-import java.io.*;
-import java.util.Properties;
-import java.util.List;
-import java.text.SimpleDateFormat;
-import java.sql.Date;
-
 import ru.blackart.dsi.infopanel.beans.Comment;
-import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.beans.Service;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
+import ru.blackart.dsi.infopanel.beans.Service;
+import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.model.DataModel;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Properties;
 
 public class GenerateMonitoringPanel {
     private static GenerateMonitoringPanel generateMonitoringPanel;
@@ -65,8 +68,8 @@ public class GenerateMonitoringPanel {
         SimpleDateFormat format = new SimpleDateFormat();
         format.applyPattern("dd/MM/yyyy hh:mm:ss");
 
-        DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-        List<Trouble> currTroubles = dataModelConstructor.getList_of_current_troubles().getTroubles();
+        DataModel dataModel = DataModel.getInstance();
+        List<Trouble> currTroubles = dataModel.getList_of_current_troubles().getTroubles();
 
         try {
             for (Trouble t : currTroubles) {

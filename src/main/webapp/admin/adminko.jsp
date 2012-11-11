@@ -2,8 +2,8 @@
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
+<%@ page import="ru.blackart.dsi.infopanel.model.DataModel" %>
 <%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
-<%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -26,7 +26,7 @@
     ArrayList<Hostgroup> hostgroups = (ArrayList<Hostgroup>) config.getServletContext().getAttribute("hostgroups");
     ArrayList<Hoststatus> hoststatuses = (ArrayList<Hoststatus>) config.getServletContext().getAttribute("hoststatuses");
     ArrayList<Region> regions = (ArrayList<Region>) config.getServletContext().getAttribute("regions");
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
     AccessService accessService = AccessService.getInstance();
     Collection<Group> groups = accessService.getGroups().values();
 
@@ -367,7 +367,7 @@
     <div id="v_tabs">
         <ul>
             <%
-                synchronized (dataModelConstructor) {
+                synchronized (dataModel) {
                     if (accessUserObject != null) {
                         Menu general_menu = accessUserObject.getMenu();
                         for (MenuItem menuGroup : general_menu.getItems()) {
@@ -376,7 +376,7 @@
                             } else {
                                 %><h3><%=menuGroup.getName()%></h3><div><%
                                 for (MenuItem menuItem : menuGroup.getItems()) {
-                                    TroubleList troubleList = dataModelConstructor.getTroubleListForName(menuItem.getName().toLowerCase());
+                                    TroubleList troubleList = dataModel.getTroubleListForName(menuItem.getName().toLowerCase());
                                     String count_trobles = " ";
                                     if (troubleList != null) {
                                             if (troubleList.getName().equals("current")) {

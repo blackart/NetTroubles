@@ -223,6 +223,7 @@ $(document).ready(function() {
                     $.ajax({
                         url : "/controller",
                         type : "POST",
+                        dataType: "json",
                         data : {
                             cmd: "deleteTrouble",
                             id: $id,
@@ -244,8 +245,8 @@ $(document).ready(function() {
                         },
                         success: function(data) {
                             var $status_crm = $(data).find("status").text();
-                            if ($status_crm == "false") {
-                                alert($(data).find("message").text());
+                            if (!Boolean.valueOf(data.status)) {
+                                alert(data.message);
                             }
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                             $.fn.update_trouble_counters();

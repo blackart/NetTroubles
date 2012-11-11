@@ -5,11 +5,10 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import ru.blackart.dsi.infopanel.SessionFactorySingle;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
-import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Hoststatus;
 import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -57,13 +56,13 @@ public class SearchingForStatus implements Searching {
     }
 
     public List<Devcapsule> find() {
-        DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+        DataModel dataModel = DataModel.getInstance();
 
         if (hoststatuses.size() > 0) {
             List<Trouble> troubles = new ArrayList<Trouble>();
-            troubles.addAll(dataModelConstructor.getTroubleListForName("current").getTroubles());
-            troubles.addAll(dataModelConstructor.getTroubleListForName("complete").getTroubles());
-            troubles.addAll(dataModelConstructor.getTroubleListForName("waiting_close").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("current").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("complete").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("waiting_close").getTroubles());
 
             List<Devcapsule> devc_find = new ArrayList<Devcapsule>();
 

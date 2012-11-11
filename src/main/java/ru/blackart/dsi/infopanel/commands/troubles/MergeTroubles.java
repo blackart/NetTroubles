@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.crm.CrmTrouble;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.*;
-import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,7 +15,7 @@ import java.util.*;
 
 public class MergeTroubles extends AbstractCommand {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    private DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    private DataModel dataModel = DataModel.getInstance();
     private TroubleService troubleService = TroubleService.getInstance();
     private TroubleListService troubleListService = TroubleListService.getInstance();
 
@@ -69,35 +69,35 @@ public class MergeTroubles extends AbstractCommand {
         for (String anIds_arr : ids) {
             boolean find = false;
 
-            for (Trouble t : dataModelConstructor.getList_of_need_actual_problem().getTroubles()) {
+            for (Trouble t : dataModel.getList_of_need_actual_problem().getTroubles()) {
                 if (t.getId() == Integer.valueOf(anIds_arr)) {
-                    troubles_troubleList.put(t, dataModelConstructor.getList_of_need_actual_problem());
+                    troubles_troubleList.put(t, dataModel.getList_of_need_actual_problem());
                     find = true;
                 }
                 if (find) break;
             }
             if (!find) {
-                for (Trouble t : dataModelConstructor.getList_of_current_troubles().getTroubles()) {
+                for (Trouble t : dataModel.getList_of_current_troubles().getTroubles()) {
                     if (t.getId() == Integer.valueOf(anIds_arr)) {
-                        troubles_troubleList.put(t, dataModelConstructor.getList_of_current_troubles());
+                        troubles_troubleList.put(t, dataModel.getList_of_current_troubles());
                         find = true;
                     }
                     if (find) break;
                 }
             }
             if (!find) {
-                for (Trouble t : dataModelConstructor.getList_of_waiting_close_troubles().getTroubles()) {
+                for (Trouble t : dataModel.getList_of_waiting_close_troubles().getTroubles()) {
                     if (t.getId() == Integer.valueOf(anIds_arr)) {
-                        troubles_troubleList.put(t, dataModelConstructor.getList_of_waiting_close_troubles());
+                        troubles_troubleList.put(t, dataModel.getList_of_waiting_close_troubles());
                         find = true;
                     }
                     if (find) break;
                 }
             }
             if (!find) {
-                for (Trouble t : dataModelConstructor.getList_of_complete_troubles().getTroubles()) {
+                for (Trouble t : dataModel.getList_of_complete_troubles().getTroubles()) {
                     if (t.getId() == Integer.valueOf(anIds_arr)) {
-                        troubles_troubleList.put(t, dataModelConstructor.getList_of_complete_troubles());
+                        troubles_troubleList.put(t, dataModel.getList_of_complete_troubles());
                         find = true;
                     }
                     if (find) break;
@@ -130,7 +130,7 @@ public class MergeTroubles extends AbstractCommand {
         List<Devcapsule> devc = new ArrayList<Devcapsule>();
         List<Comment> comments = new ArrayList<Comment>();
 
-        synchronized (dataModelConstructor) {
+        synchronized (dataModel) {
 
             Properties troubles_troubleList = this.checkTroubles(ids_arr);
 
@@ -200,25 +200,25 @@ public class MergeTroubles extends AbstractCommand {
 
                 TroubleList troubleList = null;
                 if (current) {
-                    troubleList = dataModelConstructor.getList_of_current_troubles();
+                    troubleList = dataModel.getList_of_current_troubles();
                     current = true;
                     wait = false;
                     need_actual = false;
                     complete = false;
                 } else if (wait) {
-                    troubleList = dataModelConstructor.getList_of_waiting_close_troubles();
+                    troubleList = dataModel.getList_of_waiting_close_troubles();
                     current = false;
                     wait = true;
                     need_actual = false;
                     complete = false;
                 } else if (need_actual) {
-                    troubleList = dataModelConstructor.getList_of_need_actual_problem();
+                    troubleList = dataModel.getList_of_need_actual_problem();
                     current = false;
                     wait = false;
                     need_actual = true;
                     complete = false;
                 } else if (complete) {
-                    troubleList = dataModelConstructor.getList_of_complete_troubles();
+                    troubleList = dataModel.getList_of_complete_troubles();
                     current = false;
                     wait = false;
                     need_actual = false;

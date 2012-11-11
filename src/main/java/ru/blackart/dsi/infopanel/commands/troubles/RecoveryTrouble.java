@@ -3,26 +3,26 @@ package ru.blackart.dsi.infopanel.commands.troubles;
 import ru.blackart.dsi.infopanel.beans.Trouble;
 import ru.blackart.dsi.infopanel.beans.TroubleList;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.crm.CrmTrouble;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
-import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 public class RecoveryTrouble extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
     TroubleListService troubleListService = TroubleListService.getInstance();
 
     @Override
     public String execute() throws Exception {
-        synchronized (dataModelConstructor) {
+        synchronized (dataModel) {
             int id = Integer.valueOf(this.getRequest().getParameter("id"));
 
-            Trouble trouble = dataModelConstructor.getTroubleForId(id);
+            Trouble trouble = dataModel.getTroubleForId(id);
 
-            TroubleList troubleListTarget = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
-            TroubleList troubleListSource = dataModelConstructor.getTroubleListForTrouble(trouble);
+            TroubleList troubleListTarget = dataModel.getTargetTroubleListForTrouble(trouble);
+            TroubleList troubleListSource = dataModel.getTroubleListForTrouble(trouble);
 
-            dataModelConstructor.moveTroubleList(trouble, troubleListSource, troubleListTarget);
+            dataModel.moveTroubleList(trouble, troubleListSource, troubleListTarget);
 
             if ((!trouble.getClose()) && (trouble.getCrm())) {
                 CrmTrouble crmTrouble = new CrmTrouble(trouble, "3");

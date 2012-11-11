@@ -3,9 +3,9 @@ package ru.blackart.dsi.infopanel.utils.searching;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Device;
 import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +25,12 @@ public class SearchingForName implements Searching {
 
     public List<Devcapsule> find() {
         if (device != null) {
-            DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+            DataModel dataModel = DataModel.getInstance();
 
             List<Trouble> troubles = new ArrayList<Trouble>();
-            troubles.addAll(dataModelConstructor.getTroubleListForName("current").getTroubles());
-            troubles.addAll(dataModelConstructor.getTroubleListForName("complete").getTroubles());
-            troubles.addAll(dataModelConstructor.getTroubleListForName("waiting_close").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("current").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("complete").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("waiting_close").getTroubles());
 
             List<Devcapsule> devc_find = new ArrayList<Devcapsule>();
 

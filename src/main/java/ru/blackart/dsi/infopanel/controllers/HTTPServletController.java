@@ -10,10 +10,10 @@ import ru.blackart.dsi.infopanel.beans.*;
 import ru.blackart.dsi.infopanel.commands.Command;
 import ru.blackart.dsi.infopanel.commands.FactoryCommandCommand;
 import ru.blackart.dsi.infopanel.commands.access.Login;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.AccessService;
 import ru.blackart.dsi.infopanel.services.DeviceManager;
 import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -93,7 +93,7 @@ public class HTTPServletController extends HttpServlet {
         //Devices
         DeviceManager.getInstance();
         AccessService.getInstance();
-        DataModelConstructor.getInstance();
+        DataModel.getInstance();
     }
 
     @Override
