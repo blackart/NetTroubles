@@ -66,6 +66,10 @@ public class DataModel {
             trouble.getComments();
 
             List<Devcapsule> devcapsules = trouble.getDevcapsules();
+            for (Devcapsule devcapsule : devcapsules) {
+                Device device = devcapsule.getDevice();
+                devcapsule.setDevice(deviceManager.getDevice(device));
+            }
             devcapsules.size();
 
             List<Service> services = trouble.getServices();

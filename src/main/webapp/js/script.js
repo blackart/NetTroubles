@@ -3,15 +3,6 @@ $(document).ready(function () {
 
     function ViewModel() {
         var self = this;
-        self.activeDeviceList = ko.observable(false);
-        self.showDeviceList = function() {
-            self.activeDeviceList() ? $('#devicesList').modal('hide') : $('#devicesList').modal('show');
-        };
-        self.activeCommentsList = ko.observable(false);
-        self.showCommentsList = function() {
-            self.activeCommentsList() ? $('#commentsList').modal('hide') : $('#commentsList').modal('show');
-        };
-
         self.needActualProblemTroublesCounter = ko.observable(0);
         self.waitingCloseTroublesCounter = ko.observable(0);
         self.currentTroublesCounter = ko.observable(0);
@@ -27,52 +18,44 @@ $(document).ready(function () {
             title: "",
             devcapsules: [],
             services: [],
-            timeout: "",
+            timeoutTime: "",
             actualProblem: "",
             comments: []
-        });
+        }) ;
+        self.currentTroubleTimeoutTime = ko.observable('');
+        self.currentTroubleServices = ko.observableArray([]);
         self.chosenTrouble = function (trouble) {
+            console.log(trouble);
             self.currentTroubleEditing(trouble);
-            $('#timeout').datepicker({format:'dd/mm/yyyy'});
+            $('#date-out').datepicker({format:'dd/mm/yyyy'});
+            if (trouble.services) {
+                var services = [];
+                $.each(trouble.services, function() {
+                    services.push(this.id);
+                });
+                self.currentTroubleServices(services);
+            }
+
+            if (trouble.timeout) {
+                var timeout = new Date();
+                timeout.setTime(trouble.timeout);
+                $('#date-out').datepicker('setDate', timeout);
+                self.currentTroubleTimeoutTime(timeout.getHours() - 1 + ':' + timeout.getMinutes());
+            } else {
+                self.currentTroubleTimeoutTime('');
+            }
         };
     }
 
     var viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 
-    $('#editingDialog').modal({show: false});
-    $('#editingDialog').bind('hide', function () {
-        $('#devicesList').modal('hide');
-        $('#commentsList').modal('hide');
-    });
-
-    $('#commentsList').modal({
-        show: false,
-        backdrop: false
-    }).bind('show',
-        function() {
-            $('#commentsList .modal-body').css({"height":$('#edition-dialog-body').css("height")});
-            viewModel.activeCommentsList(true);
-        }
-    ).bind('hide',
-        function() {
-            viewModel.activeCommentsList(false);
-        }
-    );
-
-    $('#devicesList').modal({
-        show:false,
-        backdrop: false
-    }).bind('show',
-        function() {
-            $('#devicesList .modal-body').css({"height":$('#edition-dialog-body').css("height")});
-            viewModel.activeDeviceList(true);
-        }
-    ).bind('hide',
-        function() {
-            viewModel.activeDeviceList(false);
-        }
-    );
+    $('#editingDialog')
+        .modal({show:false})
+        .on('hidden', function() {
+            update_trouble_counters();
+            update_troubles();
+        });
 
     function update_trouble_counters() {
         $.get(host, {cmd:"getTroubleCounters"},

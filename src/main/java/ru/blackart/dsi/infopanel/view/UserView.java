@@ -1,12 +1,40 @@
 package ru.blackart.dsi.infopanel.view;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Sergey
- * Date: 11.11.12
- * Time: 1:04
- * To change this template use File | Settings | File Templates.
- */
 public class UserView {
+    private int id;
+    private String login;
+    private Boolean block;
+    private String fio;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public Boolean getBlock() {
+        return block;
+    }
+
+    public void setBlock(Boolean block) {
+        this.block = block;
+    }
+
+    public String getFio() {
+        return fio;
+    }
+
+    public void setFio(String fio) {
+        this.fio = fio;
+    }
 }
