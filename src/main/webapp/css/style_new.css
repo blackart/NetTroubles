@@ -12,32 +12,45 @@
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    cursor: pointer;
     padding: 4px;
 }
 
 .trouble-entry input {
-    margin: 0 0 0 10px;
+    margin: 4px 0 0 10px;
+    display: inline-block;
 }
 
 .trouble-entry div {
-    margin: 0 0 0 32px;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.trouble-entry span {
+.trouble-entry .trouble-title {
     color: #08C;
     margin-left: 10px;
+    display: inline-block;
+    width: 60%;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
-.trouble-entry span:hover {
+.trouble-entry .right-panel {
+    margin: 0 10px 0 0;
+}
+
+.trouble-entry .right-panel span {
+    display: inline-block;
+}
+
+.trouble-entry .trouble-title:hover {
     color: #005580;
 }
 
-.trouble-entry .description span {
-    color: #b9b9b9;
+.date-and-time-label {
+    padding: 4px 0 0 0;
 }
 
-.datepicker {
+.picker {
     z-index: 1051;
 }
 

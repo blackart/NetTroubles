@@ -11,6 +11,7 @@ deleteMainFilter=ru.blackart.dsi.infopanel.commands.filters.mainDeviceFilter.Del
 #troubles
 getLogEntry=ru.blackart.dsi.infopanel.commands.troubles.GetLogEntry
 editTroubleOfCurrentTroubleList=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCurrentTroubleList
+editTroubleOfCurrentTroubleListNew=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCurrentTroubleListNew
 editTroubleOfCompleteTroubleList=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCompleteTroubleList
 #mergeTroubles=ru.blackart.dsi.infopanel.commands.troubles.MergeTroublesEvoEvo
 mergeTroubles=ru.blackart.dsi.infopanel.commands.troubles.MergeTroubles

@@ -1,5 +1,6 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
+import com.google.gson.Gson;
 import ru.blackart.dsi.infopanel.beans.Service;
 import ru.blackart.dsi.infopanel.beans.Trouble;
 import ru.blackart.dsi.infopanel.beans.User;
@@ -8,6 +9,7 @@ import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.ServiceService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.DateStr;
+import ru.blackart.dsi.infopanel.view.TroubleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,10 @@ public class EditTroubleOfCurrentTroubleList extends AbstractCommand {
     ServiceService serviceService = ServiceService.getInstance();
 
     public String execute() throws Exception {
+        String troubleJSON = this.getRequest().getParameter("trouble");
+
+        Gson gson = new Gson();
+        TroubleView troubleView  = gson.fromJson(troubleJSON, TroubleView.class);
         /*-------------------------------------------------------------------------------------------*/
         String[] services = null;
         String services_str = this.getRequest().getParameter("service").trim().replace(" ", "");

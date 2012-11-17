@@ -8,4 +8,8 @@ package ru.blackart.dsi.infopanel.view;
  * To change this template use File | Settings | File Templates.
  */
 public class CommentView {
+    private boolean crm;
+    private String text;
+    private String time;
+    private UserView author;
 }

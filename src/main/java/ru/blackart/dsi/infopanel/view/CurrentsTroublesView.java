@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CurrentsTroublesViewController {
-    private static CurrentsTroublesViewController currentsTroublesViewController;
+public class CurrentsTroublesView {
+    private static CurrentsTroublesView currentsTroublesView;
     private SimpleDateFormat dateFormat = new SimpleDateFormat();
     private TroubleListView current = new TroubleListView();
     private TroubleListView wait = new TroubleListView();
@@ -66,14 +66,14 @@ public class CurrentsTroublesViewController {
         this.transformTroubleList(actual, this.actual);
     }
 
-    public static CurrentsTroublesViewController getInstance() {
-        if (currentsTroublesViewController == null) {
-            currentsTroublesViewController = new CurrentsTroublesViewController();
+    public static CurrentsTroublesView getInstance() {
+        if (currentsTroublesView == null) {
+            currentsTroublesView = new CurrentsTroublesView();
         }
-        return currentsTroublesViewController;
+        return currentsTroublesView;
     }
 
-    public CurrentsTroublesViewController() {
+    public CurrentsTroublesView() {
 
     }
 

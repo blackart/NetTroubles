@@ -2,27 +2,24 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Административная панель</title>
+    <title>Administrate tool</title>
     <link rel="shortcut icon" href="">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
-    <!--<META HTTP-EQUIV="REFRESH" CONTENT="600">-->
 
     <!-- jQuery -->
     <script type="text/javascript" src="../js/jQuery/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.10.custom.min.js"></script>
     <!-- Custom Scrollbar -->
-    <!--<script type="text/javascript" src="../js/customScrollbar/jquery.mCustomScrollbar.min.js"></script>-->
-    <!--<script type="text/javascript" src="../js/customScrollbar/jquery.mousewheel.min.js"></script>-->
-    <!--<link rel="stylesheet" type="text/css" href="../js/customScrollbar/jquery.mCustomScrollbar.css"/>-->
     <!-- bootstrap -->
     <script type="text/javascript" src="../js/bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="../js/bootstrap/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../js/bootstrap/js/bootstrap-timepicker.js"></script>
     <!-- bootstrap css -->
     <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/datepicker.css"/>
-    <!--<link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap-responsive.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/timepicker.css"/>
     <!--konockout-->
     <script type="text/javascript" src="../js/knockout/knockout-2.1.0.js"></script>
     <!--page script-->
@@ -31,14 +28,13 @@
     <link rel="stylesheet" type="text/css" href="../css/style_new.css"/>
 </head>
 <body>
-
-<div id="editingDialog" class="modal hide edition-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="editingDialog" class="modal hide edition-dialog" tabindex="-1" role="dialog" aria-hidden="true" data-bind="with: troubleForEditing">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Editing information about the trouble</h3>
     </div>
     <div class="modal-body container-fluid" id="edition-dialog-body">
-        <div class="tabbable" data-bind="with: currentTroubleEditing"> <!-- Only required for left/right tabs -->
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#edit-dialog-general" data-toggle="tab">General</a></li>
                 <li><a href="#edit-dialog-devices" data-toggle="tab">Devices</a></li>
@@ -54,21 +50,20 @@
                         </div>
                         <div class="control-group">
                             <div class="caption">Services</div>
-                            <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: $parent.currentTroubleServices"></select>
+                            <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: services"></select>
                         </div>
                         <div class="control-group">
                             <div class="caption">Time to resolve the problem</div>
-                            <div class="form-inline">
-                                <div class="span6">
-                                    <span>Date:</span>
-                                    <input type="text" id="date-out" class="span10" placeholder="when resolve the problem?">
-                                </div>
-
-                                <div class="span6 pull-right">
-                                    <span>Time:</span>
-                                    <input type="text" id="time-out" class="span10" data-bind="value: $parent.currentTroubleTimeoutTime" placeholder="when resolve the problem?">
-                                </div>
-                            </div>
+                            <span class="row-fluid form-inline">
+                                <span class="span6">
+                                    <span class="span1 date-and-time-label">Date:</span>
+                                    <span class="span11"><input type="text" class="span12 picker" id="date-timeout" data-date-format="dd/mm/yyyy" placeholder="when solved the problem?" data-bind="value: date"></span>
+                                </span>
+                                <span class="span6">
+                                    <span class="span1 date-and-time-label">Time:</span>
+                                    <span class="span11"><input type="text" class="span12 picker" id="time-timeout" placeholder="the time when the problem will be solved?" data-bind="value: time"></span>
+                                </span>
+                            </span>
                         </div>
                         <div class="control-group">
                             <div class="caption">Actual problem</div>
@@ -80,20 +75,20 @@
                 <div class="tab-pane" id="edit-dialog-devices">
                     <div class="container-fluid device-list">
                         <div data-bind="foreach: devcapsules">
-                            <div data-bind="with: device" class="container-fluid device-block">
+                            <div class="container-fluid device-block">
                                 <div class="row">
-                                    <span class="badge" data-bind="text: name"></span>
+                                    <span class="badge" data-bind="text: device.name"></span>
                                     <span data-bind="text: $parent.complete ? 'up' : 'down', attr: {class: $parent.complete ? 'label label-success' : 'label label-important'}"></span>
                                 </div>
                                 <dl class="dl-horizontal">
                                     <dt>Time down: </dt>
-                                    <dd data-bind="text: $parent.timedown"></dd>
-                                    <div data-bind="visible: $parent.timeup">
+                                    <dd data-bind="text: timedown"></dd>
+                                    <div data-bind="visible: timeup">
                                         <dt>Time up: </dt>
-                                        <dd data-bind="text: $parent.timeup"></dd>
+                                        <dd data-bind="text: timeup"></dd>
                                     </div>
                                     <dt>Description: </dt>
-                                    <dd data-bind="text: description"></dd>
+                                    <dd data-bind="text: device.description"></dd>
                                 </dl>
                             </div>
                         </div>
@@ -121,8 +116,8 @@
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn">Save changes</button>
-        <button class="btn btn-primary">Send to SRM</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true" data-bind="click: $parent.saveEditionTrouble">Save changes</button>
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Send to SRM</button>
     </div>
 </div>
 
@@ -237,17 +232,30 @@
 
             <h5 data-bind="visible: waitingCloseTroubles().length > 0">Send it CRM:</h5>
 
-            <div id="wait" data-bind="foreach: waitingCloseTroubles" data-toggle="modal" data-target="#editingDialog">
+            <div id="wait" data-bind="foreach: waitingCloseTroubles">
                 <div class="trouble-entry">
-                    <input type="checkbox"/><span data-bind="text: title"></span>
+                    <div>
+                        <input type="checkbox"/>
+                    </div>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.selectTrouble" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span data-bind="visible: crm" class="label label-info pull-right crm">crm</span>
                 </div>
             </div>
 
             <h5 data-bind="visible: currentTroubles().length > 0">Current troubles:</h5>
 
-            <div id="current" data-bind="foreach: currentTroubles" data-toggle="modal" data-target="#editingDialog">
-                <div class="trouble-entry" data-bind="click: $parent.chosenTrouble">
-                    <input type="checkbox"/><span data-bind="text: title"></span>
+            <div id="current" data-bind="foreach: currentTroubles">
+                <div class="trouble-entry">
+                    <div>
+                        <input type="checkbox"/>
+                    </div>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span class="right-panel pull-right">
+                        <span data-bind="visible: timeToResolve() != '-2' && timeToResolve() != '-1', text: timeToResolve, attr: {class: 'label label-success'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-2', text: 'set resolving time', attr: {class: 'label label-warning'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-1', text: 'update time resolving', attr: {class: 'label label-important'}"></span>
+                        <span data-bind="visible: crm" class="label label-info">crm</span>
+                    </span>
                 </div>
             </div>
         </div>

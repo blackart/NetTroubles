@@ -1,7 +1,5 @@
 package ru.blackart.dsi.infopanel.view;
 
-import ru.blackart.dsi.infopanel.beans.Service;
-
 import java.util.List;
 
 public class TroubleView {
@@ -13,7 +11,7 @@ public class TroubleView {
     private String date_out;
     private UserView author;
     private List<DevcapsuleView> devcapsules;
-    private List<Service> services;
+    private int[] services;
     private Boolean close;
     private Boolean crm;
     private List<CommentView> comments;
@@ -82,11 +80,11 @@ public class TroubleView {
         this.devcapsules = devcapsules;
     }
 
-    public List<Service> getServices() {
+    public int[] getServices() {
         return services;
     }
 
-    public void setServices(List<Service> services) {
+    public void setServices(int[] services) {
         this.services = services;
     }
 

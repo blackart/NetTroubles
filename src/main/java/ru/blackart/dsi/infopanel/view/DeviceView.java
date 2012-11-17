@@ -3,14 +3,12 @@ package ru.blackart.dsi.infopanel.view;
 /**
  * Created with IntelliJ IDEA.
  * User: Sergey
- * Date: 11.11.12
- * Time: 18:41
+ * Date: 17.11.12
+ * Time: 17:26
  * To change this template use File | Settings | File Templates.
  */
-public class DevcapsuleView {
+public class DeviceView {
     private int id;
-    private DeviceView device;
-    private String timeup;
-    private String timedown;
-    private boolean complete;
+    private String name;
+    private String description;
 }
