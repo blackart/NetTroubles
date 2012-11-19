@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    var host = "http://localhost:8080/controller";
+    var host = "/controller";
 
     function twoChar(param) {
         return param.toString().length == 1 ? "0" + param : param;
     }
-    
+
     function getRightTimeFormat(timestamp) {
         var date = new Date();
         date.setTime(timestamp);
@@ -12,7 +12,7 @@ $(document).ready(function () {
         return twoChar(date.getDate()) + "/" +
             twoChar(date.getMonth() + 1) + "/" +
             twoChar(date.getFullYear()) + " " +
-            twoChar(date.getHours() - 1) + ":" +
+            twoChar(date.getHours()) + ":" +
             twoChar(date.getMinutes()) + ":" +
             twoChar(date.getSeconds());
     }
@@ -161,8 +161,6 @@ $(document).ready(function () {
                 }
             });
         };
-
-
     }
 
     var viewModel = new ViewModel();
@@ -195,6 +193,10 @@ $(document).ready(function () {
     var refreshData = setInterval(function() {
         getJSONData()
     }, 30000);
+
+    $("#refesh-page").click(function() {
+        getJSONData();
+    });
 
     function update_trouble_counters() {
         $.get(host, {cmd:"getTroubleCounters"},

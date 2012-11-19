@@ -11,7 +11,6 @@
     <!-- jQuery -->
     <script type="text/javascript" src="../js/jQuery/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.10.custom.min.js"></script>
-    <!-- Custom Scrollbar -->
     <!-- bootstrap -->
     <script type="text/javascript" src="../js/bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="../js/bootstrap/js/bootstrap-datepicker.js"></script>
@@ -53,7 +52,7 @@
                             <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: services"></select>
                         </div>
                         <div class="control-group">
-                            <div class="caption">Time to resolve the problem</div>
+                            <div class="caption">Time to solve the problem</div>
                             <span class="row-fluid form-inline">
                                 <span class="span6">
                                     <span class="span1 date-and-time-label">Date:</span>
@@ -204,18 +203,7 @@
                     </form>
                     <div class="nav-collapse control-panel">
                         <form class="navbar-form pull-right">
-                            <select>
-                                <option value="1800000">30 minutes</option>
-                                <option value="1500000">25 minutes</option>
-                                <option value="1200000">20 minutes</option>
-                                <option value="900000">15 minutes</option>
-                                <option value="600000">10 minutes</option>
-                                <option value="10000">10 seconds</option>
-                                <option value="5000">5 seconds</option>
-                            </select>
-                            <button type="button" class="btn">Set interval</button>
-                            <button type="button" class="btn">Start refresh</button>
-                            <button type="button" class="btn">Refresh</button>
+                            <button type="button" class="btn" id="refesh-page">Refresh</button>
                         </form>
                     </div>
                 </div>
@@ -252,8 +240,8 @@
                     <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
                     <span class="right-panel pull-right">
                         <span data-bind="visible: timeToResolve() != '-2' && timeToResolve() != '-1', text: timeToResolve, attr: {class: 'label label-success'}"></span>
-                        <span data-bind="visible: timeToResolve() == '-2', text: 'set resolving time', attr: {class: 'label label-warning'}"></span>
-                        <span data-bind="visible: timeToResolve() == '-1', text: 'update time resolving', attr: {class: 'label label-important'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-2', text: 'set solving time', attr: {class: 'label label-warning'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-1', text: 'update solving time', attr: {class: 'label label-important'}"></span>
                         <span data-bind="visible: crm" class="label label-info">crm</span>
                     </span>
                 </div>
@@ -266,7 +254,7 @@
 
 <!--------------------------------------------------------------------------------------------------------------------->
 
-<!--<footer>
+<footer>
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -274,7 +262,7 @@
             </div>
         </div>
     </div>
-</footer>-->
+</footer>
 
 </body>
 </html>
