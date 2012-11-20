@@ -7,6 +7,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
+    <!--<META HTTP-EQUIV="REFRESH" CONTENT="600">-->
 
     <!-- jQuery -->
     <script type="text/javascript" src="../js/jQuery/js/jquery-1.7.2.min.js"></script>
@@ -43,26 +44,31 @@
 
                 <div class="tab-pane active row-fluid" id="edit-dialog-general">
                     <div class="span12 form-horizontal" id="main-column">
+                        <span data-bind="with: $parent.errorAlert">
+                            <div class="alert alert-block alert-error" data-bind="visible: show">
+                                <strong>Warning!</strong> <span data-bind="text: message"></span>
+                            </div>
+                        </span>
                         <div class="control-group">
                             <div class="caption">Title</div>
                             <input type="text" class="span12" placeholder="the title of trouble" data-bind="value: title">
-                        </div>
-                        <div class="control-group">
-                            <div class="caption">Services</div>
-                            <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: services"></select>
                         </div>
                         <div class="control-group">
                             <div class="caption">Time to solve the problem</div>
                             <span class="row-fluid form-inline">
                                 <span class="span6">
                                     <span class="span1 date-and-time-label">Date:</span>
-                                    <span class="span11"><input type="text" class="span12 picker" id="date-timeout" data-date-format="dd/mm/yyyy" placeholder="when solved the problem?" data-bind="value: date"></span>
+                                    <span class="span11"><input type="text" class="pull-right picker" id="date-timeout" data-date-format="dd/mm/yyyy" placeholder="when solved the problem?" data-bind="value: date, attr: {disabled: close}"></span>
                                 </span>
                                 <span class="span6">
                                     <span class="span1 date-and-time-label">Time:</span>
-                                    <span class="span11"><input type="text" class="span12 picker" id="time-timeout" placeholder="the time when the problem will be solved?" data-bind="value: time"></span>
+                                    <span class="span11"><input type="text" class="pull-right picker" id="time-timeout" placeholder="the time when the problem will be solved?" data-bind="value: time, attr: {disabled: close}"></span>
                                 </span>
                             </span>
+                        </div>
+                        <div class="control-group">
+                            <div class="caption">Services</div>
+                            <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: services"></select>
                         </div>
                         <div class="control-group">
                             <div class="caption">Actual problem</div>
@@ -103,20 +109,25 @@
                                     <h6 class="pull-right" data-bind="text: time"></h6>
                                 </div>
                                 <div class="row-fluid">
-                                    <div class="comment-text-container" data-bind="text: text"></div>
+                                    <div class="span12 comment-text-container" data-bind="text: text"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <span class="row-fluid input-crm-message control-group" id="control-group-add-crm-comment">
+                        <textarea class="span12" id="text-comment"></textarea>
+                        <button class="btn pull-right" id="send-comment" data-bind="click: $parent.sendComment">Send comment</button>
+                    </span>
                 </div>
 
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true" data-bind="click: $parent.saveEditionTrouble">Save changes</button>
-        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Send to SRM</button>
+        <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn" data-bind="click: $parent.deleteTrouble">Delete</button>
+        <button class="btn" data-bind="click: $parent.saveTrouble">Save</button>
+        <button class="btn btn-primary" data-bind="click: $parent.sendToCRM">Send to SRM</button>
     </div>
 </div>
 
@@ -209,24 +220,31 @@
                 </div>
             </div>
 
-            <h5 data-bind="visible: needCRMTroubles().length > 0">Enter the value of the actual problem for these
-                troubles:</h5>
+            <h5 data-bind="visible: needCRMTroubles().length > 0">Enter the value of the actual problem for these troubles:</h5>
 
-            <div id="need" data-bind="foreach: needCRMTroubles" data-toggle="modal" data-target="#editingDialog">
+            <div id="need" data-bind="foreach: needCRMTroubles">
                 <div class="trouble-entry">
-                    <input type="checkbox"/><span data-bind="text: title"></span>
+                    <div>
+                        <input type="checkbox"/>
+                    </div>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span class="right-panel pull-right">
+                        <span data-bind="visible: crm" class="label label-info crm">crm</span>
+                    </span>
                 </div>
             </div>
 
-            <h5 data-bind="visible: waitingCloseTroubles().length > 0">Send it CRM:</h5>
+            <h5 data-bind="visible: waitingCloseTroubles().length > 0">Send it to CRM:</h5>
 
             <div id="wait" data-bind="foreach: waitingCloseTroubles">
                 <div class="trouble-entry">
                     <div>
                         <input type="checkbox"/>
                     </div>
-                    <span class="trouble-title" data-bind="text: title, click: $parent.selectTrouble" data-toggle="modal" data-target="#editingDialog"></span>
-                    <span data-bind="visible: crm" class="label label-info pull-right crm">crm</span>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span class="right-panel pull-right">
+                        <span data-bind="visible: crm" class="label label-info crm">crm</span>
+                    </span>
                 </div>
             </div>
 
@@ -254,7 +272,7 @@
 
 <!--------------------------------------------------------------------------------------------------------------------->
 
-<footer>
+<!--<footer>
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -262,7 +280,7 @@
             </div>
         </div>
     </div>
-</footer>
+</footer>-->
 
 </body>
 </html>

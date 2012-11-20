@@ -5,6 +5,15 @@ $(document).ready(function () {
         return param.toString().length == 1 ? "0" + param : param;
     }
 
+    function sDecrease(a, b) { // По убыванию
+        if (a.time > b.time)
+            return -1;
+        else if (a.time < b.time)
+            return 1;
+        else
+            return 0;
+    }
+
     function getRightTimeFormat(timestamp) {
         var date = new Date();
         date.setTime(timestamp);
@@ -17,10 +26,27 @@ $(document).ready(function () {
             twoChar(date.getSeconds());
     }
 
+    function convertFormattedStringToDate(str) {
+        var exprDateFormat = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/]([2]\d{3})[ ]([0-1][0-9]|2[0-4])[:]([0-5][0-9])[:]([0-5][0-9])/;
+        var date;
+        if (exprDateFormat.exec(str)) {
+            date = new Date();
+            var dateParts = str.replace(exprDateFormat, "$1 $2 $3 $4 $5 $6").split(" ");
+            date.setDate(dateParts[0]);
+            date.setMonth(dateParts[1]-1);
+            date.setFullYear(dateParts[2]);
+            date.setHours(dateParts[3]);
+            date.setMinutes(dateParts[4]);
+            date.setSeconds(dateParts[5]);
+        }
+        return date;
+    }
+
     function getTimeToResolve(timestamp, now) {
         if (!timestamp) return -2;
 
-        var diffInSec = ((parseInt(timestamp) - now) / 1000) - (3600);
+        var diffInSec = ((parseInt(timestamp) - now) / 1000);
+        if (diffInSec <= 0) return -1;
 
         var days = parseInt(diffInSec / (3600 * 24));
         diffInSec = diffInSec - (days * 3600 * 24);
@@ -29,8 +55,6 @@ $(document).ready(function () {
         var minutes = parseInt(diffInSec / 60);
         diffInSec = diffInSec - (minutes * 60);
         var seconds = parseInt(diffInSec);
-
-        if ((days <= 0) && (hours <= 0) && (minutes <= 0) && (seconds <=0)) return -1;
 
         return (days == 0 ? "" : days + "d ") + twoChar(hours) + ":" + twoChar(minutes) + ":" + twoChar(seconds) + "";
     }
@@ -63,7 +87,16 @@ $(document).ready(function () {
             services: ko.observableArray([]),
             timeout: ko.observable(''),
             time: ko.observable(''),
-            date: ko.observable('')
+            date: ko.observable(''),
+            close: ko.observable(false),
+            crm: ko.observable(false)
+        });
+        self.troubleForEditing().timeoutObj = ko.computed(function() {
+            return convertFormattedStringToDate(this.troubleForEditing().timeout());
+        }, this);
+        self.errorAlert = ko.observable({
+            show: ko.observable(false),
+            message: ko.observable("")
         });
         self.mergeTimeout = ko.computed(function() {
             var time = $.trim(self.troubleForEditing().time());
@@ -73,6 +106,7 @@ $(document).ready(function () {
         self.calcTroubleForEditing = function() {
             var trouble = this;
             var troubleForEditing = self.troubleForEditing();
+            self.errorAlert().show(false);
 
             troubleForEditing.id(trouble.id);
             troubleForEditing.title(trouble.title);
@@ -84,6 +118,9 @@ $(document).ready(function () {
                 var timeout_parts = timeout.split(" ");
                 self.troubleForEditing().date(timeout_parts[0]);
                 self.troubleForEditing().time(timeout_parts[1]);
+            } else {
+                self.troubleForEditing().date("");
+                self.troubleForEditing().time("");
             }
 
             troubleForEditing.date_in = getRightTimeFormat(trouble.date_in);
@@ -111,11 +148,12 @@ $(document).ready(function () {
                 });
             }
 
-            troubleForEditing.close = trouble.close;
-            troubleForEditing.crm = trouble.crm;
+            troubleForEditing.close(trouble.close);
+            troubleForEditing.crm(trouble.crm);
 
             troubleForEditing.comments([]);
             if (trouble.comments) {
+                trouble.comments.sort(sDecrease);
                 $.each(trouble.comments, function() {
                     var comment = {};
                     comment.crm = this.crm;
@@ -125,18 +163,8 @@ $(document).ready(function () {
                     troubleForEditing.comments.push(comment);
                 });
             }
-
-            $("#date-timeout").datepicker();
-
-            $("#time-timeout").timepicker({
-                showMeridian: false,
-                minuteStep: 10,
-                disableFocus: true,
-                showSeconds: true,
-                defaultTime: 'value'
-            });
         };
-        self.saveEditionTrouble = function() {
+        self.saveTrouble = function() {
             var trouble = this;
             $.ajax({
                 url : "/controller",
@@ -144,23 +172,123 @@ $(document).ready(function () {
                 dataType: 'JSON',
                 data: {
                     cmd: "editTroubleOfCurrentTroubleListNew",
-                    "trouble": ko.toJSON(trouble)
+                    trouble: ko.toJSON(trouble)
                 },
                 beforeSend: function() {
+                    var errorAlert = self.errorAlert();
                     trouble.timeout($.trim(trouble.timeout()));
                     var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
-                    if (trouble.timeout() == "") {
-                        return true;
-                    } else if (!expr.exec(trouble.timeout())) {
+                    if (!$.trim(trouble.title())) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, enter the title of trouble.");
+                        return false;
+                    } else if (trouble.timeout() && !expr.exec(trouble.timeout())) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, enter the time of resolving problem in correct format.");
+                        return false;
+                    }
+                    errorAlert.show(false);
+                    return true;
+                },
+                success: function(data) {
+                    $('#editingDialog').modal('hide');
+                }
+            });
+        };
+        self.sendToCRM = function() {
+            var trouble = this;
+            $.ajax({
+                url : "/controller",
+                type : "POST",
+                dataType: 'JSON',
+                data: {
+                    cmd: "sendToCRMNew",
+                    trouble: ko.toJSON(trouble)
+                },
+                beforeSend: function() {
+                    var errorAlert = self.errorAlert();
+                    trouble.timeout($.trim(trouble.timeout()));
+                    var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
+                    if (!$.trim(trouble.title())) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, enter the title of trouble.");
+                        return false;
+                    } else if (trouble.services().length == 0) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, select the affected services.");
+                        return false;
+                    } else if (!trouble.timeout()) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, enter the time of resolving problem.");
+                        return false;
+                    } else if (trouble.timeout() && !expr.exec(trouble.timeout())) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, enter the time of resolving problem in correct format.");
+                        return false;
+                    } else if (getTimeToResolve(trouble.timeoutObj().getTime(), new Date().getTime()) == "-1") {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, more actual time.");
+                        return false;
+                    } else if (trouble.comments().length == 0) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, add at least one comment.");
+                        return false;
+                    }
+                    errorAlert.show(false);
+                    return true;
+                },
+                success: function(data) {
+                    $('#editingDialog').modal('hide');
+                }
+            });
+        };
+        self.deleteTrouble = function() {
+            var trouble = this;
+            $.ajax({
+                url : "/controller",
+                type : "POST",
+                dataType: 'JSON',
+                data: {
+                    cmd: "deleteTroubleNew",
+                    trouble: ko.toJSON(trouble)
+                },
+                beforeSend: function() {
+                    return true;
+                },
+                success: function(data) {
+                    $('#editingDialog').modal('hide');
+                }
+            });
+        };
+        self.sendComment = function() {
+            var trouble = this;
+            var comment = $("#text-comment").val();
+            $.ajax({
+                url : "/controller",
+                type : "POST",
+                dataType: 'JSON',
+                data: {
+                    cmd: "addCommentNew",
+                    id: this.id(),
+                    text: comment
+                },
+                beforeSend: function() {
+                    if (!$.trim(comment)) {
+                        $("#control-group-add-crm-comment").addClass("error");
+                        $("#text-comment").popover('show');
                         return false;
                     }
                     return true;
                 },
                 success: function(data) {
+                    $("#text-comment").val("");
+                    data.time = getRightTimeFormat(data.time);
+                    viewModel.troubleForEditing().comments.push(data);
+                    viewModel.troubleForEditing().comments.sort(sDecrease);
                     getJSONData();
                 }
             });
-        };
+        }
     }
 
     var viewModel = new ViewModel();
@@ -170,11 +298,40 @@ $(document).ready(function () {
         viewModel.timeNow(new Date().getTime());
     }, 1000);
 
+    $("#date-timeout").datepicker();
+
+    $("#time-timeout").timepicker({
+        showMeridian: false,
+        minuteStep: 10,
+        disableFocus: true,
+        showSeconds: true,
+        defaultTime: 'value'
+    });
+
     $('#editingDialog')
         .modal({show:false})
         .on('hidden', function() {
+            $("#text-comment").popover('hide');
+            getJSONData();
             update_trouble_counters();
         });
+
+    $("#send-comment").click(function() {
+        $("#text-comment").val();
+    });
+
+    $("#text-comment").popover({
+        placement: "top",
+        html: true,
+        content: "Please, enter the comment",
+        title: "<h5 class='text-error'>Comment error</h5>",
+        trigger: "manual"
+    });
+
+    $("#text-comment").bind("focus", function() {
+        $("#control-group-add-crm-comment").removeClass("error");
+        $(this).popover('hide');
+    });
 
     function getJSONData() {
         $.get(host, {cmd:"getCurrentTroubleListGroup"},

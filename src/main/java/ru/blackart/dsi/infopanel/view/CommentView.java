@@ -1,15 +1,40 @@
 package ru.blackart.dsi.infopanel.view;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Sergey
- * Date: 11.11.12
- * Time: 18:42
- * To change this template use File | Settings | File Templates.
- */
 public class CommentView {
     private boolean crm;
     private String text;
     private String time;
     private UserView author;
+
+    public boolean isCrm() {
+        return crm;
+    }
+
+    public void setCrm(boolean crm) {
+        this.crm = crm;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public UserView getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserView author) {
+        this.author = author;
+    }
 }

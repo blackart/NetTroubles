@@ -52,31 +52,41 @@
 
 .picker {
     z-index: 1051;
+    width: 90%;
 }
 
 .modal-body {
-    max-height: 550px;
+    max-height: 600px;
 }
 
 .tab-pane {
-    height: 400px;
+    height: 425px;
 }
 
 .edition-dialog {
     width: 60%;
     left: 20%;
     margin: auto auto auto auto;
-    top: 10%;
+    top: 5%;
 }
 
 .device-list {
     overflow: auto;
-    height: 370px;
+    height: 425px;
 }
 
 .comments-list {
     overflow: auto;
-    height: 370px;
+    height: 300px;
+}
+
+.input-crm-message {
+
+}
+
+.input-crm-message textarea {
+    margin-top: 10px;
+    height: 75px;
 }
 
 .device-block {
@@ -100,5 +110,10 @@
 }
 
 .comment-text-container {
+    display: block;
     margin: 0 0 5px 20px;
+}
+
+.popover {
+    z-index: 100500;
 }
