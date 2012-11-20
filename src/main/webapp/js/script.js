@@ -225,9 +225,9 @@ $(document).ready(function () {
                         errorAlert.show(true);
                         errorAlert.message("Please, enter the time of resolving problem in correct format.");
                         return false;
-                    } else if (getTimeToResolve(trouble.timeoutObj().getTime(), new Date().getTime()) == "-1") {
+                    } else if (!trouble.close() && getTimeToResolve(trouble.timeoutObj().getTime(), new Date().getTime()) == "-1") {
                         errorAlert.show(true);
-                        errorAlert.message("Please, more actual time.");
+                        errorAlert.message("Please, more actual resolving time.");
                         return false;
                     } else if (trouble.comments().length == 0) {
                         errorAlert.show(true);
