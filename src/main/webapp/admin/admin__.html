@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Administrate tool</title>
+    <link rel="shortcut icon" href="">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
+    <!--<META HTTP-EQUIV="REFRESH" CONTENT="600">-->
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.10.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script type="text/javascript" src="../js/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="../js/bootstrap/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../js/bootstrap/js/bootstrap-timepicker.js"></script>
+    <!-- bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/datepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/timepicker.css"/>
+    <!--konockout-->
+    <script type="text/javascript" src="../js/knockout/knockout-2.1.0.js"></script>
+    <!--page script-->
+    <script type="text/javascript" src="../js/script.js"></script>
+    <!--page style-->
+    <link rel="stylesheet" type="text/css" href="../css/style_new.css"/>
+</head>
+<body>
+<div id="editingDialog" class="modal hide edition-dialog" tabindex="-1" role="dialog" aria-hidden="true" data-bind="with: troubleForEditing">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Editing information about the trouble</h3>
+    </div>
+    <div class="modal-body container-fluid" id="edition-dialog-body">
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#edit-dialog-general" data-toggle="tab">General</a></li>
+                <li><a href="#edit-dialog-devices" data-toggle="tab">Devices</a></li>
+                <li><a href="#edit-dialog-comments" data-toggle="tab">Comments</a></li>
+            </ul>
+            <div class="tab-content">
+
+                <div class="tab-pane active row-fluid" id="edit-dialog-general">
+                    <div class="span12 form-horizontal" id="main-column">
+                        <span data-bind="with: $parent.errorAlert">
+                            <div class="alert alert-block alert-error" data-bind="visible: show">
+                                <strong>Warning!</strong> <span data-bind="text: message"></span>
+                            </div>
+                        </span>
+                        <div class="control-group">
+                            <div class="caption">Title</div>
+                            <input type="text" class="span12" placeholder="the title of trouble" data-bind="value: title">
+                        </div>
+                        <div class="control-group">
+                            <div class="caption">Time to solve the problem</div>
+                            <span class="row-fluid form-inline">
+                                <span class="span6">
+                                    <span class="span1 date-and-time-label">Date:</span>
+                                    <span class="span11"><input type="text" class="pull-right picker" id="date-timeout" data-date-format="dd/mm/yyyy" placeholder="when solved the problem?" data-bind="value: date, attr: {disabled: close}"></span>
+                                </span>
+                                <span class="span6">
+                                    <span class="span1 date-and-time-label">Time:</span>
+                                    <span class="span11"><input type="text" class="pull-right picker" id="time-timeout" placeholder="the time when the problem will be solved?" data-bind="value: time, attr: {disabled: close}"></span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="control-group">
+                            <div class="caption">Services</div>
+                            <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: services"></select>
+                        </div>
+                        <div class="control-group">
+                            <div class="caption">Actual problem</div>
+                            <input type="text" class="span12" placeholder="what's really happened?" data-bind="value: actualProblem">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="edit-dialog-devices">
+                    <div class="container-fluid device-list">
+                        <div data-bind="foreach: devcapsules">
+                            <div class="container-fluid device-block">
+                                <div class="row">
+                                    <span class="badge" data-bind="text: device.name"></span>
+                                    <span data-bind="text: $parent.complete ? 'up' : 'down', attr: {class: $parent.complete ? 'label label-success' : 'label label-important'}"></span>
+                                </div>
+                                <dl class="dl-horizontal">
+                                    <dt>Time down: </dt>
+                                    <dd data-bind="text: timedown"></dd>
+                                    <div data-bind="visible: timeup">
+                                        <dt>Time up: </dt>
+                                        <dd data-bind="text: timeup"></dd>
+                                    </div>
+                                    <dt>Description: </dt>
+                                    <dd data-bind="text: device.description"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="edit-dialog-comments">
+                    <div class="comments-list">
+                        <div data-bind="foreach: comments">
+                            <div class="container-fluid comment-block">
+                                <div class="row-fluid">
+                                    <h5 class="badge pull-left" data-bind="text: author.fio"></h5>
+                                    <h6 class="pull-right" data-bind="text: time"></h6>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span12 comment-text-container" data-bind="text: text"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="row-fluid input-crm-message control-group" id="control-group-add-crm-comment">
+                        <textarea class="span12" id="text-comment"></textarea>
+                        <button class="btn pull-right" id="send-comment" data-bind="click: $parent.sendComment">Send comment</button>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn" data-bind="click: $parent.deleteTrouble">Delete</button>
+        <button class="btn" data-bind="click: $parent.saveTrouble">Save</button>
+        <button class="btn btn-primary" data-bind="click: $parent.sendToCRM">Send to SRM</button>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="#">NetTroubles</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active">
+                        <a href="#">Home</a>
+                    </li>
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Contacts</a>
+                    </li>
+                </ul>
+
+                <ul class="nav pull-right">
+                    <li>
+                        <p class="navbar-text">blackart</p>
+                    </li>
+                    <li>
+                        <a href="#">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Troubles</li>
+                    <li class="active">
+                        <a href="#">Current (<span data-bind="html: currentTroublesCounter"></span>/<span
+                                data-bind="html: waitingCloseTroublesCounter"></span>/<span
+                                data-bind="html: needActualProblemTroublesCounter"></span>)</a>
+                    </li>
+                    <li><a href="#">Closed (<span data-bind="html: closedTroublesCounter">0</span>)</a></li>
+                    <li><a href="#">Trash (<span data-bind="html: trashedTroublesCounter">0</span>)</a></li>
+                    <li class="nav-header"><a href="#">Accidents</a></li>
+                    <li class="nav-header"><a href="#">Host Manager</a></li>
+                    <li class="nav-header">Filters</li>
+                    <li><a href="#">Link</a></li>
+                    <li class="nav-header">Access</li>
+                    <li><a href="#">Accounts</a></li>
+                    <li><a href="#">Groups</a></li>
+                    <li class="nav-header">Security</li>
+                    <li><a href="#">Administrate</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="span9">
+
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".control-panel">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <form class="navbar-form pull-left">
+                        <input type="checkbox" style="margin-right: 10px">
+                        <button type="button" class="btn">Merge</button>
+                    </form>
+                    <div class="nav-collapse control-panel">
+                        <form class="navbar-form pull-right">
+                            <button type="button" class="btn" id="refesh-page">Refresh</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <h5 data-bind="visible: needCRMTroubles().length > 0">Enter the value of the actual problem for these troubles:</h5>
+
+            <div id="need" data-bind="foreach: needCRMTroubles">
+                <div class="trouble-entry">
+                    <div>
+                        <input type="checkbox"/>
+                    </div>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span class="right-panel pull-right">
+                        <span data-bind="visible: crm" class="label label-info crm">crm</span>
+                    </span>
+                </div>
+            </div>
+
+            <h5 data-bind="visible: waitingCloseTroubles().length > 0">Send it to CRM:</h5>
+
+            <div id="wait" data-bind="foreach: waitingCloseTroubles">
+                <div class="trouble-entry">
+                    <div>
+                        <input type="checkbox"/>
+                    </div>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span class="right-panel pull-right">
+                        <span data-bind="visible: crm" class="label label-info crm">crm</span>
+                    </span>
+                </div>
+            </div>
+
+            <h5 data-bind="visible: currentTroubles().length > 0">Current troubles:</h5>
+
+            <div id="current" data-bind="foreach: currentTroubles">
+                <div class="trouble-entry">
+                    <div>
+                        <input type="checkbox"/>
+                    </div>
+                    <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
+                    <span class="right-panel pull-right">
+                        <span data-bind="visible: timeToResolve() != '-2' && timeToResolve() != '-1', text: timeToResolve, attr: {class: 'label label-success'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-2', text: 'set solving time', attr: {class: 'label label-warning'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-1', text: 'update solving time', attr: {class: 'label label-important'}"></span>
+                        <span data-bind="visible: crm" class="label label-info">crm</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<hr>-->
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<!--<footer>
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+
+            </div>
+        </div>
+    </div>
+</footer>-->
+
+</body>
+</html>
