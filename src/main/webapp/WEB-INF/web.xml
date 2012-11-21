@@ -75,6 +75,21 @@
         <url-pattern>/snmpc</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>AllJSP</filter-name>
+        <filter-class>ru.blackart.dsi.infopanel.filters.AdminAccess</filter-class>
+
+        <init-param>
+            <param-name>root</param-name>
+            <param-value>/ROOT</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AllJSP</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!--<session-config>
         <session-timeout>20</session-timeout>
     </session-config>-->
