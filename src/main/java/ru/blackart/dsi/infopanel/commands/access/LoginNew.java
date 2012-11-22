@@ -33,7 +33,7 @@ public class LoginNew extends AbstractCommand {
     public String execute() throws Exception {
         String answer = "";
 //        String adminURI = "/net/admin/admin.html";
-        String adminURI = "/admin";
+        String adminURI = "/admin-new";
 
         String login = getRequest().getParameter("login");
         String passwd = getRequest().getParameter("passwd");

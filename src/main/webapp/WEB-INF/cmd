@@ -3,6 +3,7 @@
 login=ru.blackart.dsi.infopanel.commands.access.Login
 loginNew=ru.blackart.dsi.infopanel.commands.access.LoginNew
 logout=ru.blackart.dsi.infopanel.commands.access.Logout
+logoutNew=ru.blackart.dsi.infopanel.commands.access.LogoutNew
 checkUser=ru.blackart.dsi.infopanel.commands.access.CheckUser
 
 #filters
