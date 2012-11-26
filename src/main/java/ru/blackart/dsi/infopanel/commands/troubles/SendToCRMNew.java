@@ -112,12 +112,12 @@ public class SendToCRMNew extends AbstractCommand {
                     }
 
                 } else {
-                    completeStatusMessage.setMessage("Информация по проблеме заполнена верно, но при отправке в CRM возникла ошибка. Сообщите об этом разработчику.");
+                    completeStatusMessage.setMessage("Have some problem with sending information to CRM. Contact to developer.");
                 }
                 completeStatusMessage.setStatus(send_to_crm);
             } else {
                 completeStatusMessage.setStatus(false);
-                completeStatusMessage.setMessage("Информация по проблеме заполнена не полностью. Проблема не отправлена в CRM.");
+                completeStatusMessage.setMessage("Incorrect information. Please, fix mistakes.");
             }
         }
 

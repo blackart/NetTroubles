@@ -13,7 +13,7 @@ $(document).ready(function () {
         else
             return 0;
     }
-    
+
     function getRightTimeFormat(timestamp) {
         var date = new Date();
         date.setTime(timestamp);
@@ -70,6 +70,19 @@ $(document).ready(function () {
         self.currentTroubles = ko.observableArray();
         self.waitingCloseTroubles = ko.observableArray();
         self.needCRMTroubles = ko.observableArray();
+        self.allTroubles = ko.observableArray();
+
+        self.modalDialog = {
+            status: ko.observable(''),
+            caption: ko.observable(''),
+            errorAlert: {
+                show: ko.observable(false),
+                message: ko.observable("")
+            }
+        };
+        self.modalDialog.errorAlert.showAlertTab = ko.computed(function() {
+            if (self.modalDialog.errorAlert.show()) $("#edition-dialog-body a:first").tab('show');
+        });
 
         self.timeNow = ko.observable(new Date().getTime());
         self.timeToResolve = ko.computed(function() {
@@ -78,7 +91,7 @@ $(document).ready(function () {
             });
         });
         self.services = ko.observableArray();
-        self.troubleForEditing = ko.observable({
+        self.troubleForEditing = {
             id: ko.observable(),
             title: ko.observable(''),
             actualProblem: ko.observable(''),
@@ -90,23 +103,22 @@ $(document).ready(function () {
             date: ko.observable(''),
             close: ko.observable(false),
             crm: ko.observable(false)
-        });
-        self.troubleForEditing().timeoutObj = ko.computed(function() {
-            return convertFormattedStringToDate(this.troubleForEditing().timeout());
+        };
+        self.troubleForEditing.timeoutObj = ko.computed(function() {
+            return convertFormattedStringToDate(this.troubleForEditing.timeout());
         }, this);
-        self.errorAlert = ko.observable({
-            show: ko.observable(false),
-            message: ko.observable("")
-        });
         self.mergeTimeout = ko.computed(function() {
-            var time = $.trim(self.troubleForEditing().time());
-            var date = $.trim(self.troubleForEditing().date());
-            self.troubleForEditing().timeout($.trim(date + " " + time));
+            var time = $.trim(self.troubleForEditing.time());
+            var date = $.trim(self.troubleForEditing.date());
+            self.troubleForEditing.timeout($.trim(date + " " + time));
         });
         self.calcTroubleForEditing = function() {
             var trouble = this;
-            var troubleForEditing = self.troubleForEditing();
-            self.errorAlert().show(false);
+            var troubleForEditing = self.troubleForEditing;
+
+            self.modalDialog.errorAlert.show(false);
+            self.modalDialog.caption("Edit information about the trouble");
+            self.modalDialog.status('edit');
 
             troubleForEditing.id(trouble.id);
             troubleForEditing.title(trouble.title);
@@ -116,30 +128,24 @@ $(document).ready(function () {
             var timeout = troubleForEditing.timeout();
             if (timeout) {
                 var timeout_parts = timeout.split(" ");
-                self.troubleForEditing().date(timeout_parts[0]);
-                self.troubleForEditing().time(timeout_parts[1]);
+                troubleForEditing.date(timeout_parts[0]);
+                troubleForEditing.time(timeout_parts[1]);
             } else {
-                self.troubleForEditing().date("");
-                self.troubleForEditing().time("");
+                troubleForEditing.date("");
+                troubleForEditing.time("");
             }
 
             troubleForEditing.date_in = getRightTimeFormat(trouble.date_in);
             troubleForEditing.date_out = trouble.date_out ? getRightTimeFormat(trouble.date_out) : "";
             troubleForEditing.author = trouble.author;
 
-            troubleForEditing.devcapsules([]);
             if (trouble.devcapsules) {
                 $.each(trouble.devcapsules, function() {
-                    var devcapsule = {};
-                    devcapsule.device = {};
-                    devcapsule.timeup = this.timeup ? getRightTimeFormat(this.timeup) : "";
-                    devcapsule.timedown = this.timedown ? getRightTimeFormat(this.timedown) : "";
-                    devcapsule.complete = this.complete;
-                    devcapsule.device.name = this.device.name;
-                    devcapsule.device.description = this.device.description;
-                    troubleForEditing.devcapsules.push(devcapsule);
+                    this.timeup = this.timeup ? getRightTimeFormat(this.timeup) : "";
+                    this.timedown = this.timedown ? getRightTimeFormat(this.timedown) : "";
                 });
             }
+            troubleForEditing.devcapsules(trouble.devcapsules ? trouble.devcapsules : []);
 
             troubleForEditing.services([]);
             if (trouble.services) {
@@ -151,18 +157,14 @@ $(document).ready(function () {
             troubleForEditing.close(trouble.close);
             troubleForEditing.crm(trouble.crm);
 
-            troubleForEditing.comments([]);
+
             if (trouble.comments) {
                 trouble.comments.sort(sDecrease);
                 $.each(trouble.comments, function() {
-                    var comment = {};
-                    comment.crm = this.crm;
-                    comment.text = this.text;
-                    comment.time = getRightTimeFormat(this.time);
-                    comment.author = this.author;
-                    troubleForEditing.comments.push(comment);
+                    this.time = getRightTimeFormat(this.time);
                 });
             }
+            troubleForEditing.comments(trouble.comments ? trouble.comments : []);
         };
         self.saveTrouble = function() {
             var trouble = this;
@@ -175,7 +177,7 @@ $(document).ready(function () {
                     trouble: ko.toJSON(trouble)
                 },
                 beforeSend: function() {
-                    var errorAlert = self.errorAlert();
+                    var errorAlert = self.modalDialog.errorAlert;
                     trouble.timeout($.trim(trouble.timeout()));
                     var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
                     if (!$.trim(trouble.title())) {
@@ -197,6 +199,7 @@ $(document).ready(function () {
         };
         self.sendToCRM = function() {
             var trouble = this;
+            var errorAlert = self.modalDialog.errorAlert;
             $.ajax({
                 url : "/controller",
                 type : "POST",
@@ -206,7 +209,6 @@ $(document).ready(function () {
                     trouble: ko.toJSON(trouble)
                 },
                 beforeSend: function() {
-                    var errorAlert = self.errorAlert();
                     trouble.timeout($.trim(trouble.timeout()));
                     var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
                     if (!$.trim(trouble.title())) {
@@ -238,7 +240,12 @@ $(document).ready(function () {
                     return true;
                 },
                 success: function(data) {
-                    $('#editingDialog').modal('hide');
+                    if (!data.status) {
+                        errorAlert.show(true);
+                        errorAlert.message(data.message);
+                    } else {
+                        $('#editingDialog').modal('hide');
+                    }
                 }
             });
         };
@@ -283,8 +290,119 @@ $(document).ready(function () {
                 success: function(data) {
                     $("#text-comment").val("");
                     data.time = getRightTimeFormat(data.time);
-                    viewModel.troubleForEditing().comments.push(data);
-                    viewModel.troubleForEditing().comments.sort(sDecrease);
+                    viewModel.troubleForEditing.comments.push(data);
+                    viewModel.troubleForEditing.comments.sort(sDecrease);
+                    getJSONData();
+                }
+            });
+        };
+        self.calcMergeTrouble = function() {
+            var devcapsules = [];
+            var comments = [];
+            var close = true;
+            var ids = [];
+
+            $.each(self.allTroubles(), function() {
+                if (this.checked()) {
+                    comments = comments.concat(this.comments);
+                    devcapsules = devcapsules.concat(this.devcapsules);
+                    close = close && this.close;
+                    ids.push(this.id);
+                }
+            });
+
+            if (ids.length > 0) {
+                $.each(comments, function() {
+                    this.time = getRightTimeFormat(this.time);
+                });
+
+                $.each(devcapsules, function() {
+                    this.timeup = this.timeup ? getRightTimeFormat(this.timeup) : "";
+                    this.timedown = this.timedown ? getRightTimeFormat(this.timedown) : "";
+                });
+
+                var trouble = self.troubleForEditing;
+
+                trouble.comments(comments.sort(sDecrease));
+                trouble.close(close);
+                trouble.devcapsules(devcapsules);
+                trouble.ids = ids;
+
+                trouble.id();
+                trouble.title('');
+                trouble.actualProblem('');
+                trouble.services([]);
+                trouble.timeout('');
+                trouble.time('');
+                trouble.date('');
+                trouble.crm(false);
+
+                self.modalDialog.errorAlert.show(false);
+                self.modalDialog.caption("Merge the selected troubles");
+                self.modalDialog.status('merge');
+
+                $('#editingDialog').modal("show");
+            }
+        };
+        self.mergeTroubles = function() {
+            var trouble = this;
+            var errorAlert = self.modalDialog.errorAlert;
+            $.ajax({
+                url : "/controller",
+                type : "POST",
+                dataType: 'JSON',
+                data: {
+                    cmd: "mergeTroublesNew",
+                    ids: ko.toJSON(trouble.ids),
+                    trouble: ko.toJSON(trouble)
+                },
+                beforeSend: function() {
+                    trouble.timeout($.trim(trouble.timeout()));
+                    var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
+                    if (!$.trim(trouble.title())) {
+                        errorAlert.show(true);
+                        errorAlert.message("Please, enter the title of trouble.");
+                        return false;
+                    }
+                    return true;
+                },
+                success: function(data) {
+                    if (!data.status) {
+                        errorAlert.message(data.message);
+                        errorAlert.show(true);
+                    } else {
+                        $('#editingDialog').modal('hide');
+                    }
+                }
+            });
+        };
+        self.stopRefreshOnChecked = function check() {
+            resetRefreshDataInterval();
+        };
+        self.checkAll = function() {
+            var allTroubles = self.allTroubles();
+            var checked = $("#checkAll").attr("checked");
+            $.each(allTroubles, function() {
+                this.checked(checked);
+            })
+        };
+        self.unmerge = function() {
+            var devc = this;
+            $.ajax({
+                url : "/controller",
+                type : "POST",
+                dataType: 'JSON',
+                data: {
+                    cmd: "unmergeTroubleNew",
+                    id_devc: this.id
+                },
+                beforeSend: function() {
+                    return true;
+                },
+                success: function(data) {
+                    var devc_arr = self.troubleForEditing.devcapsules;
+                    var index = devc_arr().indexOf(devc);
+                    devc_arr.splice(index, 1);
                     getJSONData();
                 }
             });
@@ -294,9 +412,20 @@ $(document).ready(function () {
     var viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 
-    var updateResolveTime = setInterval(function() {
-        viewModel.timeNow(new Date().getTime());
-    }, 1000);
+    var updateResolveTime;
+
+    function setUpdateResolveTimeInterval() {
+        updateResolveTime = setInterval(function() {
+            viewModel.timeNow(new Date().getTime());
+        }, 1000);
+    }
+
+    function resetUpdateResolveTimeInterval() {
+        clearInterval(updateResolveTime);
+        setUpdateResolveTimeInterval();
+    }
+
+    setUpdateResolveTimeInterval();
 
     $("#date-timeout").datepicker();
 
@@ -311,9 +440,9 @@ $(document).ready(function () {
     $('#editingDialog')
         .modal({show:false})
         .on('hidden', function() {
+            $("#checkAll").attr("checked", false);
             $("#text-comment").popover('hide');
             getJSONData();
-            update_trouble_counters();
         });
 
     $("#send-comment").click(function() {
@@ -336,36 +465,39 @@ $(document).ready(function () {
     function getJSONData() {
         $.get(host, {cmd:"getCurrentTroubleListGroup"},
             function (data) {
-                $.each(data.current.troubles, function() {
+                var allTroubles = data.wait.troubles.concat(data.need.troubles).concat(data.current.troubles);
+                $.each(allTroubles, function() {
                     if (!this.timeout)this.timeout = "";
                     this.timeToResolve = ko.observable();
+                    this.checked = ko.observable(false);
                 });
                 viewModel.currentTroubles(data.current.troubles);
                 viewModel.waitingCloseTroubles(data.wait.troubles);
                 viewModel.needCRMTroubles(data.need.troubles);
+
+                viewModel.allTroubles(allTroubles);
             }, "json"
         );
     }
 
-    var refreshData = setInterval(function() {
-        getJSONData()
-    }, 30000);
+    var refreshData;
+
+    function setRefreshDataInterval() {
+        refreshData = setInterval(function() {
+            getJSONData();
+        }, 30000);
+    }
+
+    function resetRefreshDataInterval() {
+        clearInterval(refreshData);
+        setRefreshDataInterval();
+    }
+
+    setRefreshDataInterval();
 
     $("#refesh-page").click(function() {
         getJSONData();
     });
-
-    function update_trouble_counters() {
-        $.get(host, {cmd:"getTroubleCounters"},
-            function (data) {
-                viewModel.currentTroublesCounter(data.current);
-                viewModel.waitingCloseTroublesCounter(data.waiting_close);
-                viewModel.closedTroublesCounter(data.close);
-                viewModel.trashedTroublesCounter(data.trash);
-                viewModel.needActualProblemTroublesCounter(data.need_actual_problem);
-            }, "json"
-        );
-    }
 
     (function() {
         $.get(host, {cmd:"getServices"},
@@ -376,5 +508,4 @@ $(document).ready(function () {
     })();
 
     getJSONData();
-    update_trouble_counters();
 });

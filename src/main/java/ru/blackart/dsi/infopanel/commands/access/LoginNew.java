@@ -8,7 +8,6 @@ import ru.blackart.dsi.infopanel.beans.User;
 import ru.blackart.dsi.infopanel.beans.UserSettings;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.services.AccessService;
-import ru.blackart.dsi.infopanel.utils.message.CompleteStatusMessage;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -31,17 +30,13 @@ public class LoginNew extends AbstractCommand {
 
     @Override
     public String execute() throws Exception {
-        String answer = "";
-//        String adminURI = "/net/admin/admin.html";
-        String adminURI = "/admin-new";
+        String adminURI = "/admin/current/";
 
         String login = getRequest().getParameter("login");
         String passwd = getRequest().getParameter("passwd");
 
         synchronized (accessService) {
             User user = accessService.getUser(login);
-
-            CompleteStatusMessage completeStatusMessage = new CompleteStatusMessage();
 
             if (user == null) {
                 if (login.equals("system")) {

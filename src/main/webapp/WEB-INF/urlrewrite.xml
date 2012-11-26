@@ -33,12 +33,27 @@
         <to>/test/status/</to>
     </outbound-rule>
 
-    <class-rule class="ru.blackart.dsi.infopanel.filters.AdminHtmlPageAccessRule" />
+    <!--<class-rule class="ru.blackart.dsi.infopanel.filters.AdminHtmlPageAccessRule" />-->
     <class-rule class="ru.blackart.dsi.infopanel.filters.AdminURLAccessRule" />
 
     <rule>
         <from>^/admin(/)?$</from>
         <to>/admin/adminko.jsp</to>
+    </rule>
+
+    <rule>
+        <from>^/admin/current(/)?$</from>
+        <to>/admin/current.html</to>
+    </rule>
+
+    <rule>
+        <from>^/admin/close(/)?$</from>
+        <to>/admin/close.html</to>
+    </rule>
+
+    <rule>
+        <from>^/admin/trash(/)?$</from>
+        <to>/admin/trash.html</to>
     </rule>
 
     <rule>

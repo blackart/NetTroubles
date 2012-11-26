@@ -5,17 +5,19 @@ import org.tuckey.web.filters.urlrewrite.extend.RewriteRule;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.regex.Pattern;
 
 public class AdminURLAccessRule extends RewriteRule {
     public RewriteMatch matches(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
 
-//        boolean oldAdmin = Pattern.matches("^/admin(/)?$", uri);
-        boolean newAdmin = Pattern.matches("^/admin-new(/)?$", uri);
+        boolean admin = Pattern.matches("^/admin.*$", uri);
 
-//        if (oldAdmin || newAdmin) {
-        if (newAdmin) {
+        HttpSession session = request.getSession(true);
+        Boolean login = (Boolean) session.getAttribute("login");
+
+        if (admin && ((login == null) || !login)) {
             return new AdminURLAccessMatch();
         }
 
