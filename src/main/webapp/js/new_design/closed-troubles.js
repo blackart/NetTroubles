@@ -1,76 +1,51 @@
 $(document).ready(function () {
     var host = "/controller";
 
-    function twoChar(param) {
-        return param.toString().length == 1 ? "0" + param : param;
-    }
-
-    function sDecrease(a, b) { // По убыванию
-        if (a.time > b.time)
-            return -1;
-        else if (a.time < b.time)
-            return 1;
-        else
-            return 0;
-    }
-
-    function getRightTimeFormat(timestamp) {
-        var date = new Date();
-        date.setTime(timestamp);
-
-        return twoChar(date.getDate()) + "/" +
-            twoChar(date.getMonth() + 1) + "/" +
-            twoChar(date.getFullYear()) + " " +
-            twoChar(date.getHours()) + ":" +
-            twoChar(date.getMinutes()) + ":" +
-            twoChar(date.getSeconds());
-    }
-
-    function convertFormattedStringToDate(str) {
-        var exprDateFormat = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/]([2]\d{3})[ ]([0-1][0-9]|2[0-4])[:]([0-5][0-9])[:]([0-5][0-9])/;
-        var date;
-        if (exprDateFormat.exec(str)) {
-            date = new Date();
-            var dateParts = str.replace(exprDateFormat, "$1 $2 $3 $4 $5 $6").split(" ");
-            date.setDate(dateParts[0]);
-            date.setMonth(dateParts[1]-1);
-            date.setFullYear(dateParts[2]);
-            date.setHours(dateParts[3]);
-            date.setMinutes(dateParts[4]);
-            date.setSeconds(dateParts[5]);
-        }
-        return date;
-    }
-
-    function getTimeToResolve(timestamp, now) {
-        if (!timestamp) return -2;
-
-        var diffInSec = ((parseInt(timestamp) - now) / 1000);
-        if (diffInSec <= 0) return -1;
-
-        var days = parseInt(diffInSec / (3600 * 24));
-        diffInSec = diffInSec - (days * 3600 * 24);
-        var hours = parseInt(diffInSec / 3600);
-        diffInSec = diffInSec - (hours * 3600);
-        var minutes = parseInt(diffInSec / 60);
-        diffInSec = diffInSec - (minutes * 60);
-        var seconds = parseInt(diffInSec);
-
-        return (days == 0 ? "" : days + "d ") + twoChar(hours) + ":" + twoChar(minutes) + ":" + twoChar(seconds) + "";
-    }
-
     function ViewModel() {
         var self = this;
-        self.needActualProblemTroublesCounter = ko.observable(0);
-        self.waitingCloseTroublesCounter = ko.observable(0);
-        self.currentTroublesCounter = ko.observable(0);
-        self.closedTroublesCounter = ko.observable(0);
-        self.trashedTroublesCounter = ko.observable(0);
+        self.troubles = ko.observableArray();
+        self.searchCategory = ko.observableArray([
+            {id: 1, text: 'Day'},
+            {id: 2, text: 'Month'},
+            {id: 3, text: 'Year'}
+        ]);
+        self.selectedSearchCategory = ko.observable(1);
+        self.searchDate = ko.observable("");
+        self.search = function() {
+            var date = self.searchDate();
+            var category = self.selectedSearchCategory();
+            $.ajax({
+                url : "/controller",
+                type : "POST",
+                dataType: 'JSON',
+                data: {
+                    cmd: "getClosedTroubleList",
+                    category: category,
+                    date: date
+                },
+                beforeSend: function() {
+                    if (!date) return false;
+                    return true;
+                },
+                success: function(data) {
+                    $.each(data, function() {
+                        if (!this.timeout)this.timeout = "";
+                        this.timeToResolve = ko.observable();
+                        this.checked = ko.observable(false);
+                    });
+                    self.troubles(data);
+                }
+            });
+        };
 
-        self.currentTroubles = ko.observableArray();
-        self.waitingCloseTroubles = ko.observableArray();
-        self.needCRMTroubles = ko.observableArray();
-        self.allTroubles = ko.observableArray();
+        self.user = ko.observable({
+            id: NaN,
+            login: "",
+            block: false,
+            fio: "",
+            changePassword: false,
+            menu: null
+        });
 
         self.modalDialog = {
             status: ko.observable(''),
@@ -84,12 +59,6 @@ $(document).ready(function () {
             if (self.modalDialog.errorAlert.show()) $("#edition-dialog-body a:first").tab('show');
         });
 
-        self.timeNow = ko.observable(new Date().getTime());
-        self.timeToResolve = ko.computed(function() {
-            $.each(self.currentTroubles(), function() {
-                this.timeToResolve(getTimeToResolve(this.timeout, self.timeNow()));
-            });
-        });
         self.services = ko.observableArray();
         self.troubleForEditing = {
             id: ko.observable(),
@@ -161,7 +130,7 @@ $(document).ready(function () {
             if (trouble.comments) {
                 trouble.comments.sort(sDecrease);
                 $.each(trouble.comments, function() {
-                    this.time = getRightTimeFormat(this.time);
+                    this.timeFormatted = getRightTimeFormat(this.time);
                 });
             }
             troubleForEditing.comments(trouble.comments ? trouble.comments : []);
@@ -173,7 +142,7 @@ $(document).ready(function () {
                 type : "POST",
                 dataType: 'JSON',
                 data: {
-                    cmd: "editTroubleOfCurrentTroubleListNew",
+                    cmd: "editTrouble",
                     trouble: ko.toJSON(trouble)
                 },
                 beforeSend: function() {
@@ -193,59 +162,8 @@ $(document).ready(function () {
                     return true;
                 },
                 success: function(data) {
+                    self.search();
                     $('#editingDialog').modal('hide');
-                }
-            });
-        };
-        self.sendToCRM = function() {
-            var trouble = this;
-            var errorAlert = self.modalDialog.errorAlert;
-            $.ajax({
-                url : "/controller",
-                type : "POST",
-                dataType: 'JSON',
-                data: {
-                    cmd: "sendToCRMNew",
-                    trouble: ko.toJSON(trouble)
-                },
-                beforeSend: function() {
-                    trouble.timeout($.trim(trouble.timeout()));
-                    var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
-                    if (!$.trim(trouble.title())) {
-                        errorAlert.show(true);
-                        errorAlert.message("Please, enter the title of trouble.");
-                        return false;
-                    } else if (trouble.services().length == 0) {
-                        errorAlert.show(true);
-                        errorAlert.message("Please, select the affected services.");
-                        return false;
-                    } else if (!trouble.timeout()) {
-                        errorAlert.show(true);
-                        errorAlert.message("Please, enter the time of resolving problem.");
-                        return false;
-                    } else if (trouble.timeout() && !expr.exec(trouble.timeout())) {
-                        errorAlert.show(true);
-                        errorAlert.message("Please, enter the time of resolving problem in correct format.");
-                        return false;
-                    } else if (!trouble.close() && getTimeToResolve(trouble.timeoutObj().getTime(), new Date().getTime()) == "-1") {
-                        errorAlert.show(true);
-                        errorAlert.message("Please, more actual resolving time.");
-                        return false;
-                    } else if (trouble.comments().length == 0) {
-                        errorAlert.show(true);
-                        errorAlert.message("Please, add at least one comment.");
-                        return false;
-                    }
-                    errorAlert.show(false);
-                    return true;
-                },
-                success: function(data) {
-                    if (!data.status) {
-                        errorAlert.show(true);
-                        errorAlert.message(data.message);
-                    } else {
-                        $('#editingDialog').modal('hide');
-                    }
                 }
             });
         };
@@ -263,6 +181,7 @@ $(document).ready(function () {
                     return true;
                 },
                 success: function(data) {
+                    self.search();
                     $('#editingDialog').modal('hide');
                 }
             });
@@ -289,7 +208,7 @@ $(document).ready(function () {
                 },
                 success: function(data) {
                     $("#text-comment").val("");
-                    data.time = getRightTimeFormat(data.time);
+                    data.timeFormatted = getRightTimeFormat(data.time);
                     viewModel.troubleForEditing.comments.push(data);
                     viewModel.troubleForEditing.comments.sort(sDecrease);
                     getJSONData();
@@ -302,7 +221,7 @@ $(document).ready(function () {
             var close = true;
             var ids = [];
 
-            $.each(self.allTroubles(), function() {
+            $.each(self.troubles(), function() {
                 if (this.checked()) {
                     comments = comments.concat(this.comments);
                     devcapsules = devcapsules.concat(this.devcapsules);
@@ -313,7 +232,7 @@ $(document).ready(function () {
 
             if (ids.length > 0) {
                 $.each(comments, function() {
-                    this.time = getRightTimeFormat(this.time);
+                    this.timeFormatted = getRightTimeFormat(this.time);
                 });
 
                 $.each(devcapsules, function() {
@@ -373,14 +292,12 @@ $(document).ready(function () {
                     } else {
                         $('#editingDialog').modal('hide');
                     }
+                    self.search();
                 }
             });
         };
-        self.stopRefreshOnChecked = function check() {
-            resetRefreshDataInterval();
-        };
         self.checkAll = function() {
-            var allTroubles = self.allTroubles();
+            var allTroubles = self.troubles();
             var checked = $("#checkAll").attr("checked");
             $.each(allTroubles, function() {
                 this.checked(checked);
@@ -403,7 +320,7 @@ $(document).ready(function () {
                     var devc_arr = self.troubleForEditing.devcapsules;
                     var index = devc_arr().indexOf(devc);
                     devc_arr.splice(index, 1);
-                    getJSONData();
+                    self.search();
                 }
             });
         }
@@ -412,22 +329,22 @@ $(document).ready(function () {
     var viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 
-    var updateResolveTime;
+    $("#date-timeout").datepicker({
+        format: "dd/mm/yyyy",
+        weekStart: 1,
+        startView: 0,
+        todayHighlight: true,
+        keyboardNavigation: true
+    });
 
-    function setUpdateResolveTimeInterval() {
-        updateResolveTime = setInterval(function() {
-            viewModel.timeNow(new Date().getTime());
-        }, 1000);
-    }
-
-    function resetUpdateResolveTimeInterval() {
-        clearInterval(updateResolveTime);
-        setUpdateResolveTimeInterval();
-    }
-
-    setUpdateResolveTimeInterval();
-
-    $("#date-timeout").datepicker();
+    $("#date-search").datepicker({
+        format: "dd/mm/yyyy",
+        weekStart: 1,
+        startView: 0,
+        autoclose: true,
+        todayHighlight: true,
+        keyboardNavigation: true
+    });
 
     $("#time-timeout").timepicker({
         showMeridian: false,
@@ -442,7 +359,6 @@ $(document).ready(function () {
         .on('hidden', function() {
             $("#checkAll").attr("checked", false);
             $("#text-comment").popover('hide');
-            getJSONData();
         });
 
     $("#send-comment").click(function() {
@@ -462,42 +378,16 @@ $(document).ready(function () {
         $(this).popover('hide');
     });
 
-    function getJSONData() {
-        $.get(host, {cmd:"getCurrentTroubleListGroup"},
-            function (data) {
-                var allTroubles = data.wait.troubles.concat(data.need.troubles).concat(data.current.troubles);
-                $.each(allTroubles, function() {
-                    if (!this.timeout)this.timeout = "";
-                    this.timeToResolve = ko.observable();
-                    this.checked = ko.observable(false);
-                });
-                viewModel.currentTroubles(data.current.troubles);
-                viewModel.waitingCloseTroubles(data.wait.troubles);
-                viewModel.needCRMTroubles(data.need.troubles);
 
-                viewModel.allTroubles(allTroubles);
+    function getUser() {
+        $.get(host, {cmd:"getUser"},
+            function (data) {
+                if (data) {
+                    viewModel.user(data);
+                }
             }, "json"
         );
     }
-
-    var refreshData;
-
-    function setRefreshDataInterval() {
-        refreshData = setInterval(function() {
-            getJSONData();
-        }, 30000);
-    }
-
-    function resetRefreshDataInterval() {
-        clearInterval(refreshData);
-        setRefreshDataInterval();
-    }
-
-    setRefreshDataInterval();
-
-    $("#refesh-page").click(function() {
-        getJSONData();
-    });
 
     (function() {
         $.get(host, {cmd:"getServices"},
@@ -507,5 +397,5 @@ $(document).ready(function () {
         );
     })();
 
-    getJSONData();
+    getUser();
 });

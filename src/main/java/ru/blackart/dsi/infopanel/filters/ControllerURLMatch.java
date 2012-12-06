@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminURLAccessMatch extends RewriteMatch {
+public class ControllerURLMatch extends RewriteMatch {
     @Override
     public boolean execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect("/login-new");

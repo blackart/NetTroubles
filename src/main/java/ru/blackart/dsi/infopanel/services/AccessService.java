@@ -18,10 +18,7 @@ import ru.blackart.dsi.infopanel.utils.TroubleListsManager;
 import javax.servlet.ServletConfig;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class AccessService {
     private static AccessService AccessService;
@@ -29,6 +26,7 @@ public class AccessService {
     private Gson gson = new Gson();
     private Menu canonicalMenu;
     private HashMap<Integer, MenuItem> canonicalIndexingMenu = new HashMap<Integer, MenuItem>();
+    private ArrayList<String> noLoginCmd;
 
     private HashMap<Integer, Menu> menuForGroups = new HashMap<Integer, Menu>();
     private HashMap<Integer, HashMap<Integer, MenuItem>> indexingMenuForGroups = new HashMap<Integer, HashMap<Integer, MenuItem>>();
@@ -65,6 +63,10 @@ public class AccessService {
 
     public HashMap<Integer, MenuItem> getCanonicalIndexingMenu() {
         return this.canonicalIndexingMenu;
+    }
+
+    public ArrayList<String> getNoLoginCmd() {
+        return noLoginCmd;
     }
 
     public synchronized Menu resolveMenu(String json) {
@@ -121,9 +123,14 @@ public class AccessService {
         TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
         ServletConfig config = troubleListsManager.getHTTPServletConfig();
         Properties paths = (Properties) config.getServletContext().getAttribute("pathToDataFile");
-        InputStream inputStream = config.getServletContext().getResourceAsStream(paths.getProperty("menuConfig"));
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        this.canonicalMenu = this.gson.fromJson(inputStreamReader, Menu.class);
+
+        InputStream menuConfigStream = config.getServletContext().getResourceAsStream(paths.getProperty("menuConfig"));
+        InputStreamReader menuConfigStreamReader = new InputStreamReader(menuConfigStream);
+        this.canonicalMenu = this.gson.fromJson(menuConfigStreamReader, Menu.class);
+
+        InputStream noLoginCmdStream = config.getServletContext().getResourceAsStream(paths.getProperty("no-login-cmd"));
+        InputStreamReader noLoginCmdStreamReader = new InputStreamReader(noLoginCmdStream);
+        this.noLoginCmd = (ArrayList<String>)this.gson.fromJson(noLoginCmdStreamReader, ArrayList.class);
 
         List<User> userList = this.getUsersFromDB();
         for (User u : userList) {

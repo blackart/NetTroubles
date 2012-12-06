@@ -1,10 +1,14 @@
 package ru.blackart.dsi.infopanel.view;
 
-public class UserView {
+import ru.blackart.dsi.infopanel.access.menu.Menu;
+
+public class UserView extends View {
     private int id;
     private String login;
     private Boolean block;
     private String fio;
+    private Boolean changePassword;
+    private Menu menu;
 
     public int getId() {
         return id;
@@ -36,5 +40,21 @@ public class UserView {
 
     public void setFio(String fio) {
         this.fio = fio;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    public Boolean getChangePassword() {
+        return changePassword;
+    }
+
+    public void setChangePassword(Boolean changePassword) {
+        this.changePassword = changePassword;
     }
 }

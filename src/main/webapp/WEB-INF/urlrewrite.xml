@@ -33,8 +33,7 @@
         <to>/test/status/</to>
     </outbound-rule>
 
-    <!--<class-rule class="ru.blackart.dsi.infopanel.filters.AdminHtmlPageAccessRule" />-->
-    <class-rule class="ru.blackart.dsi.infopanel.filters.AdminURLAccessRule" />
+    <class-rule class="ru.blackart.dsi.infopanel.filters.CustomRule" />
 
     <rule>
         <from>^/admin(/)?$</from>
@@ -47,8 +46,8 @@
     </rule>
 
     <rule>
-        <from>^/admin/close(/)?$</from>
-        <to>/admin/close.html</to>
+        <from>^/admin/closed(/)?$</from>
+        <to>/admin/closed.html</to>
     </rule>
 
     <rule>

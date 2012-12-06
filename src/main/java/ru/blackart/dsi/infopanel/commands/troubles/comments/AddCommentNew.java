@@ -28,6 +28,8 @@ public class AddCommentNew extends AbstractCommand {
         String text = this.getRequest().getParameter("text");
         User author = (User) this.getSession().getAttribute("info");
 
+        if (author == null) return null;
+
         Calendar calendar = Calendar.getInstance();
 
         Comment comment = new Comment();

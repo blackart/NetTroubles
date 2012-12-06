@@ -1,0 +1,9 @@
+[
+"login",
+"loginNew",
+"checkUser",
+"getTroubleCounters",
+"getCurrentTroubleListGroup",
+"getServices",
+"getUser"
+]

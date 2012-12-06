@@ -1,3 +1,7 @@
+body {
+    overflow-y: scroll;
+}
+
 .sidebar-nav {
     padding: 8px 0;
 }
@@ -34,6 +38,16 @@
     cursor: pointer;
 }
 
+.trouble-entry .trashed-trouble-title {
+    display: block;
+    width: 100%;
+}
+
+.trouble-entry .trashed-trouble-desc {
+    color: #cecece;
+    margin-left: 10px;
+}
+
 .trouble-entry .right-panel {
     margin: 0 10px 0 0;
 }
@@ -61,6 +75,7 @@
 
 .tab-pane {
     height: 425px;
+    overflow: hidden;
 }
 
 .edition-dialog {
@@ -77,7 +92,12 @@
 
 .comments-list {
     overflow: auto;
-    height: 300px;
+    height: 295px;
+}
+
+.comments-list-without-input-box {
+    overflow: auto;
+    height: 425px;
 }
 
 .input-crm-message {
@@ -116,4 +136,26 @@
 
 .popover {
     z-index: 100500;
+}
+
+.navbar-form .search-date-block {
+    display: inline-block;
+    margin: 4px 5px 0 0;
+    vertical-align: middle;
+    padding-top: 2px;
+}
+
+.navbar-form .title {
+    display: inline-block;
+    margin: 5px 5px 0 20px;
+    vertical-align: middle;
+}
+
+.navbar-form .btn-group {
+    display: inline-block;
+    margin-top: 0;
+}
+
+.trouble-container {
+    margin-bottom: 150px;
 }

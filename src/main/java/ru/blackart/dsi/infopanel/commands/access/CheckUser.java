@@ -7,24 +7,13 @@ import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.services.AccessService;
 import ru.blackart.dsi.infopanel.utils.message.CompleteStatusMessage;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class CheckUser extends AbstractCommand {
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private final AccessService accessService = AccessService.getInstance();
-
-    //Статический метод, заполняет параметры в сесси исходными значениями
-    public static void start(HttpSession session) throws SQLException {
-        session.setAttribute("info", null);
-        session.setAttribute("login", false);
-        session.setAttribute("page", null);
-        session.setAttribute("access", null);
-        session.setAttribute("change_passwd", false);
-    }
 
     @Override
     public String execute() throws Exception {

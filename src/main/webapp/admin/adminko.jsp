@@ -8,7 +8,7 @@
 <%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    HttpSession req_session = request.getSession(true);
+    /*HttpSession req_session = request.getSession(true);
     if (req_session.getAttribute("login") != null) {
         if (!(Boolean)req_session.getAttribute("login")) {
             response.sendRedirect("/login");
@@ -18,7 +18,7 @@
         }
     } else {
         response.sendRedirect("/login");
-    }
+    }*/
 %>
 <%
     ArrayList<Service> services = (ArrayList<Service>) config.getServletContext().getAttribute("services");

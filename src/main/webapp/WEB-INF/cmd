@@ -14,7 +14,7 @@ deleteMainFilter=ru.blackart.dsi.infopanel.commands.filters.mainDeviceFilter.Del
 #troubles
 getLogEntry=ru.blackart.dsi.infopanel.commands.troubles.GetLogEntry
 editTroubleOfCurrentTroubleList=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCurrentTroubleList
-editTroubleOfCurrentTroubleListNew=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCurrentTroubleListNew
+editTrouble=ru.blackart.dsi.infopanel.commands.troubles.EditTrouble
 editTroubleOfCompleteTroubleList=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCompleteTroubleList
 #mergeTroubles=ru.blackart.dsi.infopanel.commands.troubles.MergeTroublesEvoEvo
 mergeTroubles=ru.blackart.dsi.infopanel.commands.troubles.MergeTroubles
@@ -37,6 +37,9 @@ conv=ru.blackart.dsi.infopanel.commands.troubles.ConvertLegendAndDescToComment
 recoveryTrouble=ru.blackart.dsi.infopanel.commands.troubles.RecoveryTrouble
 getTroubleCounters=ru.blackart.dsi.infopanel.commands.troubles.GetTroubleCounters
 getCurrentTroubleListGroup=ru.blackart.dsi.infopanel.commands.troubles.GetListsTroubles
+getTrashedTroubleList=ru.blackart.dsi.infopanel.commands.troubles.GetListTrashedTroubles
+getClosedTroubleList=ru.blackart.dsi.infopanel.commands.troubles.GetListClosedTroubles
+destroyTrouble=ru.blackart.dsi.infopanel.commands.troubles.DestroyTrouble
 
 #services
 getServices=ru.blackart.dsi.infopanel.commands.service.GetListOfServices
@@ -52,6 +55,7 @@ addAccount=ru.blackart.dsi.infopanel.commands.security.users.AddUser
 editAccount=ru.blackart.dsi.infopanel.commands.security.users.EditUser
 deleteAccount=ru.blackart.dsi.infopanel.commands.security.users.DeleteUser
 changePasswd=ru.blackart.dsi.infopanel.commands.security.users.ChangePasswdUser
+getUser=ru.blackart.dsi.infopanel.commands.access.GetUser
 
 #users-settings
 openControlPanel=ru.blackart.dsi.infopanel.commands.security.users.settings.SetOpenControlPanel
