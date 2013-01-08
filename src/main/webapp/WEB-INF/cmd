@@ -40,11 +40,17 @@ getCurrentTroubleListGroup=ru.blackart.dsi.infopanel.commands.troubles.GetListsT
 getTrashedTroubleList=ru.blackart.dsi.infopanel.commands.troubles.GetListTrashedTroubles
 getClosedTroubleList=ru.blackart.dsi.infopanel.commands.troubles.GetListClosedTroubles
 destroyTrouble=ru.blackart.dsi.infopanel.commands.troubles.DestroyTrouble
+getRegions=ru.blackart.dsi.infopanel.commands.troubles.GetRegions
+getHostStatuses=ru.blackart.dsi.infopanel.commands.troubles.GetHostStatuses
 
 #services
 getServices=ru.blackart.dsi.infopanel.commands.service.GetListOfServices
 
+#reports
+getTroubleReport=ru.blackart.dsi.infopanel.commands.reports.GetTroubleReport
+
 #failures
+
 getFailuresListForDate=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForDate
 getFailuresListForName=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForName
 getFailuresListForStatus=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForStatus

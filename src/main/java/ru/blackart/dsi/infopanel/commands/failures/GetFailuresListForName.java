@@ -19,7 +19,6 @@ public class GetFailuresListForName extends AbstractCommand {
 
     @Override
     public String execute() throws Exception {
-        this.getResponse().setCharacterEncoding("utf-8");
         this.getResponse().setContentType("text/xml");
 
         SimpleDateFormat format = new SimpleDateFormat();
