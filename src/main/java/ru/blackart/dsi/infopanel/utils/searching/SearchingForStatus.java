@@ -11,14 +11,21 @@ import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 public class SearchingForStatus implements Searching {
     ManagerMainDeviceFilter managerMainDeviceFilter = ManagerMainDeviceFilter.getInstance();
-    private Properties hoststatuses = new Properties();
+    private HashMap<Integer, Hoststatus> hostStatuses = new HashMap<Integer, Hoststatus>();
     private String all_status = "";
+    private final DataModel dataModel = DataModel.getInstance();
+
+    public SearchingForStatus(ArrayList<Hoststatus> statuses) {
+        for (int i = 0; i < statuses.size(); i++) {
+            Hoststatus hoststatus = statuses.get(i);
+            hostStatuses.put(hoststatus.getId(), hoststatus);
+        }
+    }
 
     public SearchingForStatus(String[] statuses) {
         Session session = SessionFactorySingle.getSessionFactory().openSession();
@@ -28,27 +35,17 @@ public class SearchingForStatus implements Searching {
             crt_status.add(Restrictions.eq("id", Integer.valueOf(statuses[i])));
             if (crt_status.list().size() > 0) {
                 Hoststatus hoststatus = (Hoststatus) crt_status.list().get(0);
-                hoststatuses.put(hoststatus.getName(), hoststatus);
+                hostStatuses.put(hoststatus.getId(), hoststatus);
+                all_status += hoststatus.getName() + ", ";
             }
         }
 
         session.flush();
         session.close();
-
-        int i = 0;
-        for (Enumeration en = hoststatuses.keys(); en.hasMoreElements();) {
-            i++;
-            String status_name = en.nextElement().toString();
-            if (i != hoststatuses.size()) {
-                all_status += status_name + ", ";
-            } else {
-                all_status += status_name;
-            }
-        }
     }
 
-    public Properties getHoststatuses() {
-        return hoststatuses;
+    public HashMap<Integer, Hoststatus> getHoststatuses() {
+        return hostStatuses;
     }
 
     public String getAll_status() {
@@ -56,27 +53,32 @@ public class SearchingForStatus implements Searching {
     }
 
     public List<Devcapsule> find() {
-        DataModel dataModel = DataModel.getInstance();
+        synchronized (dataModel) {
 
-        if (hoststatuses.size() > 0) {
-            List<Trouble> troubles = new ArrayList<Trouble>();
-            troubles.addAll(dataModel.getTroubleListForName("current").getTroubles());
-            troubles.addAll(dataModel.getTroubleListForName("complete").getTroubles());
-            troubles.addAll(dataModel.getTroubleListForName("waiting_close").getTroubles());
+            if (hostStatuses.size() > 0) {
+                List<Trouble> troubles = new ArrayList<Trouble>();
+                troubles.addAll(dataModel.getTroubleListForName("current").getTroubles());
+                troubles.addAll(dataModel.getTroubleListForName("complete").getTroubles());
+                troubles.addAll(dataModel.getTroubleListForName("waiting_close").getTroubles());
 
-            List<Devcapsule> devc_find = new ArrayList<Devcapsule>();
+                List<Devcapsule> devc_find = new ArrayList<Devcapsule>();
 
-            for (Trouble t : troubles) {
-                for (Devcapsule d : t.getDevcapsules()) {
-                    if ((d.getDevice().getHoststatus() != null) && hoststatuses.containsKey(d.getDevice().getHoststatus().getName()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
-                        devc_find.add(d);
+                for (Trouble t : troubles) {
+                    for (Devcapsule d : t.getDevcapsules()) {
+                        if ((d.getDevice().getHoststatus() != null)
+                                && hostStatuses.containsKey(d.getDevice().getHoststatus().getId())
+                                && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice())))
+                        {
+                            devc_find.add(d);
+                        }
                     }
                 }
+
+                return devc_find;
+            } else {
+                return null;
             }
 
-            return devc_find;
-        } else {
-            return null;
         }
     }
 
