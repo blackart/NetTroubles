@@ -1,0 +1,187 @@
+.settings .settings_block {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.settings .settings_block .title {
+    font-family: Verdana, serif;
+    font-size: 10pt;
+    border-bottom: 1px solid #3399ff;
+    padding: 0 0 5px 15px;
+    margin: 20px 0 20px 0;
+}
+
+/*Список*/
+
+.settings .settings_block .settings_list {
+    width: 100%;
+    font-size: 9pt;
+    font-family: Verdana, serif;
+    border: 1px solid #3399ff;
+}
+
+.settings .settings_block .settings_list td {
+    padding: 1px 0 1px 10px;
+    border-right: 1px solid #bed4ff;
+
+}
+
+.settings .settings_block .settings_list .header {
+    font-weight: bold;
+    height: 40px;
+}
+
+.settings .settings_block .settings_list .edit_row {
+    background: #66ff66; /*margin: 10px 0 10px 0;*/
+    height: 30px;
+}
+
+/*Добавление*/
+
+.settings .settings_block .settings_add {
+    width: 100%;
+    font-size: 9pt;
+    font-family: Verdana, serif;
+    border: 1px solid #3399ff;
+}
+
+.settings .settings_block .settings_add td input, .settings .settings_block .settings_add td select, .settings .settings_block .settings_add td button {
+    display: block;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.settings .settings_block .settings_add td.menu_items ul.l1 input {
+    display: inline;
+    width: 20px;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.settings .settings_block .settings_add td {
+    padding: 13px 10px 10px 10px;
+    border-right: 1px solid #bed4ff; /*vertical-align: text-top;*/
+}
+
+.settings .settings_block .settings_add .header {
+    font-weight: bold;
+    height: 40px;
+    background: #bed4ff;
+}
+
+.settings .settings_block .settings_add .header td {
+    border-right: 1px solid #fff;
+}
+
+/*Диалог редактирования фильтра*/
+
+.settings_dialog {
+    display: block;
+}
+
+.settings_dialog .settings_table {
+    width: 100%;
+    font-size: 9pt;
+    font-family: Verdana, serif;
+    border: 1px solid #3399ff;
+    margin: 20px 0 0 0;
+}
+
+.settings_dialog .settings_table td input, .settings_dialog .settings_table td select {
+    display: block;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.settings_dialog .settings_table td {
+    padding: 3px 10px 3px 10px;
+    border-right: 1px solid #bed4ff;
+}
+
+.settings_dialog .settings_table .header {
+    font-weight: bold;
+    height: 40px;
+    background: #bed4ff;
+}
+
+.settings_dialog .settings_table .header td {
+    border-right: 1px solid #fff;
+}
+
+/*Style dialog only for group*/
+
+.settings_dialog .settings_table_group {
+    width: 100%;
+    font-size: 9pt;
+    font-family: Verdana, serif;
+    border: 1px solid #3399ff;
+    margin: 20px 0 0 0;
+}
+
+.settings_dialog .settings_table_group td input, .settings_dialog .settings_table td select {
+    display: inline;
+    width: auto;
+    height: auto;
+}
+
+.settings_dialog .settings_table_group td {
+    padding: 3px 10px 3px 10px;
+    border-right: 1px solid #bed4ff;
+}
+
+.settings_dialog .settings_table_group .header {
+    font-weight: bold;
+    height: 40px;
+    background: #bed4ff;
+}
+
+.settings_dialog .settings_table_group .header td {
+    border-right: 1px solid #fff;
+}
+
+.settings_dialog .settings_table_group #groups_edit_name {
+    width: 100%;
+}
+
+/*menu groups*/
+
+.settings .settings_block .menu_items ul {
+    display: block; /*border: 1px solid #000;*/
+    padding: 0 0 0 15px;
+}
+
+.settings .settings_block .menu_items ul.l1 {
+    margin: 10px 0 10px 0;
+}
+
+.settings .settings_block .menu_items ul li {
+    display: block; /*border: 1px solid red;*/
+}
+
+.settings .settings_block .menu_items .l1 li {
+    font-weight: bold;
+}
+
+.settings .settings_block .menu_items .l2 li {
+    font-weight: normal;
+}
+
+.settings_dialog .label_container {
+    position: relative;
+}
+
+.settings_dialog label {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    color: #999999;
+}
+
+.settings_dialog input {
+    margin-right: 10px;
+    width: 150px;
+}
+

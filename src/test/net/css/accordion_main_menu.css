@@ -1,0 +1,102 @@
+/* Accordion
+----------------------------------*/
+.ui-accordion-isem {
+    width: 100%;
+    background-color: #ffffff; /*border: 1px solid red;*/
+}
+
+/* Interaction states
+----------------------------------*/
+.ui-accordion-isem .ui-state-default, .ui-accordion-isem .ui-widget-content .ui-state-default, .ui-accordion-isem .ui-widget-header .ui-state-default {
+    background: #FFF none; /*font-weight: bold; color: #2e6e9e;*/
+}
+
+.ui-accordion-isem .ui-state-default a, .ui-accordion-isem .ui-state-default a:link, .ui-accordion-isem .ui-state-default a:visited {
+/*color: #2e6e9e; text-decoration: none;*/
+}
+
+.ui-accordion-isem .ui-state-hover, .ui-accordion-isem .ui-widget-content .ui-state-hover, .ui-accordion-isem .ui-widget-header .ui-state-hover, .ui-accordion-isem .ui-state-focus, .ui-accordion-isem .ui-widget-content .ui-state-focus, .ui-accordion-isem .ui-widget-header .ui-state-focus {
+    background: #FFF none; /*font-weight: bold; color: #1d5987;*/
+}
+
+.ui-accordion-isem .ui-state-hover a, .ui-accordion-isem .ui-state-hover a:hover {
+/*color: #1d5987; text-decoration: none;*/
+}
+
+.ui-accordion-isem .ui-state-active, .ui-accordion-isem .ui-widget-content .ui-state-active, .ui-accordion-isem .ui-widget-header .ui-state-active {
+    background: #c3d9ff; /*font-weight: bold; color: #e17009;*/
+}
+
+.ui-accordion-isem .ui-state-active a, .ui-accordion-isem .ui-state-active a:link, .ui-accordion-isem .ui-state-active a:visited {
+/*color: #e17009; text-decoration: none;*/
+}
+
+.ui-accordion-isem .ui-widget :active {
+    outline: none;
+}
+
+.ui-accordion-isem .ui-accordion-header {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    outline: 0; /*margin-top: 1px;*/
+/*zoom: 1; */
+/*border: 1px solid blue;*/
+    color: #0000cc;
+    width: 205px; /*border: 1px solid #3ea0f0;*/
+/*background-color: #3ea0f0;*/
+    margin: 0.3em 0 0 0;
+    padding: 0.3em; /*text-decoration: underline;*/
+    border: 0;
+    -moz-border-radius-topleft: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-radius-bottomleft: 4px;
+    -webkit-border-bottom-left-radius: 4px; /*background: #FFF none;*/
+}
+
+.ui-accordion-isem li {
+    display: inline; /*border: 1px solid blue;*/
+}
+
+.ui-accordion-isem .ui-accordion-header-active {
+    display: block;
+    border: 1px solid #c3d9ff;
+    border-bottom: 0 !important;
+    background: #c3d9ff;
+    text-decoration: none;
+
+}
+
+.ui-accordion-isem .ui-accordion-header a {
+    display: block; /*font-size: 1.7em;*/
+    padding: .5em .5em .5em 2.2em; /*text-decoration: none; */
+    border: 1px solid #000000;
+}
+
+.ui-accordion-isem .ui-accordion-header .ui-icon {
+    position: absolute;
+    left: .5em;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.ui-accordion-isem .ui-accordion-content {
+/*padding: 1em 2.2em;*/
+/*border-top: 0;*/
+/*margin-top: -2px;*/
+/*position: relative;*/
+/*top: 1px;*/
+/*margin-bottom: 2px;*/
+    margin-left: .9em;
+    margin-right: 0;
+    padding: 0 0 .5em .5em;
+    overflow: auto; /*border: 1px solid red;*/
+    background-color: #fff;
+    width: 205px;
+    display: none;
+    border: 0;
+}
+
+.ui-accordion-isem .ui-accordion-content-active {
+    display: block;
+}

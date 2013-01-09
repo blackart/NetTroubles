@@ -1,0 +1,36 @@
+.content_block {
+    padding: 0.5em 0 0.5em 0.5em;
+    margin: 0 0 0.5em 0;
+    /*border-bottom: 1px solid #999999;
+    border-left: 1px solid #ff6600;
+
+    -moz-border-radius-bottomleft: 8px;
+    -webkit-border-bottom-left-radius: 8px;*/
+}
+
+.content_block input, .content_block select {
+    width: 98%;
+}
+
+.button_ok_cancel {
+    display: table;
+
+    text-align: center;
+    margin-left: auto;
+
+    border-left: 2px solid #ff6600;
+    border-top: 2px solid #ff6600;
+
+    width: auto;
+
+    background: #ff6600;
+
+    -moz-border-radius-topleft: 8px;
+    -webkit-border-top-left-radius: 8px;
+    -moz-border-radius-topright: 8px;
+    -webkit-border-top-right-radius: 8px;
+
+    padding: 3px;
+}
+
+/*-----------------------------Pop-up menu----------------------------------*/
