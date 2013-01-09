@@ -30,6 +30,8 @@ public class SearchingForRegion implements Searching {
         return regions_str;
     }
 
+
+
     public List<Devcapsule> find() {
         DataModel dataModel = DataModel.getInstance();
 

@@ -27,6 +27,51 @@ public class SearchingForStatus implements Searching {
         }
     }
 
+    public List<Devcapsule> search(List<Devcapsule> devcapsules) {
+        List<Devcapsule> devc_find = null;
+
+        if (devcapsules == null) {
+            devc_find = this.searchEverywhere();
+        } else {
+            devc_find = new ArrayList<Devcapsule>();
+
+            for (Devcapsule d : devcapsules) {
+                if ((d.getDevice().getHoststatus() != null)
+                        && hostStatuses.containsKey(d.getDevice().getHoststatus().getId())
+                        && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
+                    devc_find.add(d);
+                }
+            }
+        }
+        return devc_find;
+    }
+
+    private List<Devcapsule> searchEverywhere() {
+        List<Devcapsule> devc_find = null;
+
+        synchronized (dataModel) {
+            List<Trouble> troubles = new ArrayList<Trouble>();
+            troubles.addAll(dataModel.getTroubleListForName("current").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("complete").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("waiting_close").getTroubles());
+
+
+            devc_find = new ArrayList<Devcapsule>();
+
+            for (Trouble t : troubles) {
+                for (Devcapsule d : t.getDevcapsules()) {
+                    if ((d.getDevice().getHoststatus() != null)
+                            && hostStatuses.containsKey(d.getDevice().getHoststatus().getId())
+                            && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
+                        devc_find.add(d);
+                    }
+                }
+            }
+        }
+
+        return devc_find;
+    }
+
     public SearchingForStatus(String[] statuses) {
         Session session = SessionFactorySingle.getSessionFactory().openSession();
 
@@ -67,8 +112,7 @@ public class SearchingForStatus implements Searching {
                     for (Devcapsule d : t.getDevcapsules()) {
                         if ((d.getDevice().getHoststatus() != null)
                                 && hostStatuses.containsKey(d.getDevice().getHoststatus().getId())
-                                && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice())))
-                        {
+                                && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
                             devc_find.add(d);
                         }
                     }
