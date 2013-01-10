@@ -14,12 +14,56 @@ public class SearchingForRegion implements Searching {
     private Properties regions = new Properties();
     ManagerMainDeviceFilter managerMainDeviceFilter = ManagerMainDeviceFilter.getInstance();
     private String regions_str = "";
+    private final DataModel dataModel = DataModel.getInstance();
+
+    public SearchingForRegion(List<Region> regions) {
+        for (Region region : regions) {
+            this.regions.put(region.getId(), region);
+        }
+    }
+
+    public List<Devcapsule> search(List<Devcapsule> devcapsules) {
+        List<Devcapsule> devc_find = null;
+        if (devcapsules == null) {
+            devc_find = this.searchEverywhere();
+        } else {
+            devc_find = new ArrayList<Devcapsule>();
+
+            for (Devcapsule d : devcapsules) {
+                if (regions.containsKey(d.getDevice().getRegion().getId()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
+                    devc_find.add(d);
+                }
+            }
+        }
+
+        return devc_find;
+    }
+
+    public List<Devcapsule> searchEverywhere() {
+        List<Devcapsule> devc_find = new ArrayList<Devcapsule>();
+
+        synchronized (dataModel) {
+            List<Trouble> troubles = new ArrayList<Trouble>();
+            troubles.addAll(dataModel.getTroubleListForName("current").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("complete").getTroubles());
+            troubles.addAll(dataModel.getTroubleListForName("waiting_close").getTroubles());
+
+            for (Trouble t : troubles) {
+                for (Devcapsule d : t.getDevcapsules()) {
+                    if (regions.containsKey(d.getDevice().getRegion().getId()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
+                        devc_find.add(d);
+                    }
+                }
+            }
+        }
+        return devc_find;
+    }
 
     public SearchingForRegion(String[] queryRegions, List<Region> allRegions) {
         for (Region region : allRegions) {
             for (int i = 0; i < queryRegions.length; i++) {
                 if (Integer.valueOf(queryRegions[i]) == region.getId()) {
-                    regions.put(region.getName(), region);
+                    regions.put(region.getId(), region);
                     regions_str += region.getName() + " ; ";
                 }
             }
@@ -29,8 +73,6 @@ public class SearchingForRegion implements Searching {
     public String getRegions_str() {
         return regions_str;
     }
-
-
 
     public List<Devcapsule> find() {
         DataModel dataModel = DataModel.getInstance();
@@ -44,7 +86,7 @@ public class SearchingForRegion implements Searching {
 
         for (Trouble t : troubles) {
             for (Devcapsule d : t.getDevcapsules()) {
-                if (regions.containsKey(d.getDevice().getRegion().getName()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
+                if (regions.containsKey(d.getDevice().getRegion().getId()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
                     devc_find.add(d);
                 }
             }
@@ -56,7 +98,7 @@ public class SearchingForRegion implements Searching {
         List<Devcapsule> devc_find = new ArrayList<Devcapsule>();
 
         for (Devcapsule d : devcapsules) {
-            if (regions.containsKey(d.getDevice().getRegion().getName()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
+            if (regions.containsKey(d.getDevice().getRegion().getId()) && (this.managerMainDeviceFilter.filterInputDevice(d.getDevice()))) {
                 devc_find.add(d);
             }
         }

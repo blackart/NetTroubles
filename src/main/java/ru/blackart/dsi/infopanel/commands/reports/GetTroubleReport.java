@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.model.DataModel;
-import ru.blackart.dsi.infopanel.utils.searching.SearchParam;
-import ru.blackart.dsi.infopanel.utils.searching.SearchingForName;
-import ru.blackart.dsi.infopanel.utils.searching.SearchingForStatus;
+import ru.blackart.dsi.infopanel.utils.searching.*;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class GetTroubleReport extends AbstractCommand {
 
         List<Devcapsule> devcapsules = null;
 
-        if (!searchParam.getDeviceName().trim().equals("")) {
+        if ((searchParam.getDeviceName() != null) && (!searchParam.getDeviceName().trim().equals(""))) {
             SearchingForName searchingForName = new SearchingForName(searchParam.getDeviceName());
             devcapsules = searchingForName.search(devcapsules);
         }
@@ -30,8 +28,8 @@ public class GetTroubleReport extends AbstractCommand {
             if (searchParam.getStartSearchDate() == null) searchParam.setStartSearchDate((long)0);
             if (searchParam.getEndSearchDate() == null) searchParam.setEndSearchDate(System.currentTimeMillis());
 
-//            SearchingForStatus searchingForStatus = new SearchingForStatus(searchParam.getHostStatuses());
-//            devcapsules = searchingForStatus.find();
+            SearchingForDate searchingForDate = new SearchingForDate(searchParam.getStartSearchDate(), searchParam.getEndSearchDate());
+            devcapsules = searchingForDate.search(devcapsules);
         }
 
         if ((searchParam.getHostStatuses() != null) && (searchParam.getHostStatuses().size() > 0)) {
@@ -40,16 +38,15 @@ public class GetTroubleReport extends AbstractCommand {
         }
 
         if (searchParam.getRegions() != null) {
-//            SearchingForStatus searchingForStatus = new SearchingForStatus(searchParam.getHostStatuses());
-//            devcapsules = searchingForStatus.find();
+            SearchingForRegion searchingForRegion = new SearchingForRegion(searchParam.getRegions());
+            devcapsules = searchingForRegion.search(devcapsules);
         }
 
-        /*
         if (devcapsules != null) {
+            devcapsules = DataModel.getInstance().sortDevcapsuleByTime(devcapsules);
+        }
 
-        }*/
-
-        devcapsules = DataModel.getInstance().sortDevcapsuleByTime(devcapsules);
+        this.getResponse().getWriter().print(gson.toJson(devcapsules));
 
         return null;
     }

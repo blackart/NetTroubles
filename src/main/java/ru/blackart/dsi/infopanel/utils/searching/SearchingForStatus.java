@@ -46,7 +46,7 @@ public class SearchingForStatus implements Searching {
         return devc_find;
     }
 
-    private List<Devcapsule> searchEverywhere() {
+    public List<Devcapsule> searchEverywhere() {
         List<Devcapsule> devc_find = null;
 
         synchronized (dataModel) {

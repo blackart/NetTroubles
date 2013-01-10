@@ -39,7 +39,7 @@ public class SearchingForName implements Searching {
         return devc_find;
     }
 
-    private List<Devcapsule> searchEverywhere() {
+    public List<Devcapsule> searchEverywhere() {
         DataModel dataModel = DataModel.getInstance();
 
         List<Trouble> troubles = new ArrayList<Trouble>();

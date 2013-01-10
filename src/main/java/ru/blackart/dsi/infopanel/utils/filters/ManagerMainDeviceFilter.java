@@ -45,51 +45,39 @@ public class ManagerMainDeviceFilter {
 
     public boolean validInputDeviceName(String name) {
         boolean result = false;
-        int count_filters = 0;
-        for (DeviceFilter df : this.inputDeviceFilters) {
-            if ((df.isEnable()) && (df.getType().getName().equals("name"))) {
-                if (df.isPolicy()) {
-                    result = result || Pattern.matches(df.getValue(), name);
-                    count_filters++;
-                }
-            }
-        }
-
-        if (count_filters == 0) result = true;
+        int countTruePolicyFilters = 0;
 
         for (DeviceFilter df : this.inputDeviceFilters) {
             if ((df.isEnable()) && (df.getType().getName().equals("name"))) {
                 if (!df.isPolicy()) {
-                    result = result && !Pattern.matches(df.getValue(), name);
+                    if (Pattern.matches(df.getValue(), name)) return false;
+                } else {
+                    result = result || Pattern.matches(df.getValue(), name);
+                    countTruePolicyFilters ++;
                 }
             }
         }
 
+        if (countTruePolicyFilters == 0) result = true;
         return result;
     }   
 
     public boolean validInputDeviceGroup(int group) {
         boolean result = false;
-        int count_filters = 0;
+        int countTruePolicyFilters = 0;
+
         for (DeviceFilter df : this.inputDeviceFilters) {
             if ((df.isEnable()) && (df.getType().getName().equals("group"))) {
-                if (df.isPolicy()) {
+                if (!df.isPolicy()) {                                               //forbiding filters
+                    if (Integer.valueOf(df.getValue()) == group) return false;
+                } else {                                                            //allowing filters
                     result = result || (Integer.valueOf(df.getValue()) == group);
-                    count_filters++;
+                    countTruePolicyFilters ++;
                 }
             }
         }
 
-        if (count_filters == 0) result = true;
-
-        for (DeviceFilter df : this.inputDeviceFilters) {
-            if ((df.isEnable()) && (df.getType().getName().equals("group"))) {
-                if (!df.isPolicy()) {
-                    result = result && (Integer.valueOf(df.getValue()) != group);
-                }
-            }
-        }
-
+        if (countTruePolicyFilters == 0) result = true;
         return result;
     }
 
