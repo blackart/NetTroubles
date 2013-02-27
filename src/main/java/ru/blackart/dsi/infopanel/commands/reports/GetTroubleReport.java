@@ -2,6 +2,7 @@ package ru.blackart.dsi.infopanel.commands.reports;
 
 import com.google.gson.Gson;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
+import ru.blackart.dsi.infopanel.beans.Trouble;
 import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.searching.*;
@@ -9,6 +10,7 @@ import ru.blackart.dsi.infopanel.utils.searching.*;
 import java.util.List;
 
 public class GetTroubleReport extends AbstractCommand {
+    private final DataModel dataModel = DataModel.getInstance();
     @Override
     public String execute() throws Exception {
         String searchParam_str = this.getRequest().getParameter("param");
@@ -44,6 +46,12 @@ public class GetTroubleReport extends AbstractCommand {
 
         if (devcapsules != null) {
             devcapsules = DataModel.getInstance().sortDevcapsuleByTime(devcapsules);
+            synchronized (dataModel) {
+                for (Devcapsule d : devcapsules) {
+                    Trouble trouble = dataModel.getTroubleForDevcapsule(d);
+
+                }
+            }
         }
 
         this.getResponse().getWriter().print(gson.toJson(devcapsules));

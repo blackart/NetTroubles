@@ -1,14 +1,14 @@
 package ru.blackart.dsi.infopanel.view;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Sergey
- * Date: 17.11.12
- * Time: 17:26
- * To change this template use File | Settings | File Templates.
- */
-public class DeviceView {
+import ru.blackart.dsi.infopanel.beans.Hostgroup;
+import ru.blackart.dsi.infopanel.beans.Hoststatus;
+import ru.blackart.dsi.infopanel.beans.Region;
+
+public class DeviceView extends View {
     private int id;
     private String name;
     private String description;
+    private Hostgroup hostgroup;
+    private Hoststatus hoststatus;
+    private Region region;
 }
