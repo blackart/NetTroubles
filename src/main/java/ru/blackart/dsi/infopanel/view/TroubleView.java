@@ -2,7 +2,7 @@ package ru.blackart.dsi.infopanel.view;
 
 import java.util.List;
 
-public class TroubleView {
+public class TroubleView extends View {
     private int id;
     private String title;
     private String actualProblem;
