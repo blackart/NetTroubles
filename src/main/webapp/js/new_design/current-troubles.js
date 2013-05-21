@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(function() {
     var host = "/controller";
 
     function ViewModel() {
@@ -33,6 +33,11 @@ $(document).ready(function () {
         self.timeToResolve = ko.computed(function() {
             $.each(self.currentTroubles(), function() {
                 this.timeToResolve(getTimeToResolve(this.timeout, self.timeNow()));
+            });
+        });
+        self.overdueTime = ko.computed(function() {
+            $.each(self.currentTroubles(), function() {
+                this.overdueTime('Обновите время решения проблемы (' + getOverdueTime(this.timeout, self.timeNow()) + ')');
             });
         });
         self.services = ko.observableArray();
@@ -94,7 +99,7 @@ $(document).ready(function () {
 
             troubleForEditing.services([]);
             if (trouble.services) {
-                $.each(trouble.services, function () {
+                $.each(trouble.services, function() {
                     troubleForEditing.services.push(this.id);
                 });
             }
@@ -114,8 +119,8 @@ $(document).ready(function () {
         self.saveTrouble = function() {
             var trouble = this;
             $.ajax({
-                url : "/controller",
-                type : "POST",
+                url: "/controller",
+                type: "POST",
                 dataType: 'JSON',
                 data: {
                     cmd: "editTrouble",
@@ -146,8 +151,8 @@ $(document).ready(function () {
             var trouble = this;
             var errorAlert = self.modalDialog.errorAlert;
             $.ajax({
-                url : "/controller",
-                type : "POST",
+                url: "/controller",
+                type: "POST",
                 dataType: 'JSON',
                 data: {
                     cmd: "sendToCRMNew",
@@ -197,8 +202,8 @@ $(document).ready(function () {
         self.deleteTrouble = function() {
             var trouble = this;
             $.ajax({
-                url : "/controller",
-                type : "POST",
+                url: "/controller",
+                type: "POST",
                 dataType: 'JSON',
                 data: {
                     cmd: "deleteTroubleNew",
@@ -216,8 +221,8 @@ $(document).ready(function () {
             var trouble = this;
             var comment = $("#text-comment").val();
             $.ajax({
-                url : "/controller",
-                type : "POST",
+                url: "/controller",
+                type: "POST",
                 dataType: 'JSON',
                 data: {
                     cmd: "addCommentNew",
@@ -295,8 +300,8 @@ $(document).ready(function () {
             var trouble = this;
             var errorAlert = self.modalDialog.errorAlert;
             $.ajax({
-                url : "/controller",
-                type : "POST",
+                url: "/controller",
+                type: "POST",
                 dataType: 'JSON',
                 data: {
                     cmd: "mergeTroublesNew",
@@ -336,8 +341,8 @@ $(document).ready(function () {
         self.unmerge = function() {
             var devc = this;
             $.ajax({
-                url : "/controller",
-                type : "POST",
+                url: "/controller",
+                type: "POST",
                 dataType: 'JSON',
                 data: {
                     cmd: "unmergeTroubleNew",
@@ -393,7 +398,7 @@ $(document).ready(function () {
     });
 
     $('#editingDialog')
-        .modal({show:false})
+        .modal({show: false})
         .on('hidden', function() {
             $("#checkAll").attr("checked", false);
             $("#text-comment").popover('hide');
@@ -418,12 +423,13 @@ $(document).ready(function () {
     });
 
     function getJSONData() {
-        $.get(host, {cmd:"getCurrentTroubleListGroup"},
-            function (data) {
+        $.get(host, {cmd: "getCurrentTroubleListGroup"},
+            function(data) {
                 var allTroubles = data.wait.troubles.concat(data.need.troubles).concat(data.current.troubles);
                 $.each(allTroubles, function() {
                     if (!this.timeout)this.timeout = "";
                     this.timeToResolve = ko.observable();
+                    this.overdueTime = ko.observable();
                     this.checked = ko.observable(false);
                 });
                 viewModel.currentTroubles(data.current.troubles);
@@ -436,8 +442,8 @@ $(document).ready(function () {
     }
 
     function getUser() {
-        $.get(host, {cmd:"getUser"},
-            function (data) {
+        $.get(host, {cmd: "getUser"},
+            function(data) {
                 if (data) {
                     viewModel.user(data);
                 }
@@ -465,8 +471,8 @@ $(document).ready(function () {
     });
 
     (function() {
-        $.get(host, {cmd:"getServices"},
-            function (data) {
+        $.get(host, {cmd: "getServices"},
+            function(data) {
                 viewModel.services(data);
             }, "json"
         );

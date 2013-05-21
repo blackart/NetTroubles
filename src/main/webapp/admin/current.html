@@ -83,7 +83,7 @@
                             <div class="container-fluid device-block">
                                 <div class="row">
                                     <span class="badge" data-bind="text: device.name"></span>
-                                    <span data-bind="text: $parent.complete ? 'up' : 'down', attr: {class: $parent.complete ? 'label label-success' : 'label label-important'}"></span>
+                                    <span data-bind="text: complete ? 'up' : 'down', attr: {class: complete ? 'label label-success' : 'label label-important'}"></span>
                                     <input type="button" class="btn-mini pull-right" value="unmerge" data-bind="visible: ($root.modalDialog.status() == 'edit') && ($parent.devcapsules().length > 1), click: $root.unmerge">
                                 </div>
                                 <dl class="dl-horizontal">
@@ -206,18 +206,18 @@
 
                         <form class="navbar-form pull-left">
                             <input type="checkbox" style="margin-right: 10px" data-bind="event: {change: checkAll}" id="checkAll">
-                            <button type="button" class="btn" data-bind="click: calcMergeTrouble">Merge</button>
+                            <button type="button" class="btn" data-bind="click: calcMergeTrouble">Объеденить</button>
                         </form>
                         <div class="nav-collapse control-panel">
                             <form class="navbar-form pull-right">
-                                <button type="button" class="btn" id="refesh-page">Refresh</button>
+                                <button type="button" class="btn" id="refesh-page">Обновить</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <h5 data-bind="visible: needCRMTroubles().length > 0">Enter the value of the actual problem for these troubles:</h5>
+            <h5 data-bind="visible: needCRMTroubles().length > 0">Укажите причину аварии:</h5>
 
             <div id="need" data-bind="foreach: needCRMTroubles">
                 <div class="trouble-entry">
@@ -231,7 +231,7 @@
                 </div>
             </div>
 
-            <h5 data-bind="visible: waitingCloseTroubles().length > 0">Send it to CRM:</h5>
+            <h5 data-bind="visible: waitingCloseTroubles().length > 0">Нобходимо отправить в CRM:</h5>
 
             <div id="wait" data-bind="foreach: waitingCloseTroubles">
                 <div class="trouble-entry">
@@ -245,7 +245,7 @@
                 </div>
             </div>
 
-            <h5 data-bind="visible: currentTroubles().length > 0">Current troubles:</h5>
+            <h5 data-bind="visible: currentTroubles().length > 0">Текущие проблемы:</h5>
 
             <div id="current" data-bind="foreach: currentTroubles">
                 <div class="trouble-entry">
@@ -255,8 +255,8 @@
                     <span class="trouble-title" data-bind="text: title, click: $parent.calcTroubleForEditing" data-toggle="modal" data-target="#editingDialog"></span>
                     <span class="right-panel pull-right">
                         <span data-bind="visible: timeToResolve() != '-2' && timeToResolve() != '-1', text: timeToResolve, attr: {class: 'label label-success'}"></span>
-                        <span data-bind="visible: timeToResolve() == '-2', text: 'set solving time', attr: {class: 'label label-warning'}"></span>
-                        <span data-bind="visible: timeToResolve() == '-1', text: 'update solving time', attr: {class: 'label label-important'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-2', text: 'Укажите время решения проблемы', attr: {class: 'label label-warning'}"></span>
+                        <span data-bind="visible: timeToResolve() == '-1', text: overdueTime, attr: {class: 'label label-important'}"></span>
                         <span data-bind="visible: crm" class="label label-info">crm</span>
                     </span>
                 </div>
