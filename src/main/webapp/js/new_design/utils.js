@@ -55,3 +55,20 @@ function getTimeToResolve(timestamp, now) {
 
     return (days == 0 ? "" : days + "d ") + twoChar(hours) + ":" + twoChar(minutes) + ":" + twoChar(seconds) + "";
 }
+
+function getOverdueTime(timestamp, now) {
+    if (!timestamp) return -2;
+
+    var diffInSec = ((now - parseInt(timestamp)) / 1000);
+    if (diffInSec <= 0) return -1;
+
+    var days = parseInt(diffInSec / (3600 * 24));
+    diffInSec = diffInSec - (days * 3600 * 24);
+    var hours = parseInt(diffInSec / 3600);
+    diffInSec = diffInSec - (hours * 3600);
+    var minutes = parseInt(diffInSec / 60);
+    diffInSec = diffInSec - (minutes * 60);
+    var seconds = parseInt(diffInSec);
+
+    return (days == 0 ? "" : days + "d ") + twoChar(hours) + ":" + twoChar(minutes) + ":" + twoChar(seconds) + "";
+}
