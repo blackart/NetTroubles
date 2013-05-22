@@ -36,9 +36,9 @@
     <div class="modal-body container-fluid" id="edition-dialog-body">
         <div class="tabbable"> <!-- Only required for left/right tabs -->
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#edit-dialog-general" data-toggle="tab">General</a></li>
-                <li><a href="#edit-dialog-devices" data-toggle="tab">Devices</a></li>
-                <li><a href="#edit-dialog-comments" data-toggle="tab">Comments</a></li>
+                <li class="active"><a href="#edit-dialog-general" data-toggle="tab">Основные</a></li>
+                <li><a href="#edit-dialog-devices" data-toggle="tab">Оборудование</a></li>
+                <li><a href="#edit-dialog-comments" data-toggle="tab">Комментарии</a></li>
             </ul>
             <div class="tab-content">
 
@@ -50,29 +50,29 @@
                             </div>
                         </span>
                         <div class="control-group">
-                            <div class="caption">Title</div>
-                            <input type="text" class="span12" placeholder="the title of trouble" data-bind="value: title">
+                            <div class="caption">Заголовок</div>
+                            <input type="text" class="span12" placeholder="Например: Терешковой, 37" data-bind="value: title">
                         </div>
                         <div class="control-group" data-bind="visible: $parent.modalDialog.status() == 'edit'">
-                            <div class="caption">Time to solve the problem</div>
+                            <div class="caption">Время решения проблемы</div>
                             <span class="row-fluid form-inline">
                                 <span class="span6">
-                                    <span class="span1 date-and-time-label">Date:</span>
-                                    <span class="span11"><input type="text" class="pull-right picker" id="date-timeout" placeholder="when solved the problem?" data-bind="value: date, attr: {disabled: close}"></span>
+                                    <span class="span1 date-and-time-label">Дата:</span>
+                                    <span class="span11"><input type="text" class="pull-right picker" id="date-timeout" placeholder="DD/MM/YYYY" data-bind="value: date, attr: {disabled: close}"></span>
                                 </span>
                                 <span class="span6">
-                                    <span class="span1 date-and-time-label">Time:</span>
-                                    <span class="span11"><input type="text" class="pull-right picker" id="time-timeout" placeholder="the time when the problem will be solved?" data-bind="value: time, attr: {disabled: close}"></span>
+                                    <span class="span1 date-and-time-label">Время:</span>
+                                    <span class="span11"><input type="text" class="pull-right picker" id="time-timeout" placeholder="hh:mm:ss" data-bind="value: time, attr: {disabled: close}"></span>
                                 </span>
                             </span>
                         </div>
                         <div class="control-group">
-                            <div class="caption">Services</div>
+                            <div class="caption">Затронутые сервисы</div>
                             <select class="span12" multiple="multiple" size="5" data-bind="options: $parent.services, optionsText: 'name', optionsValue: 'id', selectedOptions: services"></select>
                         </div>
                         <div class="control-group">
-                            <div class="caption">Actual problem</div>
-                            <input type="text" class="span12" placeholder="what's really happened?" data-bind="value: actualProblem">
+                            <div class="caption">Причина аварии</div>
+                            <input type="text" class="span12" placeholder="что случилось?" data-bind="value: actualProblem">
                         </div>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                                 <div class="row">
                                     <span class="badge" data-bind="text: device.name"></span>
                                     <span data-bind="text: complete ? 'up' : 'down', attr: {class: complete ? 'label label-success' : 'label label-important'}"></span>
-                                    <input type="button" class="btn-mini pull-right" value="unmerge" data-bind="visible: ($root.modalDialog.status() == 'edit') && ($parent.devcapsules().length > 1), click: $root.unmerge">
+                                    <input type="button" class="btn-mini pull-right" value="Разъеденить" data-bind="visible: ($root.modalDialog.status() == 'edit') && ($parent.devcapsules().length > 1), click: $root.unmerge">
                                 </div>
                                 <dl class="dl-horizontal">
                                     <dt>Time down: </dt>
@@ -117,7 +117,7 @@
                     </div>
                     <span class="row-fluid input-crm-message control-group" id="control-group-add-crm-comment" data-bind="visible: $parent.modalDialog.status() == 'edit'">
                         <textarea class="span12" id="text-comment"></textarea>
-                        <button class="btn pull-right" id="send-comment" data-bind="click: $parent.sendComment">Send comment</button>
+                        <button class="btn pull-right" id="send-comment" data-bind="click: $parent.sendComment">Отправить комментарий</button>
                     </span>
                 </div>
 
@@ -125,11 +125,11 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn" data-bind="click: $parent.deleteTrouble, visible: $parent.modalDialog.status() == 'edit'">Delete</button>
-        <button class="btn" data-bind="click: $parent.saveTrouble, visible: $parent.modalDialog.status() == 'edit'">Save</button>
-        <button class="btn btn-primary" data-bind="click: $parent.sendToCRM, visible: $parent.modalDialog.status() == 'edit'">Send to SRM</button>
-        <button class="btn btn-primary" data-bind="click: $parent.mergeTroubles, visible: $parent.modalDialog.status() == 'merge'">Merge</button>
+        <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Закрыть</button>
+        <button class="btn" data-bind="click: $parent.deleteTrouble, visible: $parent.modalDialog.status() == 'edit'">Удалить</button>
+        <button class="btn" data-bind="click: $parent.saveTrouble, visible: $parent.modalDialog.status() == 'edit'">Сохранить</button>
+        <button class="btn btn-primary" data-bind="click: $parent.sendToCRM, visible: $parent.modalDialog.status() == 'edit'">Отправить в CRM</button>
+        <button class="btn btn-primary" data-bind="click: $parent.mergeTroubles, visible: $parent.modalDialog.status() == 'merge'">Объеденить</button>
     </div>
 </div>
 

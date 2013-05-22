@@ -67,7 +67,7 @@ $(document).ready(function() {
             var troubleForEditing = self.troubleForEditing;
 
             self.modalDialog.errorAlert.show(false);
-            self.modalDialog.caption("Edit information about the trouble");
+            self.modalDialog.caption(trouble.title);
             self.modalDialog.status('edit');
 
             troubleForEditing.id(trouble.id);
@@ -132,11 +132,11 @@ $(document).ready(function() {
                     var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
                     if (!$.trim(trouble.title())) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, enter the title of trouble.");
+                        errorAlert.message("Введите заголовок проблемы.");
                         return false;
                     } else if (trouble.timeout() && !expr.exec(trouble.timeout())) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, enter the time of resolving problem in correct format.");
+                        errorAlert.message("Введите время решения проблемы в правильном формате.");
                         return false;
                     }
                     errorAlert.show(false);
@@ -163,27 +163,27 @@ $(document).ready(function() {
                     var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
                     if (!$.trim(trouble.title())) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, enter the title of trouble.");
+                        errorAlert.message("Введите заголовок проблемы.");
                         return false;
                     } else if (trouble.services().length == 0) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, select the affected services.");
+                        errorAlert.message("Укажите затронутые проблемой сервисы.");
                         return false;
                     } else if (!trouble.timeout()) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, enter the time of resolving problem.");
+                        errorAlert.message("Введите время решения проблемы.");
                         return false;
                     } else if (trouble.timeout() && !expr.exec(trouble.timeout())) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, enter the time of resolving problem in correct format.");
+                        errorAlert.message("Введите время решения проблемы в правильном формате.");
                         return false;
                     } else if (!trouble.close() && getTimeToResolve(trouble.timeoutObj().getTime(), new Date().getTime()) == "-1") {
                         errorAlert.show(true);
-                        errorAlert.message("Please, more actual resolving time.");
+                        errorAlert.message("Время устранения проблемы не актуально.");
                         return false;
                     } else if (trouble.comments().length == 0) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, add at least one comment.");
+                        errorAlert.message("Добавьте хотя бы один коментарий.");
                         return false;
                     }
                     errorAlert.show(false);
@@ -290,7 +290,7 @@ $(document).ready(function() {
                 trouble.crm(false);
 
                 self.modalDialog.errorAlert.show(false);
-                self.modalDialog.caption("Merge the selected troubles");
+                self.modalDialog.caption("Объединение выбранных проблем");
                 self.modalDialog.status('merge');
 
                 $('#editingDialog').modal("show");
@@ -313,7 +313,7 @@ $(document).ready(function() {
                     var expr = /(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/][2]\d{3}[ ]([0-1][0-9]|2[0-4])[:][0-5][0-9][:][0-5][0-9]/;
                     if (!$.trim(trouble.title())) {
                         errorAlert.show(true);
-                        errorAlert.message("Please, enter the title of trouble.");
+                        errorAlert.message("Введите заголовок проблемы");
                         return false;
                     }
                     return true;
@@ -412,8 +412,8 @@ $(document).ready(function() {
     $("#text-comment").popover({
         placement: "top",
         html: true,
-        content: "Please, enter the comment",
-        title: "<h5 class='text-error'>Comment error</h5>",
+        content: "Введите коментарий",
+        title: "<h5 class='text-error'>Ошибка</h5>",
         trigger: "manual"
     });
 

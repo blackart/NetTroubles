@@ -1,6 +1,8 @@
 package ru.blackart.dsi.infopanel.crm;
 
-import javax.jms.JMSException;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -11,7 +13,7 @@ public class SendToCrm {
         String url = "tcp://192.168.1.201:61716";
 
         //todo раскомментить ддя отправки в CRM
-        /*ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(user, password, url);
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(user, password, url);
         Connection connection = connectionFactory.createConnection();
         connection.setClientID("MonitoringService");
 
@@ -27,6 +29,6 @@ public class SendToCrm {
 
         mProducer.send(message);
 
-        connection.close();*/
+        connection.close();
     }
 }

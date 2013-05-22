@@ -4942,6 +4942,8 @@ input[type="submit"].btn.btn-mini {
 .modal-header h3 {
   margin: 0;
   line-height: 30px;
+  height: 30px;
+  overflow: hidden;
 }
 
 .modal-body {
