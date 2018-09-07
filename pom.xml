@@ -17,7 +17,8 @@
                 <directory>${basedir}/src/main/resources</directory>
 
                 <includes>
-                    <include>*.cfg.xml</include>
+                    <include>*.*</include>
+
                 </includes>
             </resource>
         </resources>

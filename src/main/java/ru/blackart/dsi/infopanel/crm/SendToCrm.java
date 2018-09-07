@@ -10,7 +10,7 @@ public class SendToCrm {
     public static synchronized void send(ByteArrayOutputStream baos) throws JMSException, UnsupportedEncodingException {
         String user = "crm";
         String password = "cAD79snu";
-        String url = "tcp://192.168.1.201:61716";
+        String url = "tcp://bg.dsi.ru:61716";
 
         //todo раскомментить ддя отправки в CRM
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(user, password, url);

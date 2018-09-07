@@ -87,29 +87,27 @@ public class DataModel {
     public static synchronized DataModel getInstance() {
         if (dataModel == null) {
             dataModel = new DataModel();
+            TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
 
             dataModel.sessionFactory = SessionFactorySingle.getSessionFactory();
 
             dataModel.list_of_current_troubles = dataModel.loadTroubleList("current", dataModel.sessionFactory.openSession());
-            dataModel.list_of_trash_troubles = dataModel.loadTroubleList("trash", dataModel.sessionFactory.openSession());
-            dataModel.list_of_complete_troubles = dataModel.loadTroubleList("complete", dataModel.sessionFactory.openSession());
-//            dataModel.list_of_complete_troubles = dataModel.loadTroubleList("trash", dataModel.sessionFactory.openSession());
-            dataModel.list_of_waiting_close_troubles = dataModel.loadTroubleList("waiting_close", dataModel.sessionFactory.openSession());
-            dataModel.list_of_need_actual_problem = dataModel.loadTroubleList("need_actual_problem", dataModel.sessionFactory.openSession());
-
             dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_current_troubles);
-            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_need_actual_problem);
-            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_waiting_close_troubles);
-
-            //методы класса TroubleListsManager сохраняют ссылки на эти объекты для доступа к ним из дркгого контроллера.
-            TroubleListsManager troubleListsManager = TroubleListsManager.getInstance();
             troubleListsManager.setCurrTroubleList(dataModel.list_of_current_troubles);
-            troubleListsManager.setClosedTroubleList(dataModel.list_of_complete_troubles);
-            troubleListsManager.setWaitingCloseTroubleList(dataModel.list_of_waiting_close_troubles);
-            troubleListsManager.setTrashTroubleList(dataModel.list_of_trash_troubles);
-            troubleListsManager.setNeedActualProblemTroubleList(dataModel.list_of_need_actual_problem);
-
             troubleListsManager.setTroubleListForCallCenter(dataModel.list_of_current_troubles);
+
+
+            dataModel.list_of_complete_troubles = dataModel.loadTroubleList("complete", dataModel.sessionFactory.openSession());
+            troubleListsManager.setClosedTroubleList(dataModel.list_of_complete_troubles);
+            dataModel.list_of_waiting_close_troubles = dataModel.loadTroubleList("waiting_close", dataModel.sessionFactory.openSession());
+            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_waiting_close_troubles);
+            troubleListsManager.setWaitingCloseTroubleList(dataModel.list_of_waiting_close_troubles);
+            dataModel.list_of_need_actual_problem = dataModel.loadTroubleList("need_actual_problem", dataModel.sessionFactory.openSession());
+            dataModel.errorCorrectionComplianceTroublesAndList(dataModel.list_of_need_actual_problem);
+            troubleListsManager.setNeedActualProblemTroubleList(dataModel.list_of_need_actual_problem);
+            dataModel.list_of_trash_troubles = dataModel.loadTroubleList("trash", dataModel.sessionFactory.openSession());
+            troubleListsManager.setTrashTroubleList(dataModel.list_of_trash_troubles);
+
         }
 
         return dataModel;
@@ -173,16 +171,26 @@ public class DataModel {
     }
 
     public void errorCorrectionComplianceTroublesAndList(TroubleList troubleList) {
-        List<Trouble> needMoveTroubles = new ArrayList<Trouble>();
+
+        List<Trouble> needMoveTroubles = new ArrayList();
         for (Trouble trouble : troubleList.getTroubles()) {
+            try{
             if (!this.checkComplianceTroubleAndList(trouble, troubleList)) {
                 needMoveTroubles.add(trouble);
             }
+            }catch (Exception ex){
+                int a =1;
+            }
         }
         for (Trouble trouble : needMoveTroubles) {
+            try{
             TroubleList targetTroubleList = this.getTargetTroubleListForTrouble(trouble);
             this.moveTroubleList(trouble, troubleList, targetTroubleList);
+            }catch (Exception ex){
+                int a =1;
+            }
         }
+
     }
 
     public Boolean checkComplianceTroubleAndList(Trouble trouble) {
@@ -192,8 +200,11 @@ public class DataModel {
 
     public boolean checkComplianceTroubleAndList(Trouble trouble, TroubleList sourceTroubleList) {
         TroubleList targetTroubleList = this.getTargetTroubleListForTrouble(trouble);
-        if (targetTroubleList == null) return false;
-        return targetTroubleList.getId() == sourceTroubleList.getId();
+        if (targetTroubleList == null) {
+            return false;
+        } else {
+            return targetTroubleList.getId() == sourceTroubleList.getId();
+        }
     }
 
     public TroubleList getTargetTroubleListForTrouble(Trouble trouble) {

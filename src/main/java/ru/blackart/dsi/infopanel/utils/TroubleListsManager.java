@@ -27,36 +27,23 @@ public class TroubleListsManager {
     }
 
     public TroubleList sortTroubleList(TroubleList troubleList) {
-        for (int i = 0; i < troubleList.getTroubles().size(); i++) {
-            for (int j = 0; j < i; j++) {
-                Long dev_time_i = Long.valueOf(troubleList.getTroubles().get(i).getDate_in());
-                Long dev_time_j = Long.valueOf(troubleList.getTroubles().get(j).getDate_in());
-
-                if (dev_time_i < dev_time_j) {  /*> - по убыванию, < - по возрастанию*/
-                    Trouble trouble_1 = troubleList.getTroubles().get(i);
+        for(int i = 0; i < troubleList.getTroubles().size(); ++i) {
+            for(int j = 0; j < i; ++j) {
+                Long dev_time_i = Long.valueOf(((Trouble)troubleList.getTroubles().get(i)).getDate_in());
+                Long dev_time_j = Long.valueOf(((Trouble)troubleList.getTroubles().get(j)).getDate_in());
+                if (dev_time_i.longValue() < dev_time_j.longValue()) {
+                    Trouble trouble_1 = (Trouble)troubleList.getTroubles().get(i);
                     troubleList.getTroubles().set(i, troubleList.getTroubles().get(j));
                     troubleList.getTroubles().set(j, trouble_1);
                 }
-
             }
         }
+
         return troubleList;
     }
 
     public void setTroubleListForCallCenter(TroubleList troubleList) {
-//        this.troubleListForCallCenter.getTroubles().clear();
-        /*for (Trouble trouble : troubleList.getTroubles()) {
-            boolean good = false;
-            for (Devcapsule devcapsule : trouble.getDevcapsules()) {
-                good = good || Pattern.matches("(sw)[0-9]*(-){0,1}[A-Za-z]*", devcapsule.getDevice().getName()) || Pattern.matches("(s)[0-9]*", devcapsule.getDevice().getName());
-            }
-            if (good) {
-                this.troubleListForCallCenter.getTroubles().add(trouble);
-            }
-        }*/
-
-//        this.config.getServletContext().setAttribute("callCenterTroubleList", sortTroubleList(this.troubleListForCallCenter));
-        this.config.getServletContext().setAttribute("callCenterTroubleList", sortTroubleList(troubleList));
+        this.config.getServletContext().setAttribute("callCenterTroubleList", this.sortTroubleList(troubleList));
     }
 
     public void setWaitingCloseTroubleList(TroubleList troubleList) {
