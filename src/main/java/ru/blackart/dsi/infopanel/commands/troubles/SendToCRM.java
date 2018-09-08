@@ -3,23 +3,22 @@ package ru.blackart.dsi.infopanel.commands.troubles;
 import com.myjavatools.xml.BasicXmlData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.*;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.crm.CrmComment;
+import ru.blackart.dsi.infopanel.crm.CrmTrouble;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.CommentService;
 import ru.blackart.dsi.infopanel.services.ServiceService;
-import ru.blackart.dsi.infopanel.services.TroubleListService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.DateStr;
-import ru.blackart.dsi.infopanel.utils.crm.CrmComment;
-import ru.blackart.dsi.infopanel.utils.crm.CrmTrouble;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SendToCRM extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
     TroubleService troubleService = TroubleService.getInstance();
     ServiceService serviceService = ServiceService.getInstance();
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
@@ -44,9 +43,9 @@ public class SendToCRM extends AbstractCommand {
         log.info("Start sending trouble " + title + " [" + id + "] to CRM");
         /*-------------------------------------------------------------------------------------------*/
 
-        synchronized (dataModelConstructor) {
-            Trouble trouble = dataModelConstructor.getTroubleForId(id);
-            TroubleList tList = dataModelConstructor.getTroubleListForTrouble(trouble);        //выясняем в какой очереде (листе) находится проблема
+        synchronized (dataModel) {
+            Trouble trouble = dataModel.getTroubleForId(id);
+            TroubleList tList = dataModel.getTroubleListForTrouble(trouble);        //выясняем в какой очереде (листе) находится проблема
             log.info("The trouble [" + id + "] belongs to the " + tList.getName() + " trouble list");
 
             if (tList.getName().equals("current")) {
@@ -60,7 +59,7 @@ public class SendToCRM extends AbstractCommand {
 
             trouble.setTitle(title);
             trouble.setActualProblem(actual_problem);
-            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setAuthor((User) this.getSession().getAttribute("info"));
 
             if ((services != null) && (services.length > 0)) {
                 synchronized (serviceService) {
@@ -112,12 +111,12 @@ public class SendToCRM extends AbstractCommand {
                         troubleService.update(trouble);                                            //сохраняем в DB инфу о проблеме
                     }
 
-                    TroubleList targetTroubleList = dataModelConstructor.getTargetTroubleListForTrouble(trouble);
+                    TroubleList targetTroubleList = dataModel.getTargetTroubleListForTrouble(trouble);
                     log.info("Target list for the trouble [" + id + "] is " + targetTroubleList.getName() + " trouble list");
 
                     if (tList.getId() != targetTroubleList.getId()) {
                         //перемещаем и сохраняем состояние обоих очередей в DB.
-                        dataModelConstructor.moveTroubleList(trouble, tList, targetTroubleList);
+                        dataModel.moveTroubleList(trouble, tList, targetTroubleList);
                     }
 
                 } else {

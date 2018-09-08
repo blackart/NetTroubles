@@ -1,0 +1,21 @@
+.login-form {
+    width: 30%;
+    margin: 200px auto 0 auto;
+}
+
+.response-message-container {
+    margin: -70px auto 0 auto;
+    display: block;
+}
+
+.form-horizontal .control-label {
+    width: 60px;
+}
+
+.form-horizontal .controls {
+    margin-left: 80px;
+}
+
+#submit-button {
+    margin: 0 auto 0 auto;
+}

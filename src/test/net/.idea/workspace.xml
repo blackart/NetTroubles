@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dcc12b82-a045-44cf-a3e6-56d8649f35f3" name="Default" comment="" />
+    <ignored path="net.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="net" />
+  </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.37054917">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="current-troubles.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/js/new_design/current-troubles.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="113" column="0" selection-start="4487" selection-end="5879" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="current_troubles.css" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/css/new_design/current_troubles.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="140" column="31" selection-start="1974" selection-end="1991" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="closed.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/admin/closed.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="233" column="26" selection-start="13259" selection-end="13259" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="statistics.html" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/admin/statistics.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="123" column="46" selection-start="5571" selection-end="5571" vertical-scroll-proportion="0.35784313">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="utils.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/js/new_design/utils.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="13" column="40" selection-start="296" selection-end="296" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="current.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/admin/current.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="70" column="116" selection-start="4625" selection-end="4666" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="closed-troubles.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/js/new_design/closed-troubles.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="339" column="0" selection-start="12685" selection-end="12889" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="statistics.js" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/js/new_design/statistics.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="56" column="12" selection-start="2076" selection-end="2076" vertical-scroll-proportion="0.33028573">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/login/login.html" />
+        <option value="$PROJECT_DIR$/js/new_design/login.js" />
+        <option value="$PROJECT_DIR$/admin/admin.html" />
+        <option value="$PROJECT_DIR$/js/bootstrap/js/bootstrap-datepicker.js" />
+        <option value="$PROJECT_DIR$/js/bootstrap/css/bootstrap.css" />
+        <option value="$PROJECT_DIR$/js/new_design/utils.js" />
+        <option value="$PROJECT_DIR$/js/new_design/closed-troubles.js" />
+        <option value="$PROJECT_DIR$/css/new_design/current_troubles.css" />
+        <option value="$PROJECT_DIR$/js/new_design/script.js" />
+        <option value="$PROJECT_DIR$/js/new_design/trashed-troubles.js" />
+        <option value="$PROJECT_DIR$/admin/current.html" />
+        <option value="$PROJECT_DIR$/admin/closed.html" />
+        <option value="$PROJECT_DIR$/admin/trash.html" />
+        <option value="$PROJECT_DIR$/js/new_design/current-troubles.js" />
+        <option value="$PROJECT_DIR$/admin/statistics.html" />
+        <option value="$PROJECT_DIR$/js/new_design/statistics.js" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1696" />
+    <option name="height" value="1036" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents ProjectPane="true" />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="DefaultHtmlFileTemplate" value="Html" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\webapps\net\admin" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\webapps\net\css\new_design" />
+      <recent name="C:\Program Files (x86)\Apache Software Foundation\Tomcat 7.0\webapps\net\js\new_disign" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavascriptDebugSession" factoryName="Local">
+      <JSDebuggerConfigurationSettings>
+        <option name="engineId" value="embedded" />
+        <option name="fileUrl" />
+      </JSDebuggerConfigurationSettings>
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dcc12b82-a045-44cf-a3e6-56d8649f35f3" name="Default" comment="" />
+      <created>1353493668911</created>
+      <updated>1353493668911</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1696" height="1036" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13600422" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="JsTestDriver Server" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="true" />
+    <option name="myTodoPanelSettings">
+      <value>
+        <are-packages-shown value="false" />
+        <are-modules-shown value="false" />
+        <flatten-packages value="false" />
+        <is-autoscroll-to-source value="false" />
+      </value>
+    </option>
+    <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_CHECKOUT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
+    <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="false" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
+    <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
+    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
+    <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
+    <option name="SHORT_DIFF_HORISONTALLY" value="true" />
+    <option name="SHORT_DIFF_EXTRA_LINES" value="2" />
+    <option name="SOFT_WRAPS_IN_SHORT_DIFF" value="true" />
+    <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
+    <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <option name="SHOW_FILE_HISTORY_DETAILS" value="true" />
+    <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+    <option name="ACTIVE_VCS_NAME" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/js/jQuery/js/jquery-1.8.2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7485" column="0" selection-start="211559" selection-end="211559" vertical-scroll-proportion="0.33295965" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/webide.jar!/standardSchemas/xhtml1-transitional.dtd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="898" column="2" selection-start="24213" selection-end="24213" vertical-scroll-proportion="0.3325967" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/bootstrap/css/bootstrap.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4229" column="8" selection-start="79782" selection-end="79782" vertical-scroll-proportion="0.35201794" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/new_design/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="23" selection-start="387" selection-end="387" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/trash.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="171" column="88" selection-start="9221" selection-end="9221" vertical-scroll-proportion="-17.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/new_design/trashed-troubles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="140" column="41" selection-start="0" selection-end="5466" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/new_design/closed-troubles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="339" column="0" selection-start="12685" selection-end="12889" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/closed.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="233" column="26" selection-start="13259" selection-end="13259" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/bootstrap/css/datepicker.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/bootstrap/js/bootstrap-datepicker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="72" selection-start="2687" selection-end="2688" vertical-scroll-proportion="0.019495413" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/new_design/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="40" selection-start="296" selection-end="296" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/new_design/current-troubles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="0" selection-start="4487" selection-end="5879" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/new_design/current_troubles.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="140" column="31" selection-start="1974" selection-end="1991" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/current.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="116" selection-start="4625" selection-end="4666" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/statistics.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="123" column="46" selection-start="5571" selection-end="5571" vertical-scroll-proportion="0.35784313">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/new_design/statistics.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="12" selection-start="2076" selection-end="2076" vertical-scroll-proportion="0.33028573">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

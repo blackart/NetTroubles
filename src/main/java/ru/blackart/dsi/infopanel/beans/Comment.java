@@ -8,7 +8,7 @@ public class Comment implements Persistent{
     private int id;
     private String text;
     private String time;
-    private Users author;
+    private User author;
     private Boolean crm;
 
 
@@ -43,11 +43,11 @@ public class Comment implements Persistent{
 
     @ManyToOne
     @JoinColumn(name = "_author")
-    public Users getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -60,7 +60,7 @@ public class Comment implements Persistent{
         this.crm = crm;
     }
 
-    public Comment(String text, String time, Users author, Boolean crm) {
+    public Comment(String text, String time, User author, Boolean crm) {
         this.text = text;
         this.time = time;
         this.author = author;

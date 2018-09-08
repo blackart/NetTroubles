@@ -1,55 +1,36 @@
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="ru.blackart.dsi.infopanel.access.AccessUserObject" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessTab" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.menu.Menu" %>
+<%@ page import="ru.blackart.dsi.infopanel.access.menu.MenuItem" %>
 <%@ page import="ru.blackart.dsi.infopanel.beans.*" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.AccessItemMenu" %>
-<%@ page import="org.slf4j.Logger" %>
-<%@ page import="org.slf4j.LoggerFactory" %>
-<%@ page import="ru.blackart.dsi.infopanel.utils.model.DataModelConstructor" %>
-<%@ page import="ru.blackart.dsi.infopanel.access.menu.*" %>
-<%@ page import="ru.blackart.dsi.infopanel.beans.Group" %>
+<%@ page import="ru.blackart.dsi.infopanel.model.DataModel" %>
+<%@ page import="ru.blackart.dsi.infopanel.services.AccessService" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-//    Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    /*Enumeration en = session.getAttributeNames();
-    log.info("Session elements: ");
-    while (en.hasMoreElements()) {
-        String elem = String.valueOf(en.nextElement());
-        log.info(elem + " - " + session.getAttribute(elem));
-    }*/
-
-    HttpSession req_session = request.getSession(true);
-
+    /*HttpSession req_session = request.getSession(true);
     if (req_session.getAttribute("login") != null) {
-        if (!(Boolean) req_session.getAttribute("login")) {
-//            log.info("++++++++++++++++++++++++++ Not login !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (!(Boolean)req_session.getAttribute("login")) {
             response.sendRedirect("/login");
         } else {
-            if (req_session.getAttribute("page").equals("admin")) {
-//                log.info("++++++++++++++++++++++++++ login true !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//                response.sendRedirect("/admin");
-            } else {
-//                log.info("++++++++++++++++++++++++++ page - not admin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                response.sendRedirect("/login");
-            }
+            String redirect_page = (String)req_session.getAttribute("page");
+            if (!redirect_page.equals("admin")) response.sendRedirect("/" + redirect_page);
         }
     } else {
-//        log.info("++++++++++++++++++++++++++ Login is null !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         response.sendRedirect("/login");
-    }
+    }*/
 %>
 <%
     ArrayList<Service> services = (ArrayList<Service>) config.getServletContext().getAttribute("services");
     ArrayList<TypeDeviceFilter> typeDeviceFilters = (ArrayList<TypeDeviceFilter>) config.getServletContext().getAttribute("typeDeviceFilters");
-    ArrayList<Group> groups = (ArrayList<Group>) config.getServletContext().getAttribute("groups");
-    ArrayList<Users> users = (ArrayList<Users>) config.getServletContext().getAttribute("users");
-    ArrayList<AccessItemMenu> generalMenu = (ArrayList<AccessItemMenu>) config.getServletContext().getAttribute("generalMenu");
     ArrayList<Hostgroup> hostgroups = (ArrayList<Hostgroup>) config.getServletContext().getAttribute("hostgroups");
     ArrayList<Hoststatus> hoststatuses = (ArrayList<Hoststatus>) config.getServletContext().getAttribute("hoststatuses");
     ArrayList<Region> regions = (ArrayList<Region>) config.getServletContext().getAttribute("regions");
-%>
+    DataModel dataModel = DataModel.getInstance();
+    AccessService accessService = AccessService.getInstance();
+    Collection<Group> groups = accessService.getGroups().values();
 
-<%
+
     AccessUserObject accessUserObject = (AccessUserObject) session.getAttribute("access");
 %>
 
@@ -69,6 +50,8 @@
 
     <!-- UI -->
     <script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.2.custom.min.js"></script>
+    <%--<script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.9.0.custom.js"></script>--%>
+    <script type="text/javascript" src="../js/jQuery/js/jquery.combobox.js"></script>
     <script type="text/javascript" src="../js/jQuery/js/jquery.timepicker.js"></script>
 
     <!--CSS style-->
@@ -94,7 +77,7 @@
     <script type="text/javascript" src="../js/adminko.js"></script>
     <%
         if ((session.getAttribute("login") != null) && ((Boolean)(session.getAttribute("login")))) {
-            Users user = (Users)session.getAttribute("info");
+            User user = (User)session.getAttribute("info");
             if ((Boolean)session.getAttribute("change_passwd")) {%>
                 <script type="text/javascript">
                     $(document).ready(function() {
@@ -133,6 +116,8 @@
     %>
 </head>
 <body>
+
+<div id='zanaves'><div class='zanaves'></div><img src='../img/ajax-loader_2.gif' alt='load' class='preloader'/></div>
 
 <div style="display: none;">
     <select id="host_status_replace">
@@ -250,14 +235,36 @@
                 <tr class="header">
                     <td>login</td>
                     <td>passwd</td>
+                    <td>passwd confirm</td>
                     <td>name</td>
                     <td>group</td>
                     <td>block</td>
                 </tr>
                 <tr>
-                    <td width="20%"><input type="text" id="users_edit_login"/></td>
-                    <td width="20%"><input type="text" id="users_edit_passwd"/></td>
-                    <td width="30%"><input type="text" id="users_edit_name"/></td>
+                    <td width="15%">
+                        <div class="label_container">
+                            <label for="users_edit_login" class="label">username</label>
+                            <input type="text" id="users_edit_login"/>
+                        </div>
+                    </td>
+                    <td width="15%">
+                        <div class="label_container">
+                            <label for="users_edit_passwd" class="label">password</label>
+                            <input type="password" id="users_edit_passwd"/>
+                        </div>
+                    </td>
+                    <td width="15%">
+                        <div class="label_container">
+                            <label for="users_edit_confirm_passwd" class="label">confirm</label>
+                            <input type="password" id="users_edit_confirm_passwd"/>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <div class="label_container">
+                            <label for="users_edit_name" class="label">name</label>
+                            <input type="text" id="users_edit_name"/>
+                        </div>
+                    </td>
                     <td width="15%">
                         <select id="users_edit_group">
                             <%for (Group g : groups) {%>
@@ -283,40 +290,35 @@
                 <tr>
                     <td width="40%"><input type="text" id="groups_edit_name"/></td>
                     <td width="60%">
-
-
                         <div class="settings">
                             <div class="settings_block">
                                 <div class="menu_items">
                                         <ul class="l1">
                                             <%
-                                                for (AccessItemMenu item : generalMenu) {
-                                                    if (item.getChildrens().size() == 0) {%>
-                                                        <li id="<%=item.getTab().getTab().getId()%>_<%=item.getTab().getTab().getMenu_group()%>_main_d"><input type="checkbox"/><%=item.getTab().getTab().getCaption()%></li>
-                                                    <%
-                                                    } else {
-                                                    %>
-                                                        <li id="<%=item.getTab().getTab().getId()%>_<%=item.getTab().getTab().getMenu_group()%>_main_d"><input type="checkbox"/><%=item.getTab().getTab().getCaption()%></li>
-                                                        <ul class="l2">
-                                                        <%for (AccessTab tab : item.getChildrens()) {%>
-                                                            <li id="<%=tab.getTab().getId()%>_<%=tab.getTab().getMenu_group()%>_child_d"><input type="checkbox"/><%=tab.getTab().getCaption()%></li>
-                                                        <%}%>
-                                                        </ul>
-                                                    <%}
+                                            Menu menu = accessService.getCanonicalMenu();
+                                            for (MenuItem group : menu.getItems()) {
+                                                if (group.getItems() == null) {
+                                                    %><li class="group" id="diag-group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                } else {
+                                                    %><li class="group" id="diag-group-edit-<%=group.getId()%>"><input type="checkbox"/><%=group.getName()%></li><%
+                                                    %><ul class="l2"><%
+                                                    for (MenuItem item : group.getItems()) {
+                                                        %><li class="item" id="diag-group-edit-<%=item.getId()%>"><input type="checkbox"/><%=item.getName()%></li><%
+                                                    }
+                                                    %></ul><%
                                                 }
+                                            }
                                             %>
                                         </ul>
                                 </div>
                             </div>
                         </div>
-
-
                     </td>
                 </tr>
             </table>
 </div>
 <div id="groups_delete_dialog" style="display: none;">
-    <div>Удалить фильтр <strong id="delete_group" ></strong> ?</div>
+    <div>Удалить группу <strong id="delete_group" ></strong> ?</div>
 </div>
 
 <div id="devices_edit_dialog" class="settings_dialog" style="display: none;">
@@ -326,7 +328,7 @@
             <td>name</td>
             <td>description</td>
             <td>status</td>
-            <td>group</td>
+            <td>menuGroup</td>
             <td>region</td>
         </tr>
         <tr>
@@ -356,37 +358,39 @@
 
 <div class="logout_bar"><%
     if ((session.getAttribute("login") != null) && ((Boolean) (session.getAttribute("login")))) {
-            Users user = (Users) session.getAttribute("info");
-    %><%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]<%}
+        User user = (User) session.getAttribute("info");
+        %><%=user.getLogin()%> (<%=user.getFio()%>) [<a href='' id='logout'>logout</a>]<%
+    }
 %></div>
 
 <div id="main_menu">
     <div id="v_tabs">
         <ul>
             <%
-                DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
-                if (accessUserObject != null) {
-                    Menu menu = accessUserObject.getMenu();
-                    for (ru.blackart.dsi.infopanel.access.menu.Group group : menu.getGroups()) {
-                        if ((group.getItems() == null) || (group.getItems().size() == 0)) {
-                            %><li><a href="tabs/<%=group.getUrl()%>" class="menu_item"><%=group.getName()%></a></li><%
-                        } else {
-                            %><h3><%=group.getName()%></h3><div><%
-                            for (Item item : group.getItems()) {
-                                TroubleList troubleList = dataModelConstructor.getTroubleListForName(item.getName().toLowerCase());
-                                String count_trobles = " ";
-                                if (troubleList != null) {
-                                        if (troubleList.getName().equals("current")) {
-                                            count_trobles += "<div class='count_need_actual_problem_troubles'></div>/<div class='count_waiting_close_troubles'></div>/<div class='count_current_troubles'></div>";
-                                        } else if (troubleList.getName().equals("complete")) {
-                                            count_trobles += "<div class='count_complete_troubles'></div>";
-                                        } else if (troubleList.getName().equals("trash")) {
-                                            count_trobles += "<div class='count_trash_troubles'></div>";
-                                        }
+                synchronized (dataModel) {
+                    if (accessUserObject != null) {
+                        Menu general_menu = accessUserObject.getMenu();
+                        for (MenuItem menuGroup : general_menu.getItems()) {
+                            if ((menuGroup.getItems() == null) || (menuGroup.getItems().size() == 0)) {
+                                %><li><a href="tabs/<%=menuGroup.getUrl()%>" class="menu_item"><%=menuGroup.getName()%></a></li><%
+                            } else {
+                                %><h3><%=menuGroup.getName()%></h3><div><%
+                                for (MenuItem menuItem : menuGroup.getItems()) {
+                                    TroubleList troubleList = dataModel.getTroubleListForName(menuItem.getName().toLowerCase());
+                                    String count_trobles = " ";
+                                    if (troubleList != null) {
+                                            if (troubleList.getName().equals("current")) {
+                                                count_trobles += "<div class='count_need_actual_problem_troubles'></div>/<div class='count_waiting_close_troubles'></div>/<div class='count_current_troubles'></div>";
+                                            } else if (troubleList.getName().equals("complete")) {
+                                                count_trobles += "<div class='count_complete_troubles'></div>";
+                                            } else if (troubleList.getName().equals("trash")) {
+                                                count_trobles += "<div class='count_trash_troubles'></div>";
+                                            }
+                                    }
+                                    %><li><a href="tabs/<%=menuItem.getUrl()%>"><%=menuItem.getName()+ count_trobles%></a></li><%
                                 }
-                                %><li><a href="tabs/<%=item.getUrl()%>"><%=item.getName()+ count_trobles%></a></li><%
+                                %></div><%
                             }
-                            %></div><%
                         }
                     }
                 }

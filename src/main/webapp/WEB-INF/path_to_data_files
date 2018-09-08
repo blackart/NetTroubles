@@ -2,3 +2,5 @@ cmd=/WEB-INF/cmd
 pathToApplication=/webapps
 pathToLog4jConfig=/WEB-INF/classes/log4j.properties
 generateMonitoringPanel=/WEB-INF/generateMonitoringPanel
+menuConfig=/WEB-INF/menu.json
+no-login-cmd=/WEB-INF/no-login-cmd.json

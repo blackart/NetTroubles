@@ -1,16 +1,22 @@
 package ru.blackart.dsi.infopanel.access.menu;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class Menu {
-    private ArrayList<Group> groups;
+    private ArrayList<MenuItem> items;
 
-    public ArrayList<Group> getGroups() {
-        return groups;
+    public ArrayList<MenuItem> getItems() {
+        return items;
     }
 
-    public void setGroups(ArrayList<Group> groups) {
-        this.groups = groups;
+    public void setItems(ArrayList<MenuItem> items) {
+        this.items = items;
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

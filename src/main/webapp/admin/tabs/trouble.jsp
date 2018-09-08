@@ -17,6 +17,7 @@
             </div>
         </div>
         <div class="button_print">
+            <span id="current_timeout"></span>
             Интервал обновления:
             <select id="interval_val">
                 <option value="1800000">30 минут</option>
@@ -24,12 +25,12 @@
                 <option value="1200000">20 минут</option>
                 <option value="900000">15 минут</option>
                 <option value="600000">10 минут</option>
-                <%--<option value="10000">10 секунд</option>--%>
-                <%--<option value="5000">5 секунд</option>--%>
+                <option value="10000">10 секунд</option>
+                <option value="5000">5 секунд</option>
             </select>
             <input type="button" value="set interval" id="set_interval"/>
             <input type="button" value="start reload" id="reload_page">
-            <input type="button" id="refresh_trouble_list" value="обновить"/>
+            <input type="button" value="обновить" id="refresh_trouble_list"/>
         </div>
     </div>
     <div class="bottom_button" id="troubles_page_control_panel">панель управления</div>
@@ -486,9 +487,9 @@
     </div>
 </div>
 
-<input type="hidden" id="openControlPanel" value="<%=((Users)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
-<input type="hidden" id="pageReload" value="<%=((Users)session.getAttribute("info")).getSettings_id().getCurrentTroublesPageReload()%>"/>
-<input type="hidden" id="timeoutReloadPage" value="<%=((Users)session.getAttribute("info")).getSettings_id().getTimeoutReload()%>"/>
+<input type="hidden" id="openControlPanel" value="<%=((User)session.getAttribute("info")).getSettings_id().getOpenControlPanel()%>"/>
+<input type="hidden" id="pageReload" value="<%=((User)session.getAttribute("info")).getSettings_id().getCurrentTroublesPageReload()%>"/>
+<input type="hidden" id="timeoutReloadPage" value="<%=((User)session.getAttribute("info")).getSettings_id().getTimeoutReload()%>"/>
 <input type="hidden" id="service_sel" value="
     <%if (services != null) {
         for (Service s : services) {%>

@@ -1,11 +1,28 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package ru.blackart.dsi.infopanel.beans;
 
-
-import javax.persistence.*;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "trouble")
+@Table(
+        name = "trouble"
+)
 public class Trouble implements Persistent {
     private int id;
     private String title;
@@ -13,64 +30,80 @@ public class Trouble implements Persistent {
     private String timeout;
     private String date_in;
     private String date_out;
-    private Users author;
+    private User author;
     private List<Devcapsule> devcapsules;
     private List<Service> services;
     private Boolean close;
     private Boolean crm;
     private List<Comment> comments;
 
+    public Trouble() {
+    }
+
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(
+            name = "id"
+    )
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    @Column(name = "title")
+    @Column(
+            name = "title"
+    )
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @Column(name = "actual_problem")
+    @Column(
+            name = "actual_problem"
+    )
     public String getActualProblem() {
-        return actualProblem;
+        return this.actualProblem;
     }
 
     public void setActualProblem(String actualProblem) {
         this.actualProblem = actualProblem;
     }
 
-    @Column(name = "timeout")
+    @Column(
+            name = "timeout"
+    )
     public String getTimeout() {
-        return timeout;
+        return this.timeout;
     }
 
     public void setTimeout(String timeout) {
         this.timeout = timeout;
     }
 
-    @Column(name = "date_in")
+    @Column(
+            name = "date_in"
+    )
     public String getDate_in() {
-        return date_in;
+        return this.date_in;
     }
-
 
     public void setDate_in(String date_in) {
         this.date_in = date_in;
     }
 
-    @Column(name = "date_out")
+    @Column(
+            name = "date_out"
+    )
     public String getDate_out() {
-        return date_out;
+        return this.date_out;
     }
 
     public void setDate_out(String date_out) {
@@ -78,12 +111,14 @@ public class Trouble implements Persistent {
     }
 
     @ManyToOne
-    @JoinColumn(name = "_author")
-    public Users getAuthor() {
-        return author;
+    @JoinColumn(
+            name = "_author"
+    )
+    public User getAuthor() {
+        return this.author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -94,11 +129,15 @@ public class Trouble implements Persistent {
     )
     @JoinTable(
             name = "dev_trouble",
-            joinColumns = @JoinColumn(name = "_trouble"),
-            inverseJoinColumns = @JoinColumn(name = "_devcapsule")
+            joinColumns = {@JoinColumn(
+                    name = "_trouble"
+            )},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "_devcapsule"
+            )}
     )
     public List<Devcapsule> getDevcapsules() {
-        return devcapsules;
+        return this.devcapsules;
     }
 
     public void setDevcapsules(List<Devcapsule> devcapsules) {
@@ -107,34 +146,42 @@ public class Trouble implements Persistent {
 
     @OneToMany(
             targetEntity = Service.class,
-            cascade = {CascadeType.MERGE,CascadeType.PERSIST},
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.LAZY
     )
     @JoinTable(
             name = "trouble_service",
-            joinColumns = @JoinColumn(name = "_trouble"),
-            inverseJoinColumns = @JoinColumn(name = "_service")
+            joinColumns = {@JoinColumn(
+                    name = "_trouble"
+            )},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "_service"
+            )}
     )
     public List<Service> getServices() {
-        return services;
+        return this.services;
     }
 
     public void setServices(List<Service> services) {
         this.services = services;
     }
 
-    @Column(name = "close")
+    @Column(
+            name = "close"
+    )
     public Boolean getClose() {
-        return close;
+        return this.close;
     }
 
     public void setClose(Boolean close) {
         this.close = close;
     }
 
-    @Column(name = "crm")
+    @Column(
+            name = "crm"
+    )
     public Boolean getCrm() {
-        return crm;
+        return this.crm;
     }
 
     public void setCrm(Boolean crm) {
@@ -143,16 +190,20 @@ public class Trouble implements Persistent {
 
     @OneToMany(
             targetEntity = Comment.class,
-            cascade = {CascadeType.MERGE,CascadeType.PERSIST},
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.LAZY
     )
     @JoinTable(
             name = "trouble_comment",
-            joinColumns = @JoinColumn(name = "_trouble"),
-            inverseJoinColumns = @JoinColumn(name = "_comment")
+            joinColumns = {@JoinColumn(
+                    name = "_trouble"
+            )},
+            inverseJoinColumns = {@JoinColumn(
+                    name = "_comment"
+            )}
     )
     public List<Comment> getComments() {
-        return this.sortCommentByDate(comments);
+        return this.sortCommentByDate(this.comments);
     }
 
     public void setComments(List<Comment> comments) {
@@ -160,13 +211,12 @@ public class Trouble implements Persistent {
     }
 
     public List<Comment> sortCommentByDate(List<Comment> comments) {
-        for (int i=0; i < comments.size(); i++) {
-            for (int j=0; j < i; j++) {
-                Long comment_time_i = Long.valueOf(comments.get(i).getTime());
-                Long comment_time_j = Long.valueOf(comments.get(j).getTime());
-
-                if (comment_time_i < comment_time_j) {  /*> - по убыванию, < - по возрастанию*/
-                    Comment comment = comments.get(i);
+        for(int i = 0; i < comments.size(); ++i) {
+            for(int j = 0; j < i; ++j) {
+                Long comment_time_i = Long.valueOf(((Comment)comments.get(i)).getTime());
+                Long comment_time_j = Long.valueOf(((Comment)comments.get(j)).getTime());
+                if (comment_time_i.longValue() < comment_time_j.longValue()) {
+                    Comment comment = (Comment)comments.get(i);
                     comments.set(i, comments.get(j));
                     comments.set(j, comment);
                 }
@@ -177,7 +227,5 @@ public class Trouble implements Persistent {
     }
 
     public void save() {
-
     }
-
 }

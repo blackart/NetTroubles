@@ -222,7 +222,7 @@ CREATE TABLE group_tabs (
 ALTER TABLE public.group_tabs OWNER TO root;
 
 --
--- Name: groups; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+-- Name: groups; Type: TABLE; Schema: public; Owner: root; Tablespace:
 --
 
 CREATE TABLE groups (
@@ -34077,7 +34077,7 @@ COPY troublestatus (id, name) FROM stdin;
 
 COPY type_device_filters (id, name) FROM stdin;
 1	name
-2	group
+2	menuGroup
 \.
 
 
@@ -34476,4 +34476,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-

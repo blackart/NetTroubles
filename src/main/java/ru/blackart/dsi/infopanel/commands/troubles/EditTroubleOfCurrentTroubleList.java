@@ -1,23 +1,29 @@
 package ru.blackart.dsi.infopanel.commands.troubles;
 
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import com.google.gson.Gson;
 import ru.blackart.dsi.infopanel.beans.Service;
 import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.beans.Users;
+import ru.blackart.dsi.infopanel.beans.User;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.ServiceService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
 import ru.blackart.dsi.infopanel.utils.DateStr;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
+import ru.blackart.dsi.infopanel.view.TroubleView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EditTroubleOfCurrentTroubleList extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
     TroubleService troubleService = TroubleService.getInstance();
     ServiceService serviceService = ServiceService.getInstance();
 
     public String execute() throws Exception {
+        String troubleJSON = this.getRequest().getParameter("trouble");
+
+        Gson gson = new Gson();
+        TroubleView troubleView  = gson.fromJson(troubleJSON, TroubleView.class);
         /*-------------------------------------------------------------------------------------------*/
         String[] services = null;
         String services_str = this.getRequest().getParameter("service").trim().replace(" ", "");
@@ -31,8 +37,8 @@ public class EditTroubleOfCurrentTroubleList extends AbstractCommand {
         String timeout_str = this.getRequest().getParameter("timeout");
         /*-------------------------------------------------------------------------------------------*/
 
-        synchronized (dataModelConstructor) {
-            Trouble trouble = dataModelConstructor.getTroubleForId(id);
+        synchronized (dataModel) {
+            Trouble trouble = dataModel.getTroubleForId(id);
 
             String timeout = ((trouble.getTimeout() == null) || (trouble.getTimeout().trim().equals(""))) ? null : trouble.getTimeout() ;
             if ((timeout_str != null) && (!timeout_str.equals(""))) {
@@ -43,7 +49,7 @@ public class EditTroubleOfCurrentTroubleList extends AbstractCommand {
             trouble.setTitle(title);
             trouble.setActualProblem(actual_problem);
             trouble.setTimeout(timeout);
-            trouble.setAuthor((Users) this.getSession().getAttribute("info"));
+            trouble.setAuthor((User) this.getSession().getAttribute("info"));
             trouble.setCrm(false);
 
             if ((services != null) && (services.length > 0)) {

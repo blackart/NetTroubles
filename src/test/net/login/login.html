@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Administrate tool</title>
+    <link rel="shortcut icon" href="">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, no-store, must-revalidate">
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="../js/jQuery/js/jquery-1.7.2.min.js"></script>
+    <!--<script type="text/javascript" src="../js/jQuery/js/jquery-ui-1.8.10.custom.min.js"></script>-->
+    <!-- bootstrap -->
+    <!--<script type="text/javascript" src="../js/bootstrap/js/bootstrap.js"></script>-->
+    <!--<script type="text/javascript" src="../js/bootstrap/js/bootstrap-datepicker.js"></script>-->
+    <!--<script type="text/javascript" src="../js/bootstrap/js/bootstrap-timepicker.js"></script>-->
+    <!-- bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="../js/bootstrap/css/bootstrap.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="../js/bootstrap/css/datepicker.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../js/bootstrap/css/timepicker.css"/>-->
+    <!--konockout-->
+    <!--<script type="text/javascript" src="../js/knockout/knockout-2.1.0.js"></script>-->
+    <!--page script-->
+    <script type="text/javascript" src="../js/new_design/login.js"></script>
+    <!--page style-->
+    <link rel="stylesheet" type="text/css" href="../css/new_design/login.css"/>
+</head>
+<body>
+
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="#">NetTroubles</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Contacts</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form class="form-horizontal login-form" action="/controller" method="post">
+    <span class="response-message-container">
+        <div class="alert alert-block">
+            <span class="response-message"></span>
+        </div>
+    </span>
+    <fieldset class="container-fluid">
+        <div class="control-group row-fluid">
+            <!-- Username -->
+            <label class="control-label"  for="login">Username</label>
+            <div class="controls">
+                <input type="text" id="login" name="login" placeholder="" class="span12">
+            </div>
+        </div>
+
+        <div class="control-group row-fluid">
+            <!-- Password-->
+            <label class="control-label" for="passwd">Password</label>
+            <div class="controls">
+                <input type="password" id="passwd" name="passwd" placeholder="" class="span12">
+            </div>
+        </div>
+
+        <input type="hidden" value="loginNew" name="cmd">
+
+        <div class="control-group">
+            <!-- Button -->
+            <div class="controls">
+                <input type="submit" class="btn btn-success" id="submit-button" value="Login"/>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+</body>
+</html>

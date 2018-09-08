@@ -1,13 +1,11 @@
 package ru.blackart.dsi.infopanel.commands.failures;
 
 import com.myjavatools.xml.BasicXmlData;
-
-import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Region;
-import ru.blackart.dsi.infopanel.utils.filters.ManagerMainDeviceFilter;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
+import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForDate;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForRegion;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForStatus;
@@ -18,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class GetFailuresListForStatus extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
 
     public String execute() throws Exception {
         this.getResponse().setCharacterEncoding("utf-8");
@@ -49,10 +47,10 @@ public class GetFailuresListForStatus extends AbstractCommand {
 
         SearchingForStatus searchingForStatus = new SearchingForStatus(device_status_arr);
 
-        synchronized (dataModelConstructor) {
+        synchronized (dataModel) {
             if (searchingForStatus.getHoststatuses().size() > 0) {
                 List<Devcapsule> devcapsules = searchingForStatus.find();
-                devcapsules = DataModelConstructor.getInstance().sortDevcapsuleByTime(devcapsules);
+                devcapsules = DataModel.getInstance().sortDevcapsuleByTime(devcapsules);
 
                 Date left_date = null;
                 Date right_date = null;
@@ -87,7 +85,7 @@ public class GetFailuresListForStatus extends AbstractCommand {
 
                 for (Devcapsule d : devcapsules) {
                     Date date_down = new Date(Long.valueOf(d.getTimedown() != null ? d.getTimedown() : "0"));
-                    Trouble trouble = dataModelConstructor.getTroubleForDevcapsule(d);
+                    Trouble trouble = dataModel.getTroubleForDevcapsule(d);
 
                     xml_level_1 = new BasicXmlData("failures_entry");
                     xml_level_1.addKid(new BasicXmlData("devicename", d.getDevice().getName()));

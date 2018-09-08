@@ -1,14 +1,14 @@
 package ru.blackart.dsi.infopanel.commands.troubles.comments;
 
 import com.myjavatools.xml.BasicXmlData;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Comment;
 import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.beans.Users;
+import ru.blackart.dsi.infopanel.beans.User;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.crm.CrmComment;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.services.CommentService;
 import ru.blackart.dsi.infopanel.services.TroubleService;
-import ru.blackart.dsi.infopanel.utils.crm.CrmComment;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
 
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 public class AddComment extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
     TroubleService troubleService = TroubleService.getInstance();
     CommentService commentService = CommentService.getInstance();
 
@@ -32,10 +32,10 @@ public class AddComment extends AbstractCommand {
         Comment comment = new Comment();
         comment.setText(text);
         comment.setTime(String.valueOf(calendar.getTimeInMillis()));
-        comment.setAuthor((Users) this.getSession().getAttribute("info"));
+        comment.setAuthor((User) this.getSession().getAttribute("info"));
 
-        synchronized (dataModelConstructor) {
-            Trouble trouble = dataModelConstructor.getTroubleForId(id);
+        synchronized (dataModel) {
+            Trouble trouble = dataModel.getTroubleForId(id);
 
             if (trouble.getCrm()) {
                 //Отправляем комменет в CRM

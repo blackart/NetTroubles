@@ -1,11 +1,11 @@
 package ru.blackart.dsi.infopanel.commands.failures;
 
 import com.myjavatools.xml.BasicXmlData;
-import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
 import ru.blackart.dsi.infopanel.beans.Region;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
+import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForDate;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForRegion;
 
@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 public class GetFailuresListForDate extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
 
     @Override
     public String execute() throws Exception {
@@ -49,8 +49,8 @@ public class GetFailuresListForDate extends AbstractCommand {
             regions_str = searchingForRegion.getRegions_str();
         }
 
-        synchronized (dataModelConstructor) {
-            devc_find = dataModelConstructor.sortDevcapsuleByTime(devc_find);
+        synchronized (dataModel) {
+            devc_find = dataModel.sortDevcapsuleByTime(devc_find);
 
             int count_devc = 0;
             long time_down_summ = 0;
@@ -58,7 +58,7 @@ public class GetFailuresListForDate extends AbstractCommand {
 
             for (Devcapsule d : devc_find) {
                 Date date_down = new Date(Long.valueOf(d.getTimedown() != null ? d.getTimedown() : "0"));
-                Trouble trouble = dataModelConstructor.getTroubleForDevcapsule(d);
+                Trouble trouble = dataModel.getTroubleForDevcapsule(d);
 
                 xml_level_1 = new BasicXmlData("failures_entry");
                 xml_level_1.addKid(new BasicXmlData("devicename", d.getDevice().getName()));

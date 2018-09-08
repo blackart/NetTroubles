@@ -1,7 +1,10 @@
 #http command
 #access
 login=ru.blackart.dsi.infopanel.commands.access.Login
+loginNew=ru.blackart.dsi.infopanel.commands.access.LoginNew
 logout=ru.blackart.dsi.infopanel.commands.access.Logout
+logoutNew=ru.blackart.dsi.infopanel.commands.access.LogoutNew
+checkUser=ru.blackart.dsi.infopanel.commands.access.CheckUser
 
 #filters
 addMainFilter=ru.blackart.dsi.infopanel.commands.filters.mainDeviceFilter.AddFilter
@@ -11,25 +14,43 @@ deleteMainFilter=ru.blackart.dsi.infopanel.commands.filters.mainDeviceFilter.Del
 #troubles
 getLogEntry=ru.blackart.dsi.infopanel.commands.troubles.GetLogEntry
 editTroubleOfCurrentTroubleList=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCurrentTroubleList
+editTrouble=ru.blackart.dsi.infopanel.commands.troubles.EditTrouble
 editTroubleOfCompleteTroubleList=ru.blackart.dsi.infopanel.commands.troubles.EditTroubleOfCompleteTroubleList
 #mergeTroubles=ru.blackart.dsi.infopanel.commands.troubles.MergeTroublesEvoEvo
 mergeTroubles=ru.blackart.dsi.infopanel.commands.troubles.MergeTroubles
+mergeTroublesNew=ru.blackart.dsi.infopanel.commands.troubles.MergeTroublesNew
 #cancelEditTrouble=ru.blackart.dsi.infopanel.commands.troubles.CancelEditTrouble
 #check_dev=ru.blackart.dsi.infopanel.commands.troubles.CheckDevcapsules
 getListOfClosedTroubles=ru.blackart.dsi.infopanel.commands.troubles.GetListOfClosedTroubles
 deleteTrouble=ru.blackart.dsi.infopanel.commands.troubles.DeleteTrouble
+deleteTroubleNew=ru.blackart.dsi.infopanel.commands.troubles.DeleteTroubleNew
 #closeTrouble=ru.blackart.dsi.infopanel.commands.troubles.CloseTrouble
 unmergeTrouble=ru.blackart.dsi.infopanel.commands.troubles.UnmergeTrouble
+unmergeTroubleNew=ru.blackart.dsi.infopanel.commands.troubles.UnmergeTroubleNew
 sendToCRM=ru.blackart.dsi.infopanel.commands.troubles.SendToCRM
+sendToCRMNew=ru.blackart.dsi.infopanel.commands.troubles.SendToCRMNew
 clearTrashList=ru.blackart.dsi.infopanel.commands.troubles.ClearTrashList
 #tranformDescToComment=ru.blackart.dsi.infopanel.commands.troubles.comments.TransformDescToComment
 addComment=ru.blackart.dsi.infopanel.commands.troubles.comments.AddComment
+addCommentNew=ru.blackart.dsi.infopanel.commands.troubles.comments.AddCommentNew
 conv=ru.blackart.dsi.infopanel.commands.troubles.ConvertLegendAndDescToComment
 recoveryTrouble=ru.blackart.dsi.infopanel.commands.troubles.RecoveryTrouble
 getTroubleCounters=ru.blackart.dsi.infopanel.commands.troubles.GetTroubleCounters
+getCurrentTroubleListGroup=ru.blackart.dsi.infopanel.commands.troubles.GetListsTroubles
+getTrashedTroubleList=ru.blackart.dsi.infopanel.commands.troubles.GetListTrashedTroubles
+getClosedTroubleList=ru.blackart.dsi.infopanel.commands.troubles.GetListClosedTroubles
+destroyTrouble=ru.blackart.dsi.infopanel.commands.troubles.DestroyTrouble
+getRegions=ru.blackart.dsi.infopanel.commands.troubles.GetRegions
+getHostStatuses=ru.blackart.dsi.infopanel.commands.troubles.GetHostStatuses
 
+#services
+getServices=ru.blackart.dsi.infopanel.commands.service.GetListOfServices
+
+#reports
+getTroubleReport=ru.blackart.dsi.infopanel.commands.reports.GetTroubleReport
 
 #failures
+
 getFailuresListForDate=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForDate
 getFailuresListForName=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForName
 getFailuresListForStatus=ru.blackart.dsi.infopanel.commands.failures.GetFailuresListForStatus
@@ -40,13 +61,14 @@ addAccount=ru.blackart.dsi.infopanel.commands.security.users.AddUser
 editAccount=ru.blackart.dsi.infopanel.commands.security.users.EditUser
 deleteAccount=ru.blackart.dsi.infopanel.commands.security.users.DeleteUser
 changePasswd=ru.blackart.dsi.infopanel.commands.security.users.ChangePasswdUser
+getUser=ru.blackart.dsi.infopanel.commands.access.GetUser
 
 #users-settings
 openControlPanel=ru.blackart.dsi.infopanel.commands.security.users.settings.SetOpenControlPanel
 reloadPage=ru.blackart.dsi.infopanel.commands.security.users.settings.SetReloadPage
 timeOutReloadPage=ru.blackart.dsi.infopanel.commands.security.users.settings.SetTimeOutReloadPage
 
-#group
+#menuGroup
 addGroup=ru.blackart.dsi.infopanel.commands.security.groups.AddGroup
 editGroup=ru.blackart.dsi.infopanel.commands.security.groups.EditGroup
 deleteGroup=ru.blackart.dsi.infopanel.commands.security.groups.DeleteGroup

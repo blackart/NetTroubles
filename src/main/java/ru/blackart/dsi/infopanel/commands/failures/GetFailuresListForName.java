@@ -1,11 +1,11 @@
 package ru.blackart.dsi.infopanel.commands.failures;
 
 import com.myjavatools.xml.BasicXmlData;
-import ru.blackart.dsi.infopanel.beans.Trouble;
-import ru.blackart.dsi.infopanel.commands.AbstractCommand;
 import ru.blackart.dsi.infopanel.beans.Comment;
 import ru.blackart.dsi.infopanel.beans.Devcapsule;
-import ru.blackart.dsi.infopanel.utils.model.DataModelConstructor;
+import ru.blackart.dsi.infopanel.beans.Trouble;
+import ru.blackart.dsi.infopanel.commands.AbstractCommand;
+import ru.blackart.dsi.infopanel.model.DataModel;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForDate;
 import ru.blackart.dsi.infopanel.utils.searching.SearchingForName;
 
@@ -15,11 +15,10 @@ import java.util.Date;
 import java.util.List;
 
 public class GetFailuresListForName extends AbstractCommand {
-    DataModelConstructor dataModelConstructor = DataModelConstructor.getInstance();
+    DataModel dataModel = DataModel.getInstance();
 
     @Override
     public String execute() throws Exception {
-        this.getResponse().setCharacterEncoding("utf-8");
         this.getResponse().setContentType("text/xml");
 
         SimpleDateFormat format = new SimpleDateFormat();
@@ -44,7 +43,7 @@ public class GetFailuresListForName extends AbstractCommand {
         Date right_date = null;
         Date left_date = null;
 
-        synchronized (dataModelConstructor) {
+        synchronized (dataModel) {
             if (searchingForName.getDevice() != null) {
                 List<Devcapsule> devc_find = searchingForName.find();
                 if (devc_find.size() > 0) {
@@ -62,7 +61,7 @@ public class GetFailuresListForName extends AbstractCommand {
                 }
                 for (Devcapsule d : devc_find) {
                     Date date_down = new Date(Long.valueOf(d.getTimedown() != null ? d.getTimedown() : "0"));
-                    Trouble trouble = dataModelConstructor.getTroubleForDevcapsule(d);
+                    Trouble trouble = dataModel.getTroubleForDevcapsule(d);
 
                     xml_level_1 = new BasicXmlData("failures_entry");
                     xml_level_1.addKid(new BasicXmlData("devicename", d.getDevice().getName()));

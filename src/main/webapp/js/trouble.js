@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     $("#admin_trouble_list").accordion({collapsible: true, header: "h3", autoHeight: false, alwaysOpen: false, active: false, navigation: true, icons: false}).addClass('ui-accordion-trouble');
     $("#admin_waiting_close_trouble_list").accordion({collapsible: true, header: "h3", autoHeight: false, alwaysOpen: false, active: false, navigation: true, icons: false}).removeClass('ui-accordion').addClass('ui-accordion-trouble-wait');
@@ -112,7 +111,6 @@ $(document).ready(function() {
         });
     };
 
-
     $(".troubles_lists").clickToForm({
         header: ".content",
         elements: {
@@ -225,6 +223,7 @@ $(document).ready(function() {
                     $.ajax({
                         url : "/controller",
                         type : "POST",
+                        dataType: "json",
                         data : {
                             cmd: "deleteTrouble",
                             id: $id,
@@ -246,8 +245,8 @@ $(document).ready(function() {
                         },
                         success: function(data) {
                             var $status_crm = $(data).find("status").text();
-                            if ($status_crm == "false") {
-                                alert($(data).find("message").text());
+                            if (!Boolean.valueOf(data.status)) {
+                                alert(data.message);
                             }
                             $("#v_tabs").tabs('load', $("#v_tabs").tabs('option', 'selected'));
                             $.fn.update_trouble_counters();
@@ -458,12 +457,18 @@ $(document).ready(function() {
 
     check_timeout();
 
+
+
+
+
+
+
     $("#reload_page").click(function() {
-        if ($.fn.get_interval_status() == 0) {
-            $.fn.reload_page($.fn.get_interval_val(), 1);         //900000 - 15 минут
+        if ($.fn.get_interval_status()) {
+            $.fn.reload_page($.fn.get_interval_val(), true);         //900000 - 15 минут
             $(this).val("stop reload");
-        } else if ($.fn.get_interval_status() == 1) {
-            $.fn.reload_page($.fn.get_interval_val(), 0);
+        } else {
+            $.fn.reload_page($.fn.get_interval_val(), false);
             $(this).val("start reload");
         }
 
@@ -472,7 +477,7 @@ $(document).ready(function() {
             type : "POST",
             data : {
                 cmd: "reloadPage",
-                value: ($.fn.get_interval_status() == 1)
+                value: $.fn.get_interval_status()
             }
         });
 
@@ -482,9 +487,9 @@ $(document).ready(function() {
     $("#set_interval").click(function() {
         $.fn.set_interval_val($("#interval_val").val());
 
-        if ($.fn.get_interval_status() == 1) {
-            $.fn.reload_page($.fn.get_interval_val(), 0);
-            $.fn.reload_page($.fn.get_interval_val(), 1);
+        if ($.fn.get_interval_status()) {
+            $.fn.reload_page($.fn.get_interval_val(), false);
+            $.fn.reload_page($.fn.get_interval_val(), true);
         }
 
         $.ajax({
@@ -498,17 +503,6 @@ $(document).ready(function() {
 
     });
 
-    $.fn.set_interval_val($("#timeoutReloadPage").val());
-
-    $("#interval_val").val($.fn.get_interval_val());
-
-    $.fn.set_interval_status($("#pageReload").val() == "true" ? 1 : 0);
-
-    if ($.fn.get_interval_status() == 1) {
-        $("#reload_page").val("stop reload");
-    } else if ($.fn.get_interval_status() == 0) {
-        $("#reload_page").val("start reload");
-    }
 
     $("input[id$=_unmerge]").click(function() {
         var $id = $(this).attr("id").replace("_unmerge", "");
